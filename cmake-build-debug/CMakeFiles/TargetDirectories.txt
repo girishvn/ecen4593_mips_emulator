@@ -1,0 +1,3 @@
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/cmake-build-debug/CMakeFiles/ecen4593_mips_emulator.dir

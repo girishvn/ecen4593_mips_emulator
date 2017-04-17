@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/_decode.cpp
+_decode.h
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/_decode.h
+algorithm
+-
+iostream
+-
+array
+-
+
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/_decode.h
+_instruction.h
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/_instruction.h
+
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/_instruction.h
+cstdint
+-
+
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/main.cpp
+iostream
+-
+_decode.h
+/Users/girishnarayanswamy/CLionProjects/ecen4593_mips_emulator/_decode.h
+
