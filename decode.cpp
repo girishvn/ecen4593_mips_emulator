@@ -10,7 +10,7 @@ CLASS NAME: _decode
 
 ***********************************************************************************************************************/
 
-#include "_decode.h"
+#include "decode.h"
 
 #include <algorithm>
 #include <iostream>

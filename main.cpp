@@ -1,13 +1,9 @@
 #include <iostream>
 
-#include "_decode.h"
+#include "decode.h"
 
 using namespace std;
 
-//Global Variables:
-
-uint32_t register_bank[32]; //32-register system
-uint32_t programCount; //program counter
 
 
 int main() {
