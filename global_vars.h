@@ -1,33 +1,31 @@
 //
-// Created by Girish Narayanswamy on 4/18/17.
+// Created by Girish Narayanswamy on 4/19/17.
 //
 
 #ifndef ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H
 #define ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H
 
-#include "_IFID.h"
-#include "_IDEX.h"
-#include "_EXMEM.h"
-#include "_MEMWB.h"
+#include <cstdint>
+#include "intermediate_reg_structs.h"
 
 //Global Variables:
 
-uint32_t register_bank[32]; //32-register system
-uint32_t programCount; //program counter
+extern uint32_t register_bank[32]; //32-register system
+extern uint32_t programCount; //program counter
 
 //Intermediate Registers
 
-_IFID IFID;
-_IFID shadow_IFID;
+extern _IFID IFID;
+extern _IFID shadow_IFID;
 
-_IDEX IDEX;
-_IDEX shadow_IDEX;
+extern _IDEX IDEX;
+extern _IDEX shadow_IDEX;
 
-_EXMEM EXMEM;
-_EXMEM shadow_EXMEM;
+extern _EXMEM EXMEM;
+extern _EXMEM shadow_EXMEM;
 
-_MEMWB MEMWB;
-_MEMWB shadow_MEMWB;
+extern _MEMWB MEMWB;
+extern _MEMWB shadow_MEMWB;
 
 
 #endif //ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H

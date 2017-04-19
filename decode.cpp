@@ -12,9 +12,6 @@ CLASS NAME: _decode
 
 #include "decode.h"
 
-#include <algorithm>
-#include <iostream>
-#include <array>
 
 using namespace std;
 
@@ -24,50 +21,60 @@ using namespace std;
 
  DESCRIPTION: Given and instruction, extracts the op-code and matches it with a instruction type (R, I, J)
 
- INPUTS: uint32_t inst (instruction machine code), instruction *inst (instruction passed by ref)
+ INPUTS: uint32_t inst (instruction machine code)
 
- OUTPUTS: uint8_t type (R = 1, I = 2, J = 3)
+ OUTPUTS: void (fills IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-int instType(uint32_t machineCode, instruction *inst) {
+void instType(uint32_t machineCode) {
 
     //Extracting OP Code
-    inst->opcode = uint8_t((0x3f) & (machineCode >> 26)); //opcode: bits 26-32
+    uint8_t opcode = uint8_t((0x3f) & (machineCode >> 26)); //opcode: bits 26-32
+
+    IDEX.opcode = opcode;
 
     //Checking Type (R, I , J) from OP Code
-    if (inst->opcode == ROPCode) { //R-type instruction
-        return R;
+    if (opcode == ROPCode) { //R-type instruction
+
+        IDEX.type = R;
+        return;
     }
 
     for(int i = 0; i < 17; i++){ //I-type instruction
-        if(inst->opcode == IOPCode[i]) return I;
+        if(opcode == IOPCode[i]){
+            IDEX.type = I;
+            return;
+        }
     }
 
     for(int j = 0; j < 2; j++){ //J-type instruction
-        if(inst->opcode == JOPCode[j]) return J;
+        if(opcode == JOPCode[j]){
+            IDEX.type = J;
+            return;
+        }
     }
 
-    return -1; //invalid instruction op-code
+    return; //invalid instruction op-code
 }
 
 /***********************************************************************************************************************
 
  Function Name: instRDecode
 
- DESCRIPTION: Fills proper information for R-type
+ DESCRIPTION: Fills proper information for R-type into IDEX intermediate register
 
- INPUTS: uint32_t machineCode (instruction machine code), instruction *inst (instruction passed by ref)
+ INPUTS: uint32_t machineCode (instruction machine code)
 
- OUTPUTS: void (returns full instruction)
+ OUTPUTS: void (fills IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instRDecode(uint32_t machineCode, instruction *inst) {
+void instRDecode(uint32_t machineCode) {
 
-    inst->rd = uint8_t((0x1f) & (machineCode >> 11)); //rd register: bits 11-15
-    inst->rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
-    inst->rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
-    inst->shamt =  uint8_t((0x1f) & (machineCode >> 6)); //shamt value: bits 6-10
-    inst->funct =  uint8_t((0x3f) & (machineCode)); //function code: bits 0-5
+    IDEX.rd = uint8_t((0x1f) & (machineCode >> 11)); //rd register: bits 11-15
+    IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
+    IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+    IDEX.shamt =  uint8_t((0x1f) & (machineCode >> 6)); //shamt value: bits 6-10
+    IDEX.funct =  uint8_t((0x3f) & (machineCode)); //function code: bits 0-5
 
 }
 
@@ -75,18 +82,18 @@ void instRDecode(uint32_t machineCode, instruction *inst) {
 
  Function Name: instIDecode
 
- DESCRIPTION: Fills proper information for I-type
+ DESCRIPTION: Fills proper information for I-type into IDEX intermediate register
 
- INPUTS: uint32_t machineCode (instruction machine code), instruction *inst (instruction passed by ref)
+ INPUTS: uint32_t machineCode (instruction machine code)
 
- OUTPUTS: void (returns full instruction)
+ OUTPUTS: void (fills IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instIDecode(uint32_t machineCode, instruction *inst) {
+void instIDecode(uint32_t machineCode) {
 
-    inst->rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
-    inst->rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
-    inst->immediate =  uint16_t((0xffff) & (machineCode)); //immediate value: bits 0-15
+    IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
+    IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+    IDEX.immediate =  uint16_t((0xffff) & (machineCode)); //immediate value: bits 0-15
 
 }
 
@@ -94,16 +101,16 @@ void instIDecode(uint32_t machineCode, instruction *inst) {
 
  Function Name: instJDecode
 
- DESCRIPTION: Fills proper information for J-type
+ DESCRIPTION: Fills proper information for J-type into IDEX intermediate register
 
- INPUTS: uint32_t machineCode (instruction machine code), instruction *inst (instruction passed by ref)
+ INPUTS: uint32_t machineCode (instruction machine code)
 
- OUTPUTS: void (returns full instruction)
+ OUTPUTS: void (fills IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instJDecode(uint32_t machineCode, instruction *inst) {
+void instJDecode(uint32_t machineCode) {
 
-    inst->address =  uint32_t((0x3ffffff) & (machineCode)); //address value: bits 0-26
+    IDEX.address =  uint32_t((0x3ffffff) & (machineCode)); //address value: bits 0-26
 
 }
 
@@ -115,26 +122,27 @@ void instJDecode(uint32_t machineCode, instruction *inst) {
 
  INPUTS: uint32_t machineCode (instruction machine code), instruction *inst (instruction passed by ref from main)
 
- OUTPUTS: uint8_t type (R, I, J)
+ OUTPUTS: void (fills IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instDecode(uint32_t machineCode, instruction *inst) {
+void instDecode(uint32_t machineCode) {
 
-    inst->type = instType(machineCode, inst); //checks type (R, I, J)
+    instType(machineCode); //checks type (R, I, J)
+    int inst_type = IDEX.type;
 
-    switch(inst->type) { //fills instruction based on type (R, I, J)
+    switch(inst_type) { //fills instruction based on type (R, I, J)
         case R: { //R-type
-            instRDecode(machineCode, inst);
+            instRDecode(machineCode);
             return;
         }
 
         case I: { //I-type
-            instIDecode(machineCode, inst);
+            instIDecode(machineCode);
             return;
         }
 
         case J: { //J-type
-            instJDecode(machineCode, inst);
+            instJDecode(machineCode);
             return;
         }
 
