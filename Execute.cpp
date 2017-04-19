@@ -2,10 +2,10 @@
 // Created by Karros Huang on 4/18/17.
 //Take care of signed and unsigned
 
-#include "global_vars.h"
+#include "Execute.h"
 
 void AND(){
-    rd = rs & rt;
+    IDEX.rd = rs & rt;
     programCount++;
 }
 

@@ -5,6 +5,8 @@
 #ifndef ECEN4593_MIPS_EMULATOR_EXECUTE_H
 #define ECEN4593_MIPS_EMULATOR_EXECUTE_H
 
+#include "global_vars.h"
+
 void ADD();
 void ADDI();
 void ADDIU();
