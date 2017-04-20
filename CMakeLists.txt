@@ -4,6 +4,8 @@ project(ecen4593_mips_emulator)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
+        fetch.cpp
+        fetch.h
         decode.cpp
         decode.h
         Execute.cpp
