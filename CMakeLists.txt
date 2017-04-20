@@ -13,6 +13,8 @@ set(SOURCE_FILES
         global_vars.cpp
         global_vars.h
         intermediate_reg_structs.h
+        Load_Program.c
+        Load_Program.h
         main.cpp)
 
 add_executable(ecen4593_mips_emulator ${SOURCE_FILES})

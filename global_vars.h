@@ -14,7 +14,7 @@ extern uint32_t register_bank[32]; //32-register system
 extern uint32_t programCount; //program counter
 
 //Intermediate Registers
-
+ 
 extern _IFID IFID;
 extern _IFID shadow_IFID;
 
