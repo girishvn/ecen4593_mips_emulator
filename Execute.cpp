@@ -5,12 +5,12 @@
 #include "Execute.h"
 
 void AND(){
-    IDEX.rd = rs & rt;
+    MEMWB.rd = IDEX.rs & IDEX.rt;
     programCount++;
 }
 
 void ANDI(){
-    rt = rs & imm;
+    rt =rs & imm;
     programCount++;
 }
 

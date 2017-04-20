@@ -37,7 +37,16 @@ struct _IDEX {
 
 struct _EXMEM {
 
-    uint32_t offset;
+    //registers
+    uint8_t rd;
+    uint8_t rs;
+    uint8_t rt;
+
+    //I-type specific
+    uint16_t immediate;
+
+    //J-type specific
+    uint32_t address;
 
 };
 

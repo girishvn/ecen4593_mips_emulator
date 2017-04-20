@@ -8,7 +8,9 @@ set(SOURCE_FILES
         decode.h
         Execute.cpp
         Execute.h
-        main.cpp
-        README.md intermediate_reg_structs.h global_vars.cpp global_vars.h)
+        global_vars.cpp
+        global_vars.h
+        intermediate_reg_structs.h
+        main.cpp)
 
 add_executable(ecen4593_mips_emulator ${SOURCE_FILES})
