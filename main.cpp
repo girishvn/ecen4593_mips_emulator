@@ -1,11 +1,20 @@
 #include <iostream>
 
 #include "global_vars.h"
+#include "Load_Program.h"
 #include "decode.h"
 
 using namespace std;
 
 int main() {
+
+    //init all values for operation:
+    Initialize_Simulation_Memory(); //copy program image into memory array
+    pc = memory[5]; //set program counter value
+    reg[$sp] = memory[0];
+    reg[$fp] = memory[1];
+
+
 
     uint32_t mc = 0x00ff2244; //test machine code
 
