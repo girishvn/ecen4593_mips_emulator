@@ -8,3 +8,7 @@ void WriteToRegister(void){
     reg[EXMEM.rt] = Memory[EXMEM.address];
     pc++;
 }
+
+void WriteToRegisterImmediate(void){
+    reg[EXMEM.rt] = EXMEM.rv
+}

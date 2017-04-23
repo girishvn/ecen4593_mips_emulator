@@ -8,5 +8,6 @@
 #include "global_vars.h"
 
 void WriteToRegister(void);
+void WriteToRegisterImmediate(void);
 
 #endif //ECEN4593_MIPS_EMULATOR_WRITEBACK_H

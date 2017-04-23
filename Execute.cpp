@@ -143,7 +143,7 @@ void LB(){
 }
 
 void LUI(){
-    shadow_EXMEM.address = IDEX.immediate << 16; //loading upper half of immediate value into rv
+    shadow_EXMEM.rv = IDEX.immediate << 16; //loading upper half of immediate value into rv
     pc++;
 }
 
