@@ -9,6 +9,8 @@
 
 struct _IFID {
 
+    uint32_t mc; //machine code of instruction
+
 };
 
 struct _IDEX {

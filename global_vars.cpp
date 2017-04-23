@@ -9,7 +9,7 @@
 uint32_t reg[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //32-register system
 uint32_t pc = 0; //program counter
 
-//Intermediate Registers
+//Intermediate Registers (declarations)
 
 _IFID IFID;
 _IFID shadow_IFID;

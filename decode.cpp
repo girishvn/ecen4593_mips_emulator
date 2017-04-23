@@ -59,7 +59,7 @@ void instType(uint32_t machineCode) {
 
 /***********************************************************************************************************************
 
- Function Name: instRDecode
+ FUNCTION NAME: instRDecode
 
  DESCRIPTION: Fills proper information for R-type into IDEX intermediate register
 
@@ -80,7 +80,7 @@ void instRDecode(uint32_t machineCode) {
 
 /***********************************************************************************************************************
 
- Function Name: instIDecode
+ FUNCTION NAME: instIDecode
 
  DESCRIPTION: Fills proper information for I-type into IDEX intermediate register
 
@@ -99,7 +99,7 @@ void instIDecode(uint32_t machineCode) {
 
 /***********************************************************************************************************************
 
- Function Name: instJDecode
+ FUNCTION NAME: instJDecode
 
  DESCRIPTION: Fills proper information for J-type into IDEX intermediate register
 
@@ -116,7 +116,7 @@ void instJDecode(uint32_t machineCode) {
 
 /***********************************************************************************************************************
 
- Function Name: instDecode
+ FUNCTION NAME: instDecode
 
  DESCRIPTION: Fills proper used registers
 
