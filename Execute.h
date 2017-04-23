@@ -7,46 +7,46 @@
 
 #include "global_vars.h"
 
-void ADD();
-void ADDI();
-void ADDIU();
-void ADDU();
-void SUB();
-void SUBU();
+void ADD(void);
+void ADDI(void);
+void ADDIU(void);
+void ADDU(void);
+void SUB(void);
+void SUBU(void);
 
-void AND();
-void ANDI();
-void OR();
-void ORI();
-void XOR();
-void XORI();
+void AND(void);
+void ANDI(void);
+void OR(void);
+void ORI(void);
+void XOR(void);
+void XORI(void);
 
-void BEQ();
-void BGEZ();
-void BGEZAL();
-void BGTZ();
-void BLEZ();
-void BLTZ();
-void BLTZAL();
-void BNE();
+void BEQ(void);
+void BGEZ(void);
+void BGEZAL(void);
+void BGTZ(void);
+void BLEZ(void);
+void BLTZ(void);
+void BLTZAL(void);
+void BNE(void);
 
-void LB();
-void LUI();
-void LW();
-void SB();
-void SW();
+void LB(void);
+void LUI(void);
+void LW(void);
+void SB(void);
+void SW(void);
 
-void NOOP();
+void NOOP(void);
 
-void SLL();
-void SLLV();
-void SLT();
-void SLTI();
-void SLTIU();
-void SLTU();
-void SRA();
-void SRL();
-void SRLV();
+void SLL(void);
+void SLLV(void);
+void SLT(void);
+void SLTI(void);
+void SLTIU(void);
+void SLTU(void);
+void SRA(void);
+void SRL(void);
+void SRLV(void);
 
 
 

@@ -15,6 +15,6 @@ set(SOURCE_FILES
         intermediate_reg_structs.h
         Load_Program.c
         Load_Program.h
-        main.cpp)
+        main.cpp Memory.h Memory.cpp WriteBack.h WriteBack.cpp)
 
 add_executable(ecen4593_mips_emulator ${SOURCE_FILES})
