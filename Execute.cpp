@@ -4,179 +4,218 @@
 
 #include "Execute.h"
 
+void ADD(){
+
+}
+
+void ADDI(){
+
+}
+
+void ADDIU(){
+
+}
+
+void ADDU(){
+
+}
+
+void SUB(){
+
+}
+
+void SUBU(){
+
+}
+
 void AND(){
-    MEMWB.rd = IDEX.rs & IDEX.rt;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rs] & reg[IDEX.rt];
+    pc++;
 }
 
 void ANDI(){
-    rt =rs & imm;
-    programCount++;
+    reg[shadow_EXMEM.rt] = reg[IDEX.rs] & reg[IDEX.immediate];
+    pc++;
 }
 
 void OR(){
-    rd = rs | rt;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rs] | reg[IDEX.rt];
+    pc++;
 }
 
 void ORI(){
-    rt = rs | imm;
-    programCount++;
+    reg[shadow_EXMEM.rt] = reg[IDEX.rs] | reg[IDEX.immediate];
+    pc++;
 }
 
 void XOR(){
-    rd = rs ^ rt;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rs] ^ reg[IDEX.rt];
+    pc++;
 }
 
 void XORI(){
-    rt = rs ^ imm;
-    programCount++;
+    reg[shadow_EXMEM.rt] = reg[IDEX.rs] ^ reg[IDEX.immediate];
+    pc++;
 }
 
 void BEQ(){
-    if(rs = rt){
-        programCount += imm;
+    if(reg[IDEX.rs] == reg[IDEX.rt]){
+        pc += reg[IDEX.immediate];
     }
     else{
-        programCount++;
+        pc++;
     }
 }
 
 void BGEZ(){
-    if(rs >= 0){
-        programCount += imm;
+    if(reg[IDEX.rs] >= 0){
+        pc += reg[IDEX.immediate];
     }
     else{
-        programCount++;
+        pc++;
     }
 }
 
 void BGEZAL(){
-    if(rs >= 0){
-        ra = programCount;
-        programCount += imm;
+    if(reg[IDEX.rs] >= 0){
+        reg[IDEX.ra] = pc;
+        pc += IDEX.immediate;
     }
     else{
-        programCount++;
+        pc++;
     }
 }
 
 void BGTZ(){
-    if(rs > 0){
-        programCount += imm;
+    if(reg[IDEX.rs] > 0){
+        pc += IDEX.immediate;
     }
     else{
-        programCount++;
+        pc++;
     }
 }
 
 void BLEZ(){
-    if(rs <= 0){
-        programCount += imm;
+    if(reg[IDEX.rs] <= 0){
+        pc += IDEX.immediate;
     }
     else{
-        programCount++;
+        pc++;
     }
 }
 
 void BLTZ(){
-    if(rs < 0){
-        programCount += imm;
+    if(reg[IDEX.rs] < 0){
+        pc += IDEX.immediate;
     }
     else{
-        programCount++;
+        pc++;
     }
 }
 
 void BLTZAL(){
-    if(rs < 0){
-        programCount += imm;
+    if(reg[IDEX.rs] < 0){
+        pc += IDEX.immediate;
     }
     else{
-        programCount++;
+        pc++;
     }
 }
+
 void BNE(){
-    if(rs != rt){
-        programCount += imm;
+    if(reg[IDEX.rs] != reg[IDEX.rt]){
+        pc += IDEX.immediate;
     }
     else{
-        programCount++;
+        pc++;
     }
 }
 
 void LB(){
+    reg[shadow_EXMEM.rt] = Memory[reg[IDEX.rs] + IDEX.immediate] >> 28;
+    pc++;
+}
+
+void LUI();
+
+void LW(){
+    reg[shadow_EXMEM.rt] = Memory[reg[IDEX.rs] + IDEX.immediate];
+    pc++;
 
 }
-void LUI();
-void LW();
-void SB();
-void SW();
+
+void SB(){
+    Memory[reg[IDEX.rs] + IDEX.immediate] =  (0xFF & reg[shadow_EXMEM.rt]) >> 28;
+    pc++;
+}
+
+void SW(){
+    Memory[reg[IDEX.rs] + IDEX.immediate] =  (0xFF & reg[shadow_EXMEM.rt]);
+    pc++;
+}
 
 void NOOP(){
-    programCount++;
+    pc++;
 }
 
 void SLL(){
-    rd = rt<<shamt;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rt]<<IDEX.shamt;
+    pc++;
 }
 
 void SLLV(){
-    rd = rt<<rs;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rt]<<reg[IDEX.rs];
+    pc++;
 }
 
 void SLT(){
-    if(rs < rt){
-        rd = 1;
+    if(reg[IDEX.rs] < reg[IDEX.rt]){
+        reg[shadow_EXMEM.rd] = 1;
     }
-    programCount++;
+    pc++;
 }
 
 void SLTI(){
-
-    if(rs < imm){
-        rt = 1;
+    if(reg[IDEX.rs] < IDEX.immediate){
+        reg[shadow_EXMEM.rt] = 1;
     }
     else{
-        rt = 0;
+        reg[shadow_EXMEM.rt] = 0;
     }
-    programCount++;
+    pc++;
 }
 
 void SLTIU(){
-    if(rs < imm){
-        rt = 1;
+    if(reg[IDEX.rs] < IDEX.immediate){
+        reg[shadow_EXMEM.rt] = 1;
     }
     else{
-        rt = 0;
+        reg[shadow_EXMEM.rt] = 0;
     }
-    programCount++;
+    pc++;
 }
 
 void SLTU(){
-    if(rs < rt){
-        rd = 1;
+    if(reg[IDEX.rs] < reg[IDEX.rt]){
+        reg[shadow_EXMEM.rd] = 1;
     }
     else{
-        rt = 0;
+        reg[shadow_EXMEM.rt] = 0;
     }
-    programCount++;
+    pc++;
 }
 
 void SRA(){
-    rd = rt>>shamt;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rt]>>IDEX.shamt;
+    pc++;
 }
 
 void SRL(){
-    rd = rt>>shamt;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rt]>>IDEX.shamt;
+    pc++;
 }
 
 void SRLV(){
-    rd = rt>>rs;
-    programCount++;
+    reg[shadow_EXMEM.rd] = reg[IDEX.rt]>>reg[IDEX.rs];
+    pc++;
 }

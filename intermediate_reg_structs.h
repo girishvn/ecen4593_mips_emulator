@@ -24,6 +24,7 @@ struct _IDEX {
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
+    uint8_t ra;
 
     //R-type specific
     uint8_t shamt; //shamt
@@ -43,6 +44,7 @@ struct _EXMEM {
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
+    uint8_t ra;
 
     //I-type specific
     uint16_t immediate;
@@ -53,6 +55,15 @@ struct _EXMEM {
 };
 
 struct _MEMWB {
+
+    //registers
+    uint8_t rd;
+    uint8_t rs;
+    uint8_t rt;
+    uint8_t ra;
+
+    //I-type specific
+    uint16_t immediate;
 
 };
 

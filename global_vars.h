@@ -60,6 +60,8 @@ enum reg_bank_names{
 
 ***********************************************************************************************************************/
 
+uint32_t Memory[10000];
+
 extern uint32_t pc; //program counter
 
 //Intermediate Registers
@@ -70,7 +72,7 @@ Intermediate registers global structs
 
 ***********************************************************************************************************************/
 
- 
+
 extern _IFID IFID;
 extern _IFID shadow_IFID;
 
