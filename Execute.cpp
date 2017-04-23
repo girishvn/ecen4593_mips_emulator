@@ -5,56 +5,62 @@
 #include "Execute.h"
 
 void ADD(){
-
+    shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) + int32_t(reg[IDEX.rt])));
+    pc++;
 }
 
 void ADDI(){
-
+    shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) + int32_t(IDEX.immediate)));
+    pc++;
 }
 
 void ADDIU(){
-
+    shadow_EXMEM.rv = reg[IDEX.rs] + IDEX.immediate;
+    pc++;
 }
 
 void ADDU(){
-
+    shadow_EXMEM.rv = reg[IDEX.rs] + reg[IDEX.rt];
+    pc++;
 }
 
 void SUB(){
-
+    shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) - int32_t(reg[IDEX.rt])));
+    pc++;
 }
 
 void SUBU(){
-
+    shadow_EXMEM.rv = reg[IDEX.rs] - reg[IDEX.rt];
+    pc++;
 }
 
 void AND(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rs] & reg[IDEX.rt];
+    shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.rt];
     pc++;
 }
 
 void ANDI(){
-    reg[shadow_EXMEM.rt] = reg[IDEX.rs] & reg[IDEX.immediate];
+    shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.immediate];
     pc++;
 }
 
 void OR(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rs] | reg[IDEX.rt];
+    shadow_EXMEM.rv = reg[IDEX.rs] | reg[IDEX.rt];
     pc++;
 }
 
 void ORI(){
-    reg[shadow_EXMEM.rt] = reg[IDEX.rs] | reg[IDEX.immediate];
+    shadow_EXMEM.rv = reg[IDEX.rs] | reg[IDEX.immediate];
     pc++;
 }
 
 void XOR(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rs] ^ reg[IDEX.rt];
+    shadow_EXMEM.rv = reg[IDEX.rs] ^ reg[IDEX.rt];
     pc++;
 }
 
 void XORI(){
-    reg[shadow_EXMEM.rt] = reg[IDEX.rs] ^ reg[IDEX.immediate];
+    shadow_EXMEM.rv = reg[IDEX.rs] ^ reg[IDEX.immediate];
     pc++;
 }
 
@@ -132,90 +138,90 @@ void BNE(){
 }
 
 void LB(){
-    reg[shadow_EXMEM.rt] = Memory[reg[IDEX.rs] + IDEX.immediate] >> 28;
+    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate; //loading memory address into rv
     pc++;
 }
 
-void LUI();
+void LUI(){
+    shadow_EXMEM.address = IDEX.immediate << 16; //loading upper half of immediate value into rv
+    pc++;
+}
 
 void LW(){
-    reg[shadow_EXMEM.rt] = Memory[reg[IDEX.rs] + IDEX.immediate];
+    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate; //loading memory address into rv
     pc++;
-
 }
 
 void SB(){
-    Memory[reg[IDEX.rs] + IDEX.immediate] =  (0xFF & reg[shadow_EXMEM.rt]) >> 28;
+    shadow_EXMEM.rv =  (0xFF & shadow_EXMEM.rv) >> 24; //
+    shadow_EXMEM.address = IDEX.rs + IDEX.immediate;
     pc++;
 }
 
 void SW(){
-    Memory[reg[IDEX.rs] + IDEX.immediate] =  (0xFF & reg[shadow_EXMEM.rt]);
-    pc++;
-}
-
-void NOOP(){
+    shadow_EXMEM.rv =  (0xFF & shadow_EXMEM.rv);
+    shadow_EXMEM.address = IDEX.rs + IDEX.immediate;
     pc++;
 }
 
 void SLL(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rt]<<IDEX.shamt;
+    shadow_EXMEM.rv = reg[IDEX.rt]<<IDEX.shamt;
     pc++;
 }
 
 void SLLV(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rt]<<reg[IDEX.rs];
+    shadow_EXMEM.rv = reg[IDEX.rt]<<reg[IDEX.rs];
     pc++;
 }
 
 void SLT(){
     if(reg[IDEX.rs] < reg[IDEX.rt]){
-        reg[shadow_EXMEM.rd] = 1;
+        shadow_EXMEM.rv = 1;
     }
     pc++;
 }
 
 void SLTI(){
     if(reg[IDEX.rs] < IDEX.immediate){
-        reg[shadow_EXMEM.rt] = 1;
+        shadow_EXMEM.rv = 1;
     }
     else{
-        reg[shadow_EXMEM.rt] = 0;
+        shadow_EXMEM.rv = 0;
     }
     pc++;
 }
 
 void SLTIU(){
     if(reg[IDEX.rs] < IDEX.immediate){
-        reg[shadow_EXMEM.rt] = 1;
+        shadow_EXMEM.rv = 1;
     }
     else{
-        reg[shadow_EXMEM.rt] = 0;
+        shadow_EXMEM.rv = 0;
     }
     pc++;
 }
 
 void SLTU(){
     if(reg[IDEX.rs] < reg[IDEX.rt]){
-        reg[shadow_EXMEM.rd] = 1;
+        shadow_EXMEM.rv = 1;
     }
     else{
-        reg[shadow_EXMEM.rt] = 0;
+        shadow_EXMEM.rv = 0;
     }
     pc++;
 }
 
 void SRA(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rt]>>IDEX.shamt;
+    shadow_EXMEM.rv = reg[IDEX.rt]>>IDEX.shamt;
     pc++;
 }
 
 void SRL(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rt]>>IDEX.shamt;
+    shadow_EXMEM.rv = reg[IDEX.rt]>>IDEX.shamt;
     pc++;
 }
 
 void SRLV(){
-    reg[shadow_EXMEM.rd] = reg[IDEX.rt]>>reg[IDEX.rs];
+    shadow_EXMEM.rv = reg[IDEX.rt]>>reg[IDEX.rs];
     pc++;
 }

@@ -52,6 +52,8 @@ struct _EXMEM {
     //J-type specific
     uint32_t address;
 
+    uint32_t rv;
+
 };
 
 struct _MEMWB {
