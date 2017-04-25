@@ -23,7 +23,7 @@ using namespace std;
 
  INPUTS: uint32_t inst (instruction machine code)
 
- OUTPUTS: void (fills IDEX Reg with proper instruction information)
+ OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
 void instType(uint32_t machineCode) {
@@ -31,25 +31,25 @@ void instType(uint32_t machineCode) {
     //Extracting OP Code
     uint8_t opcode = uint8_t((0x3f) & (machineCode >> 26)); //opcode: bits 26-32
 
-    IDEX.opcode = opcode;
+    shadow_IDEX.opcode = opcode;
 
     //Checking Type (R, I , J) from OP Code
     if (opcode == ROPCode) { //R-type instruction
 
-        IDEX.type = R;
+        shadow_IDEX.type = R;
         return;
     }
 
     for(int i = 0; i < 17; i++){ //I-type instruction
         if(opcode == IOPCode[i]){
-            IDEX.type = I;
+            shadow_IDEX.type = I;
             return;
         }
     }
 
     for(int j = 0; j < 2; j++){ //J-type instruction
         if(opcode == JOPCode[j]){
-            IDEX.type = J;
+            shadow_IDEX.type = J;
             return;
         }
     }
@@ -61,20 +61,20 @@ void instType(uint32_t machineCode) {
 
  FUNCTION NAME: instRDecode
 
- DESCRIPTION: Fills proper information for R-type into IDEX intermediate register
+ DESCRIPTION: Fills proper information for R-type into shadow_IDEX intermediate register
 
  INPUTS: uint32_t machineCode (instruction machine code)
 
- OUTPUTS: void (fills IDEX Reg with proper instruction information)
+ OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
 void instRDecode(uint32_t machineCode) {
 
-    IDEX.rd = uint8_t((0x1f) & (machineCode >> 11)); //rd register: bits 11-15
-    IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
-    IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
-    IDEX.shamt =  uint8_t((0x1f) & (machineCode >> 6)); //shamt value: bits 6-10
-    IDEX.funct =  uint8_t((0x3f) & (machineCode)); //function code: bits 0-5
+    shadow_IDEX.rd = uint8_t((0x1f) & (machineCode >> 11)); //rd register: bits 11-15
+    shadow_IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
+    shadow_IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+    shadow_IDEX.shamt =  uint8_t((0x1f) & (machineCode >> 6)); //shamt value: bits 6-10
+    shadow_IDEX.funct =  uint8_t((0x3f) & (machineCode)); //function code: bits 0-5
 
 }
 
@@ -82,18 +82,18 @@ void instRDecode(uint32_t machineCode) {
 
  FUNCTION NAME: instIDecode
 
- DESCRIPTION: Fills proper information for I-type into IDEX intermediate register
+ DESCRIPTION: Fills proper information for I-type into shadow_IDEX intermediate register
 
  INPUTS: uint32_t machineCode (instruction machine code)
 
- OUTPUTS: void (fills IDEX Reg with proper instruction information)
+ OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
 void instIDecode(uint32_t machineCode) {
 
-    IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
-    IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
-    IDEX.immediate =  uint16_t((0xffff) & (machineCode)); //immediate value: bits 0-15
+    shadow_IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
+    shadow_IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+    shadow_IDEX.immediate =  uint16_t((0xffff) & (machineCode)); //immediate value: bits 0-15
 
 }
 
@@ -101,16 +101,16 @@ void instIDecode(uint32_t machineCode) {
 
  FUNCTION NAME: instJDecode
 
- DESCRIPTION: Fills proper information for J-type into IDEX intermediate register
+ DESCRIPTION: Fills proper information for J-type into shadow_IDEX intermediate register
 
  INPUTS: uint32_t machineCode (instruction machine code)
 
- OUTPUTS: void (fills IDEX Reg with proper instruction information)
+ OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
 void instJDecode(uint32_t machineCode) {
 
-    IDEX.address =  uint32_t((0x3ffffff) & (machineCode)); //address value: bits 0-26
+    shadow_IDEX.address =  uint32_t((0x3ffffff) & (machineCode)); //address value: bits 0-26
 
 }
 
@@ -122,7 +122,7 @@ void instJDecode(uint32_t machineCode) {
 
  INPUTS: uint32_t machineCode (instruction machine code), instruction *inst (instruction passed by ref from main)
 
- OUTPUTS: void (fills IDEX Reg with proper instruction information)
+ OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
 void instDecode(void) {
@@ -130,7 +130,7 @@ void instDecode(void) {
     uint32_t machineCode = IFID.mc;
 
     instType(machineCode); //checks type (R, I, J)
-    int inst_type = IDEX.type;
+    int inst_type = shadow_IDEX.type;
 
     switch(inst_type) { //fills instruction based on type (R, I, J)
         case R: { //R-type
@@ -153,5 +153,4 @@ void instDecode(void) {
             return;
         }
     }
-
 }

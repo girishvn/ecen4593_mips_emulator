@@ -4,9 +4,9 @@
 #include "Load_Insts.h"
 #include "Fetch.h"
 #include "Decode.h"
-//#include "Execute.h"
-//#include "Memory.h"
-//#include "WriteBack.h"
+#include "Execute.h"
+#include "Memory.h"
+#include "WriteBack.h"
 
 using namespace std;
 
@@ -56,8 +56,10 @@ int main() {
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         instFetch();
-        instWriteBack();
         instDecode();
+        instExecute();
+        instMemory();
+        instWriteBack();
 
         escapeShadowRealm(); //transfer data from shadow registers to real registers
     }

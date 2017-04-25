@@ -20,6 +20,7 @@ void OR(void);
 void ORI(void);
 void XOR(void);
 void XORI(void);
+void NOR(void);
 
 void BEQ(void);
 void BGEZ(void);
@@ -29,12 +30,17 @@ void BLEZ(void);
 void BLTZ(void);
 void BLTZAL(void);
 void BNE(void);
+void JUMP(void);
+void JAL(void);
+void JR(void);
 
-void LB(void);
+void LBU(void);
 void LUI(void);
 void LW(void);
+void LHU(void);
 void SB(void);
 void SW(void);
+void SH(void);
 
 void NOOP(void);
 
@@ -48,7 +54,7 @@ void SRA(void);
 void SRL(void);
 void SRLV(void);
 
-
+void instExecute(void);
 
 
 #endif //ECEN4593_MIPS_EMULATOR_EXECUTE_H

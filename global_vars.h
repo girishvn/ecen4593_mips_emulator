@@ -86,7 +86,7 @@ struct _IDEX {
     //opcode
     uint8_t opcode;
 
-    //registers
+    //registers number. NOT VALUE INSIDE
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
@@ -106,11 +106,20 @@ struct _IDEX {
 
 struct _EXMEM {
 
-    //registers
+    int type; //R, I, J
+
+    //opcode
+    uint8_t opcode;
+
+    //registers number. NOT VALUE INSIDE
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
     uint8_t ra;
+
+    //R-type specific
+    uint8_t shamt; //shamt
+    uint8_t funct; //function
 
     //I-type specific
     uint16_t immediate;
@@ -124,14 +133,28 @@ struct _EXMEM {
 
 struct _MEMWB {
 
-    //registers
+    int type; //R, I, J
+
+    //opcode
+    uint8_t opcode;
+
+    //registers number. NOT VALUE INSIDE
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
     uint8_t ra;
 
+    //R-type specific
+    uint8_t shamt; //shamt
+    uint8_t funct; //function
+
     //I-type specific
     uint16_t immediate;
+
+    //J-type specific
+    uint32_t address;
+
+    uint32_t rv;
 
 };
 

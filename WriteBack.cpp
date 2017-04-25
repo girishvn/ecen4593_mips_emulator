@@ -3,12 +3,13 @@
 //
 
 #include "WriteBack.h"
+#include "Decode.h"
 
-void WriteToRegister(void){
-    reg[EXMEM.rt] = memory[EXMEM.address];
-    pc++;
-}
-
-void WriteToRegisterImmediate(void){
-    reg[EXMEM.rt] = EXMEM.rv;
+void instWriteBack(){
+    if(MEMWB.type == I){
+        reg[MEMWB.rt] = MEMWB.rv;
+    }
+    else if(MEMWB.type == R){
+        reg[MEMWB.rd] = MEMWB.rv;
+    }
 }

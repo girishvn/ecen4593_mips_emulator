@@ -8,5 +8,7 @@
 #include "global_vars.h"
 
 void WriteIntoMemory(void);
+void LoadFromMemory(void);
+void instMemory(void);
 
 #endif //ECEN4593_MIPS_EMULATOR_MEMORY_H
