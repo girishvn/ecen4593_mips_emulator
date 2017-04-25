@@ -5,6 +5,6 @@
 #include "Memory.h"
 
 void WriteIntoMemory(){
-    Memory[EXMEM.address] = EXMEM.rv;
+    memory[EXMEM.address] = EXMEM.rv;
     pc++;
 }

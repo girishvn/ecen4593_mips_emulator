@@ -1,8 +1,12 @@
 #include <iostream>
 
 #include "global_vars.h"
-#include "Load_Program.h"
-#include "decode.h"
+#include "Load_Insts.h"
+#include "Fetch.h"
+#include "Decode.h"
+//#include "Execute.h"
+//#include "Memory.h"
+//#include "WriteBack.h"
 
 using namespace std;
 
@@ -43,12 +47,17 @@ int main() {
 
     //init all values for operation:
     Initialize_Simulation_Memory(); //copy program image into memory array
+
     pc = memory[5]; //set program counter value
     reg[$sp] = memory[0]; //init stack pointer
     reg[$fp] = memory[1]; //init frame pointer
 
 
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
+
+        instFetch();
+        instWriteBack();
+        instDecode();
 
         escapeShadowRealm(); //transfer data from shadow registers to real registers
     }
@@ -58,24 +67,24 @@ int main() {
 TEST CODE
 
 ***********************************************************************************************************************/
-
+/*
     uint32_t mc = 0x00ff2244; //test machine code
+    IFID.mc = mc;
 
-    instDecode(mc); //calling ID stage of pipeline
+    instDecode(); //calling ID stage of pipeline
 
     std::cout <<"type: "<<IDEX.type<< std::endl;
     std::cout <<"rd: "<<int(IDEX.rd)<< std::endl;
     std::cout <<"rs: "<<int(IDEX.rs)<< std::endl;
     std::cout <<"rt: "<<int(IDEX.rt)<< std::endl;
 
-    /*
+
     uint16_t tst = 0xffaa;
     int16_t signedtst = int16_t(tst);
 
     std::cout <<"unsigned 16 bit val: "<<int(IDEX.rs)<< std::endl;
     std::cout <<"2signed 16 bit val: "<<int(IDEX.rt)<< std::endl;
-    */
-
+*/
     return 1;
 
 }

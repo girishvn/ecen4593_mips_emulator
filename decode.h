@@ -34,7 +34,7 @@ void instType(uint32_t machineCode);
 void instRDecode(uint32_t machineCode);
 void instIDecode(uint32_t machineCode);
 void instJDecode(uint32_t machineCode);
-void instDecode(uint32_t machineCode);
+void instDecode(void);
 
 
 #endif //ECEN4593_MIPS_EMULATOR_DECODE_H

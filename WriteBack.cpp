@@ -5,10 +5,10 @@
 #include "WriteBack.h"
 
 void WriteToRegister(void){
-    reg[EXMEM.rt] = Memory[EXMEM.address];
+    reg[EXMEM.rt] = memory[EXMEM.address];
     pc++;
 }
 
 void WriteToRegisterImmediate(void){
-    reg[EXMEM.rt] = EXMEM.rv
+    reg[EXMEM.rt] = EXMEM.rv;
 }

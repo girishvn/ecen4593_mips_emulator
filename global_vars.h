@@ -6,7 +6,8 @@
 #define ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H
 
 #include <cstdint>
-#include "intermediate_reg_structs.h"
+//#include "intermediate_reg_structs.h"
+
 
 //Global Variables:
 
@@ -60,7 +61,7 @@ enum reg_bank_names{
 
 ***********************************************************************************************************************/
 
-uint32_t Memory[10000];
+extern uint32_t memory[1200];
 
 extern uint32_t pc; //program counter
 
@@ -72,6 +73,69 @@ Intermediate registers global structs
 
 ***********************************************************************************************************************/
 
+struct _IFID {
+
+    uint32_t mc; //machine code of instruction
+
+};
+
+struct _IDEX {
+
+    int type; //R, I, J
+
+    //opcode
+    uint8_t opcode;
+
+    //registers
+    uint8_t rd;
+    uint8_t rs;
+    uint8_t rt;
+    uint8_t ra;
+
+    //R-type specific
+    uint8_t shamt; //shamt
+    uint8_t funct; //function
+
+    //I-type specific
+    uint16_t immediate;
+
+    //J-type specific
+    uint32_t address;
+
+};
+
+struct _EXMEM {
+
+    //registers
+    uint8_t rd;
+    uint8_t rs;
+    uint8_t rt;
+    uint8_t ra;
+
+    //I-type specific
+    uint16_t immediate;
+
+    //J-type specific
+    uint32_t address;
+
+    uint32_t rv;
+
+};
+
+struct _MEMWB {
+
+    //registers
+    uint8_t rd;
+    uint8_t rs;
+    uint8_t rt;
+    uint8_t ra;
+
+    //I-type specific
+    uint16_t immediate;
+
+};
+
+//Extern Globals
 
 extern _IFID IFID;
 extern _IFID shadow_IFID;

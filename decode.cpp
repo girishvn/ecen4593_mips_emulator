@@ -10,7 +10,7 @@ CLASS NAME: _decode
 
 ***********************************************************************************************************************/
 
-#include "decode.h"
+#include "Decode.h"
 
 
 using namespace std;
@@ -125,7 +125,9 @@ void instJDecode(uint32_t machineCode) {
  OUTPUTS: void (fills IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instDecode(uint32_t machineCode) {
+void instDecode(void) {
+
+    uint32_t machineCode = IFID.mc;
 
     instType(machineCode); //checks type (R, I, J)
     int inst_type = IDEX.type;
