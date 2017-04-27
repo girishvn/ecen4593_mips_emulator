@@ -57,10 +57,10 @@ int main() {
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         instFetch();
+        instWriteBack();
         instDecode();
         instExecute();
         instMemory();
-        instWriteBack();
 
         escapeShadowRealm(); //transfer data from shadow registers to real registers
     }

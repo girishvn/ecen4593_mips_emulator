@@ -11,14 +11,14 @@ uint32_t pc = 0; //program counter
 
 //Intermediate Registers (declarations)
 
-_IFID IFID;
-_IFID shadow_IFID;
+_IFID IFID; //intermediate fetch/decode register
+_IFID shadow_IFID; //intermediate shadow fetch/decode register
 
-_IDEX IDEX;
-_IDEX shadow_IDEX;
+_IDEX IDEX; //intermediate decode/execute register
+_IDEX shadow_IDEX; //intermediate shadow decode/execute register
 
-_EXMEM EXMEM;
-_EXMEM shadow_EXMEM;
+_EXMEM EXMEM; //intermediate execute/memory register
+_EXMEM shadow_EXMEM; //intermediate shadow execute/memory register
 
-_MEMWB MEMWB;
-_MEMWB shadow_MEMWB;
+_MEMWB MEMWB; //intermediate memory/write back register
+_MEMWB shadow_MEMWB; //intermediate shadow memory/write back register

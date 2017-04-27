@@ -7,10 +7,6 @@
 
 #include "global_vars.h"
 
-#define program_starting_address	27
-
-
-
 /***********************************************************************************************************************
 
  inst_memory_size: size of instruction memory

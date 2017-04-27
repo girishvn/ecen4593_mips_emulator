@@ -5,14 +5,15 @@
 #include "Execute.h"
 #include "Decode.h"
 
-void ADD(){
+void ADD(){ //R
     shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) + int32_t(reg[IDEX.rt])));
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+
     pc++;
 }
 
-void ADDI(){
+void ADDI(){ //I
     shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) + int32_t(IDEX.immediate)));
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -20,7 +21,7 @@ void ADDI(){
     pc++;
 }
 
-void ADDIU(){
+void ADDIU(){ //I
     shadow_EXMEM.rv = reg[IDEX.rs] + IDEX.immediate;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -28,8 +29,24 @@ void ADDIU(){
     pc++;
 }
 
-void ADDU(){
+void ADDU(){ //R
     shadow_EXMEM.rv = reg[IDEX.rs] + reg[IDEX.rt];
+    shadow_EXMEM.rd = IDEX.rd;
+    shadow_EXMEM.type = IDEX.type;
+
+    pc++;
+}
+
+void AND(){ //R
+    shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.rt];
+    shadow_EXMEM.rd = IDEX.rd;
+    shadow_EXMEM.type = IDEX.type;
+
+    pc++;
+}
+
+void ANDI(){ //I
+    shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.immediate];
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
 
@@ -46,22 +63,6 @@ void SUB(){
 
 void SUBU(){
     shadow_EXMEM.rv = reg[IDEX.rs] - reg[IDEX.rt];
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
-void AND(){
-    shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.rt];
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
-void ANDI(){
-    shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.immediate];
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
 
@@ -345,69 +346,84 @@ void SRLV(){
     pc++;
 }
 
+/***********************************************************************************************************************
+
+ FUNCTION NAME: instExecute
+
+ DESCRIPTION: Executes instruction
+
+ INPUTS: void (fills from IDEX register)
+
+ OUTPUTS: void (fills shadow_EXMEM Reg with proper instruction information)
+
+***********************************************************************************************************************/
+
 void instExecute() {
+    //I OR J TYPE
     if(IDEX.type == I || IDEX.type == J){
-        if(IDEX.funct == 0x08){
+        if(IDEX.opcode == 0x08){
             ADDI();
         }
-        else if(IDEX.funct == 0x09){
+        else if(IDEX.opcode == 0x09){
             ADDIU();
         }
-        else if(IDEX.funct == 0x0C){
+        else if(IDEX.opcode == 0x0C){
             ANDI();
         }
-        else if(IDEX.funct == 0x04){
+        else if(IDEX.opcode == 0x04){
             BEQ();
         }
-        else if(IDEX.funct == 0x05){
+        else if(IDEX.opcode == 0x05){
             BNE();
         }
-        else if(IDEX.funct == 0x02){
+        else if(IDEX.opcode == 0x02){
             JUMP();
         }
-        else if(IDEX.funct == 0x03){
+        else if(IDEX.opcode == 0x03){
             JAL();
         }
-        else if(IDEX.funct == 0x24){
+        else if(IDEX.opcode == 0x24){
             LBU();
         }
-        else if(IDEX.funct == 0x25){
+        else if(IDEX.opcode == 0x25){
             LHU();
         }
-        else if(IDEX.funct == 0x30){
+        else if(IDEX.opcode == 0x30){
             LW();
         }
-        else if(IDEX.funct == 0x0F){
+        else if(IDEX.opcode == 0x0F){
             LUI();
         }
-        else if(IDEX.funct == 0x23){
+        else if(IDEX.opcode == 0x23){
             LW();
         }
-        else if(IDEX.funct == 0x0D){
+        else if(IDEX.opcode == 0x0D){
             ORI();
         }
-        else if(IDEX.funct == 0x0A){
+        else if(IDEX.opcode == 0x0A){
             SLTI();
         }
-        else if(IDEX.funct == 0x0B){
+        else if(IDEX.opcode == 0x0B){
             SLTIU();
         }
-        else if(IDEX.funct == 0x28){
+        else if(IDEX.opcode == 0x28){
             SB();
         }
-        else if(IDEX.funct == 0x38){
+        else if(IDEX.opcode == 0x38){
             SW();
         }
-        else if(IDEX.funct == 0x29){
+        else if(IDEX.opcode == 0x29){
             SH();
         }
-        else if(IDEX.funct == 0x2B){
+        else if(IDEX.opcode == 0x2B){
             SW();
         }
         else{
             std::cout<<"Invalid Function: "<<IDEX.funct<<std::endl;
         }
     }
+
+    //R TYPE
     else if(IDEX.type == R){
         if(IDEX.funct == 0x20){
             ADD();
@@ -446,6 +462,8 @@ void instExecute() {
             std::cout<<"Invalid Function: "<<IDEX.funct<<std::endl;
         }
     }
+
+    //DEFAULT CASE (MEETS NO TYPES)
     else{
         std::cout<<"invalid opcode or input / undocumented instruction"<<std::endl;
 
