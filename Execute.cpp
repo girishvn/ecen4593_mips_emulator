@@ -244,28 +244,37 @@ void LHU(){
 }
 
 void SB(){
-    shadow_EXMEM.rv =  (0xFF & reg[shadow_EXMEM.rt]) >> 24; //
-    shadow_EXMEM.address = IDEX.rs + IDEX.immediate;
+    shadow_EXMEM.rv =  (0xFF & reg[IDEX.rt]) >> 24; //
+    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate;
+    shadow_EXMEM.rs = IDEX.rs;
+    shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.immediate = IDEX.immediate;
 
     pc++;
 }
 
 void SW(){
-    shadow_EXMEM.rv =  (0xFF & reg[shadow_EXMEM.rt]);
-    shadow_EXMEM.address = IDEX.rs + IDEX.immediate;
+    shadow_EXMEM.rv =  (0xFF & reg[IDEX.rt]);
+    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate;
+    shadow_EXMEM.rs = IDEX.rs;
+    shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.immediate = IDEX.immediate;
 
     pc++;
 }
 
 void SH(){
-    shadow_EXMEM.rv =  (0xFF & reg[shadow_EXMEM.rt]) >> 16;
-    shadow_EXMEM.address = IDEX.rs + IDEX.immediate;
+    shadow_EXMEM.rv =  (0xFF & reg[IDEX.rt]) >> 16;
+    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate;
+    shadow_EXMEM.rs = IDEX.rs;
+    shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.immediate = IDEX.immediate;
 
     pc++;
 }

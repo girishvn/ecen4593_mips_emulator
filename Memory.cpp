@@ -8,12 +8,14 @@
 void WriteIntoMemory(){
     memory[EXMEM.address] = EXMEM.rv;
     shadow_MEMWB.type = EXMEM.type;
+    shadow_MEMWB.opcode = EXMEM.opcode;
 }
 
 void LoadFromMemory(){
     shadow_MEMWB.rv = memory[EXMEM.address];
     shadow_MEMWB.rt = EXMEM.rt;
     shadow_MEMWB.type = EXMEM.type;
+    shadow_MEMWB.opcode = EXMEM.opcode;
 }
 
 
