@@ -346,113 +346,108 @@ void SRLV(){
 }
 
 void instExecute() {
-    switch (IDEX.type) {
-        case I or J: {
-            switch (IDEX.funct) {
-                case 0x08: {
-                    ADDI();
-                }
-                case 0x09: {
-                    ADDIU();
-                }
-                case 0x0C: {
-                    ANDI();
-                }
-                case 0x04: {
-                    BEQ();
-                }
-                case 0x05: {
-                    BNE();
-                }
-                case 0x02: {
-                    JUMP();
-                }
-                case 0x03: {
-                    JAL();
-                }
-                case 0x24: {
-                    LBU();
-                }
-                case 0x25: {
-                    LHU();
-                }
-                case 0x30: {
-                    LW();
-                }
-                case 0x0F: {
-                    LUI();
-                }
-                case 0x23: {
-                    LW();
-                }
-                case 0x0D: {
-                    ORI();
-                }
-                case 0x0A: {
-                    SLTI();
-                }
-                case 0x0B: {
-                    SLTIU();
-                }
-                case 0x28: {
-                    SB();
-                }
-                case 0x38: {
-                    SW();
-                }
-                case 0x29: {
-                    SH();
-                }
-                case 0x2B: {
-                    SW();
-                }
-                default: {
-                    std::cout<<"Invalid Function: "<<IDEX.funct<<std::endl;
-                }
-            }
+    if(IDEX.type == I || IDEX.type == J){
+        if(IDEX.funct == 0x08){
+            ADDI();
         }
-        case R: {
-            switch (IDEX.funct) {
-                case 0x20: {
-                    ADD();
-                }
-                case 0x21: {
-                    ADDI();
-                }
-                case 0x24: {
-                    AND();
-                }
-                case 0x08: {
-                    JR();
-                }
-                case 0x27: {
-                    NOR();
-                }
-                case 0x25: {
-                    OR();
-                }
-                case 0x2A: {
-                    SLT();
-                }
-                case 0x2B: {
-                    SLTU();
-                }
-                case 0x02: {
-                    SRL();
-                }
-                case 0x22: {
-                    SUB();
-                }
-                case 0x23: {
-                    SUBU();
-                }
-                default: {
-                    std::cout<<"Invalid Function: "<<IDEX.funct<<std::endl;
-                }
-            }
+        else if(IDEX.funct == 0x09){
+            ADDIU();
         }
-        default: {
-            std::cout<<"invalid opcode or input / undocumented instruction"<<std::endl;
+        else if(IDEX.funct == 0x0C){
+            ANDI();
         }
+        else if(IDEX.funct == 0x04){
+            BEQ();
+        }
+        else if(IDEX.funct == 0x05){
+            BNE();
+        }
+        else if(IDEX.funct == 0x02){
+            JUMP();
+        }
+        else if(IDEX.funct == 0x03){
+            JAL();
+        }
+        else if(IDEX.funct == 0x24){
+            LBU();
+        }
+        else if(IDEX.funct == 0x25){
+            LHU();
+        }
+        else if(IDEX.funct == 0x30){
+            LW();
+        }
+        else if(IDEX.funct == 0x0F){
+            LUI();
+        }
+        else if(IDEX.funct == 0x23){
+            LW();
+        }
+        else if(IDEX.funct == 0x0D){
+            ORI();
+        }
+        else if(IDEX.funct == 0x0A){
+            SLTI();
+        }
+        else if(IDEX.funct == 0x0B){
+            SLTIU();
+        }
+        else if(IDEX.funct == 0x28){
+            SB();
+        }
+        else if(IDEX.funct == 0x38){
+            SW();
+        }
+        else if(IDEX.funct == 0x29){
+            SH();
+        }
+        else if(IDEX.funct == 0x2B){
+            SW();
+        }
+        else{
+            std::cout<<"Invalid Function: "<<IDEX.funct<<std::endl;
+        }
+    }
+    else if(IDEX.type == R){
+        if(IDEX.funct == 0x20){
+            ADD();
+        }
+        else if(IDEX.funct == 0x21){
+            ADDI();
+        }
+        else if(IDEX.funct == 0x24){
+            AND();
+        }
+        else if(IDEX.funct == 0x08){
+            JR();
+        }
+        else if(IDEX.funct == 0x27){
+            NOR();
+        }
+        else if(IDEX.funct == 0x25){
+            OR();
+        }
+        else if(IDEX.funct == 0x2A){
+            SLT();
+        }
+        else if(IDEX.funct == 0x2B){
+            SLTU();
+        }
+        else if(IDEX.funct == 0x02){
+            SRL();
+        }
+        else if(IDEX.funct == 0x22){
+            SUB();
+        }
+        else if(IDEX.funct == 0x23){
+            SUBU();
+        }
+        else{
+            std::cout<<"Invalid Function: "<<IDEX.funct<<std::endl;
+        }
+    }
+    else{
+        std::cout<<"invalid opcode or input / undocumented instruction"<<std::endl;
+
     }
 }

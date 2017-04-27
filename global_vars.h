@@ -90,7 +90,6 @@ struct _IDEX {
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
-    uint8_t ra;
 
     //R-type specific
     uint8_t shamt; //shamt
@@ -174,3 +173,4 @@ extern _MEMWB shadow_MEMWB;
 
 
 #endif //ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H
+
