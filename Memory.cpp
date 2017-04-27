@@ -17,6 +17,14 @@ void LoadFromMemory(){
 
 
 void instMemory(){
+
+    //nop instruction detection
+    if(EXMEM.nop == true){ //NOP detection
+        shadow_MEMWB.nop = true;
+        return;
+    }
+    shadow_MEMWB.nop = false;
+
     if(EXMEM.type == I) {
         if(EXMEM.opcode == 0x24 || EXMEM.opcode == 0x25 || EXMEM.opcode == 0x30 || EXMEM.opcode == 0x23) {
             LoadFromMemory();

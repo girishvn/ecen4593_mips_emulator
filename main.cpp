@@ -29,7 +29,6 @@ void escapeShadowRealm(void) { //the shadow realm is always void
     EXMEM = shadow_EXMEM;
     MEMWB = shadow_MEMWB;
 
-
 }
 
 /***********************************************************************************************************************

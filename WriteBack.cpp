@@ -6,6 +6,12 @@
 #include "Decode.h"
 
 void instWriteBack(){
+
+    //nop instruction detection
+    if(MEMWB.nop == true){ //NOP detection
+        return;
+    }
+
     if(MEMWB.type == I){
         reg[MEMWB.rt] = MEMWB.rv;
     }

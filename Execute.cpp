@@ -359,6 +359,15 @@ void SRLV(){
 ***********************************************************************************************************************/
 
 void instExecute() {
+
+    //nop instruction detection
+    if(IDEX.nop == true){ //NOP detection
+        shadow_EXMEM.nop = true;
+        pc++;
+        return;
+    }
+    shadow_EXMEM.nop = false;
+
     //I OR J TYPE
     if(IDEX.type == I || IDEX.type == J){
         if(IDEX.opcode == 0x08){

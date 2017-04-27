@@ -128,6 +128,11 @@ void instJDecode(uint32_t machineCode) {
 void instDecode(void) {
 
     uint32_t machineCode = IFID.mc;
+    if(IFID.mc == 0x00){ //NOP detection
+        shadow_IDEX.nop = true;
+        return;
+    }
+    shadow_IDEX.nop = false;
 
     instType(machineCode); //checks type (R, I, J)
     int inst_type = shadow_IDEX.type;

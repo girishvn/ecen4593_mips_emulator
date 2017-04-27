@@ -6,8 +6,6 @@
 #define ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H
 
 #include <cstdint>
-//#include "intermediate_reg_structs.h"
-
 
 //Global Variables:
 
@@ -79,11 +77,13 @@ Intermediate registers global structs
 
 struct _IFID {
 
-    uint32_t mc; //machine code of instruction
+    uint32_t mc = 0; //machine code of instruction
 
 };
 
 struct _IDEX {
+
+    bool nop = true;;
 
     int type; //R, I, J
 
@@ -108,6 +108,8 @@ struct _IDEX {
 };
 
 struct _EXMEM {
+
+    bool nop = true;
 
     int type; //R, I, J
 
@@ -135,6 +137,8 @@ struct _EXMEM {
 };
 
 struct _MEMWB {
+
+    bool nop = true;;
 
     int type; //R, I, J
 
