@@ -7,6 +7,7 @@
 
 void WriteIntoMemory(){
     memory[EXMEM.address] = EXMEM.rv;
+    shadow_MEMWB.type = EXMEM.type;
 }
 
 void LoadFromMemory(){
@@ -28,16 +29,25 @@ void instMemory(){
     if(EXMEM.type == I) {
         if(EXMEM.opcode == 0x24 || EXMEM.opcode == 0x25 || EXMEM.opcode == 0x30 || EXMEM.opcode == 0x23) {
             LoadFromMemory();
-        } else if (EXMEM.opcode == 0x28 || EXMEM.opcode == 0x38 || EXMEM.opcode == 0x29 || EXMEM.opcode == 0x2b) {
+        }
+        else if (EXMEM.opcode == 0x28 || EXMEM.opcode == 0x38 || EXMEM.opcode == 0x29 || EXMEM.opcode == 0x2b) {
             WriteIntoMemory();
         }
+        else{
+            shadow_MEMWB.rv = EXMEM.rv;
+            shadow_MEMWB.rt = EXMEM.rt;
+        }
+        shadow_MEMWB.type = EXMEM.type;
     }
     else if(EXMEM.type == R){
         shadow_MEMWB.rv = EXMEM.rv;
         shadow_MEMWB.rd = EXMEM.rd;
         shadow_MEMWB.type = EXMEM.type;
+        shadow_MEMWB.ra = EXMEM.ra;
     }
-    else{
-        std::cout<<"Memory Stage hasn't received the correct Opcode and Type"<<std::endl;
+    else if(EXMEM.opcode == 0x03){
+        shadow_MEMWB.rv = EXMEM.rv;
+        shadow_MEMWB.ra = EXMEM.ra;
+        shadow_MEMWB.opcode = EXMEM.opcode;
     }
 }

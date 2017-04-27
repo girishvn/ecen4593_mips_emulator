@@ -21,9 +21,6 @@ void instFetch(void) {
 
     uint32_t instMC; //instruction machine code
     instMC = memory[pc]; //grab correct instruction from instruction memory
-
-    std::cout <<"mc: "<<memory[50]<< std::endl;
-
     shadow_IFID.mc = instMC; //set next instruction to intermediate IF/ID register
 
 }

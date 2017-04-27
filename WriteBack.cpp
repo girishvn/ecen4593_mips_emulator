@@ -18,4 +18,7 @@ void instWriteBack(){
     else if(MEMWB.type == R){
         reg[MEMWB.rd] = MEMWB.rv;
     }
+    else if(MEMWB.opcode == 0x03){
+        reg[MEMWB.ra] = MEMWB.rv;
+    }
 }
