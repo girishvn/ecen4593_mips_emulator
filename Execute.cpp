@@ -11,7 +11,7 @@ ARITHMETIC FUNCTIONS
 
 ***********************************************************************************************************************/
 
-void ADD(){
+void ADD(){ //good
     shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) + int32_t(reg[IDEX.rt])));
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;

@@ -47,26 +47,30 @@ int main() {
 
     //init all values for operation:
     Initialize_Simulation_Memory(); //copy program image into memory array
+    pc = memory[5]; //set program counter value
+    reg[$sp] = memory[0]; //init stack pointer
+    reg[$fp] = memory[1]; //init frame pointer
 
-    pc = memory[0]; //set program counter value
-    //reg[$sp] = memory[0]; //init stack pointer
-    //reg[$fp] = memory[1]; //init frame pointer
 
+    while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
-    while(pc != 13){ //while PC does not jump to 0x000 (end of file)
+        cout<<"Program Counter value: "<<pc<<endl;
 
         ///////////////
         //Fetch Stage//
-        ///////////////
         instFetch();
-        cout<<"Program Counter value: "<<pc<<endl
-            <<"Instruction Fetched: "<<shadow_IFID.mc<<endl;
+        ///////////////
+
+        cout<<"Instruction Fetched: "<<shadow_IFID.mc<<endl;
         cout<<endl;
+
+        IFID = shadow_IFID;
 
         ////////////////
         //Decode Stage//
-        ////////////////
         instDecode();
+        ////////////////
+
         cout<<"Decode Stage Finished. Type: "<<shadow_IDEX.type<<endl;
         if(shadow_IDEX.type == N){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -74,63 +78,75 @@ int main() {
         else {
             cout << "Decoding: " << IFID.mc << endl;
             if (shadow_IDEX.type == R) {
-                cout<< "rd: " << +shadow_IDEX.rd << endl
-                    << "rs: " << +shadow_IDEX.rs << endl
-                    << "rsVal: " << +shadow_IDEX.rsVal << endl
-                    << "rt: " << +shadow_IDEX.rt << endl
-                    << "rtVal: " << +shadow_IDEX.rtVal << endl
-                    << "shamt: " << +shadow_IDEX.shamt << endl
-                    << "funct: " << +shadow_IDEX.funct << endl;
-            } else if (shadow_IDEX.type == I) {
-                cout<< "rs: " << +shadow_IDEX.rs << endl
-                    << "rsVal: " << +shadow_IDEX.rsVal << endl
-                    << "rt: " << +shadow_IDEX.rt << endl
-                    << "rtVal: " << +shadow_IDEX.rtVal << endl
-                    << "Immediate: " << +shadow_IDEX.immediate << endl
-                    << "OP Code: " << +shadow_IDEX.opcode << endl;
-            } else if (shadow_IDEX.type == J) {
-                cout<< "Address: " << +shadow_IDEX.address << endl;
+                cout<< "R Function: " << +shadow_IDEX.funct
+                    << " rd: " << +shadow_IDEX.rd
+                    << " rs: " << +shadow_IDEX.rs
+                    << " rsVal: " << +shadow_IDEX.rsVal
+                    << " rt: " << +shadow_IDEX.rt
+                    << " rtVal: " << +shadow_IDEX.rtVal
+                    << " shamt: " << +shadow_IDEX.shamt << endl;
+            }
+            else if (shadow_IDEX.type == I) {
+                cout<< "I OP Code: " << +shadow_IDEX.opcode
+                    << " rs: " << +shadow_IDEX.rs
+                    << " rsVal: " << +shadow_IDEX.rsVal
+                    << " rt: " << +shadow_IDEX.rt
+                    << " rtVal: " << +shadow_IDEX.rtVal
+                    << " Immediate: " << +shadow_IDEX.immediate << endl;
+            }
+            else if (shadow_IDEX.type == J) {
+                cout<< "J OP Code: " << +shadow_IDEX.opcode
+                    << " Address: " << +shadow_IDEX.address<< endl;
             }
         }
         cout<<endl;
 
+        IDEX = shadow_IDEX;
+
         /////////////////
         //Execute Stage//
-        /////////////////
         instExecute();
+        /////////////////
+
         cout<<"Execute Stage Finished. Type: "<<+shadow_EXMEM.type<<endl;
         if(shadow_EXMEM.nop == true){
             cout<<"Stage Passed, NOP detected"<<endl;
         }
         else {
             if (shadow_EXMEM.type == R) {
-                cout<< "Function " << +shadow_EXMEM.funct << endl
-                    << "rs " << +shadow_EXMEM.rs << endl
-                    << "rsVal " << +shadow_EXMEM.rsVal << endl
-                    << "rt " << +shadow_EXMEM.rt << endl
-                    << "rtVal " << +shadow_EXMEM.rtVal << endl
-                    << "rd " << +shadow_EXMEM.rd << endl
-                    << "shamt " << +shadow_EXMEM.shamt << endl
-                    << "rv " << +shadow_EXMEM.rv << endl;
-            } else if (shadow_EXMEM.type == I) {
-                cout<< "opcode: " << +shadow_EXMEM.opcode << endl
-                    << "immediate: " << +shadow_EXMEM.immediate << endl
-                    << "rs: " << +shadow_EXMEM.rs << endl
-                    << "rsVal " << +shadow_EXMEM.rsVal << endl
-                    << "rt: " << +shadow_EXMEM.rt << endl
-                    << "rtVal " << +shadow_EXMEM.rtVal << endl
-                    << "rv: " << +shadow_EXMEM.rv << endl
-                    << "address: "<< +shadow_EXMEM.address << endl;
-            } else if (shadow_EXMEM.type == J) {
-                cout << "Jumps Are completed by Memory stage." << endl;
+                cout<< "R Function " << +shadow_EXMEM.funct
+                    << " rd " << +shadow_EXMEM.rd
+                    << " rs " << +shadow_EXMEM.rs
+                    << " rsVal " << +shadow_EXMEM.rsVal
+                    << " rt " << +shadow_EXMEM.rt
+                    << " rtVal " << +shadow_EXMEM.rtVal
+                    << " shamt " << +shadow_EXMEM.shamt
+                    << " rv " << +shadow_EXMEM.rv << endl;
+            }
+            else if (shadow_EXMEM.type == I) {
+                cout<< "I OP Code: " << +shadow_EXMEM.opcode
+                    << " immediate: " << +shadow_EXMEM.immediate
+                    << " rs: " << +shadow_EXMEM.rs
+                    << " rsVal " << +shadow_EXMEM.rsVal
+                    << " rt: " << +shadow_EXMEM.rt
+                    << " rtVal " << +shadow_EXMEM.rtVal
+                    << " rv: " << +shadow_EXMEM.rv
+                    << " address: "<< +shadow_EXMEM.address << endl;
+            }
+            else if (shadow_EXMEM.type == J) {
+                cout<< "J OP Code: " << +shadow_EXMEM.opcode
+                    << " Jumps Are completed by Memory stage." << endl;
             }
         }
         cout<<endl;
 
+        EXMEM = shadow_EXMEM;
+
         ////////////////
         //Memory Stage//
-        ////////////////
         instMemory();
+        ////////////////
+
         cout<<"Memory Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(EXMEM.nop == true){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -138,29 +154,35 @@ int main() {
         else {
             if (shadow_MEMWB.type == R) {
                 cout << "R type doesn't use memory stage. Passed values from EXMEM directly to shadow_MEMWB" << endl
-                     << "rv: " << +shadow_MEMWB.rv << endl
-                     << "rd: " << +shadow_MEMWB.rd << endl;
-            } else if (shadow_MEMWB.type == I) {
+                     << "rv: " << +shadow_MEMWB.rv
+                     << " rd: " << +shadow_MEMWB.rd << endl;
+            }
+            else if (shadow_MEMWB.type == I) {
                 if (EXMEM.opcode == 0x24 || EXMEM.opcode == 0x25 || EXMEM.opcode == 0x30 || EXMEM.opcode == 0x23) {
                     cout << "Memory is loaded and being prepared to be written back" << endl
                          << "address: " << +EXMEM.address << endl
-                         << "rv: " << +shadow_MEMWB.rv << endl
-                         << "rt: " << +shadow_MEMWB.rt << endl
-                         << "type: "<< +shadow_MEMWB.type<<endl;
+                         << "rt: " << +shadow_MEMWB.rt
+                         << " rv: " << +shadow_MEMWB.rv
+                         << " type: "<< +shadow_MEMWB.type<<endl;
 
-                } else if (EXMEM.opcode == 0x28 || EXMEM.opcode == 0x38 || EXMEM.opcode == 0x29 ||
+                }
+                else if (EXMEM.opcode == 0x28 || EXMEM.opcode == 0x38 || EXMEM.opcode == 0x29 ||
                            EXMEM.opcode == 0x2b) {
                     cout << "Value is written into memory" << endl
                          << "Value: " << memory[EXMEM.address] << endl
                          << "Address: " << EXMEM.address << endl;
-                } else {
+                }
+                else {
                     cout << "Memory was not accessed" << endl;
                 }
-            } else if (shadow_MEMWB.type == J) {
-                cout << "Jumps are completed by memory stage." << endl;
+            }
+            else if (shadow_MEMWB.type == J) {
+                cout << "Jumps are completed before memory stage." << endl;
             }
         }
         cout<<endl;
+
+        MEMWB = shadow_MEMWB;
 
         ////////////////////
         //Write Back Stage//
@@ -173,45 +195,22 @@ int main() {
         else {
             if (MEMWB.type == R || MEMWB.type == I) {
                 cout << "Written back: " << MEMWB.rv << " Into register: " << +MEMWB.rt << endl;
-            } else if (shadow_EXMEM.type == J) {
+            }
+            else if (shadow_EXMEM.type == J) {
                 cout << "Jumps Are completed by Write Back stage." << endl;
             }
         }
         cout<<endl;
+        MEMWB = shadow_MEMWB;
 
         //Transferring all shadow registers into normal registers.
-        escapeShadowRealm(); //transfer data from shadow registers to real registers
-        cout<<"All registers have escaped the shadow realm."<<endl;
+        //escapeShadowRealm(); //transfer data from shadow registers to real registers
+        //cout<<"All registers have escaped the shadow realm."<<endl;
+        cout<<"Instruction has been passed through pipeline."<<endl;
         cout<<"**************************************"<<endl;
 
-        cout<<int(reg[9])<<" "<<int(reg[10])<<" "<<reg[11]<<" "<<memory[17]<<endl;
     }
-    cout<<int(reg[9])<<" "<<int(reg[10])<<" "<<reg[11]<<" "<<memory[17]<<endl;
+
     cout<<"Program has finished running"<<endl;
-
-/***********************************************************************************************************************
-
-TEST CODE
-
-***********************************************************************************************************************/
-/*
-    uint32_t mc = 0x00ff2244; //test machine code
-    IFID.mc = mc;
-
-    instDecode(); //calling ID stage of pipeline
-
-    std::cout <<"type: "<<IDEX.type<< std::endl;
-    std::cout <<"rd: "<<int(IDEX.rd)<< std::endl;
-    std::cout <<"rs: "<<int(IDEX.rs)<< std::endl;
-    std::cout <<"rt: "<<int(IDEX.rt)<< std::endl;
-
-
-    uint16_t tst = 0xffaa;
-    int16_t signedtst = int16_t(tst);
-
-    std::cout <<"unsigned 16 bit val: "<<int(IDEX.rs)<< std::endl;
-    std::cout <<"2signed 16 bit val: "<<int(IDEX.rt)<< std::endl;
-*/
     return 1;
-
 }
