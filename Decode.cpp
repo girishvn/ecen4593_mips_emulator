@@ -33,13 +33,18 @@ void instType(uint32_t machineCode) {
     shadow_IDEX.opcode = opcode;
 
     //Checking Type (R, I , J) from OP Code
-    if (opcode == ROPCode) { //R-type instruction
+    if(machineCode == 0x00000000){
+
+        shadow_IDEX.type = N;
+        return;
+    }
+    else if (opcode == ROPCode) { //R-type instruction
 
         shadow_IDEX.type = R;
         return;
     }
 
-    for(int i = 0; i < 17; i++){ //I-type instruction
+    for(int i = 0; i < 20; i++){ //I-type instruction
         if(opcode == IOPCode[i]){
             shadow_IDEX.type = I;
             return;
@@ -105,7 +110,6 @@ void instIDecode(uint32_t machineCode) {
     //reg values
     shadow_IDEX.rsVal = reg[shadow_IDEX.rs];
     shadow_IDEX.rtVal = reg[shadow_IDEX.rt];
-
     //other parameters
     shadow_IDEX.immediate =  uint16_t((0xffff) & (machineCode)); //immediate value: bits 0-15
 
@@ -144,13 +148,15 @@ void instDecode(void) {
 
     uint32_t machineCode = IFID.mc;
 
-    shadow_IDEX.nop = false;
     shadow_IDEX.mc = machineCode;
 
     instType(machineCode); //checks type (R, I, J)
     int inst_type = shadow_IDEX.type;
 
-    switch(inst_type) { //fills instruction based on type (R, I, J)
+    switch(inst_type) { //fills instruction based on type (nop, R, I, J)
+        case N: {
+            return;
+        }
         case R: { //R-type
             instRDecode(machineCode);
             return;

@@ -85,9 +85,7 @@ struct _IDEX {
 
     uint32_t mc; //machine code
 
-    bool nop = true;
-
-    int type; //R, I, J
+    int type = 0x00; //R, I, J
 
     //opcode
     uint8_t opcode;
@@ -129,6 +127,11 @@ struct _EXMEM {
     uint8_t rt;
     uint8_t ra;
 
+    //register values
+    uint32_t rdVal;
+    uint32_t rsVal;
+    uint32_t rtVal;
+
     //R-type specific
     uint8_t shamt; //shamt
     uint8_t funct; //function
@@ -138,7 +141,7 @@ struct _EXMEM {
 
     //J-type specific
     uint32_t address;
-
+    uint8_t byteIndex;
     uint32_t rv;
 
 };
@@ -157,6 +160,11 @@ struct _MEMWB {
     uint8_t rs;
     uint8_t rt;
     uint8_t ra;
+
+    //register values
+    uint32_t rdVal;
+    uint32_t rsVal;
+    uint32_t rtVal;
 
     //R-type specific
     uint8_t shamt; //shamt

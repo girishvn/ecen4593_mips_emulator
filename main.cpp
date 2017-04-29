@@ -53,7 +53,7 @@ int main() {
     //reg[$fp] = memory[1]; //init frame pointer
 
 
-    while(pc != 12){ //while PC does not jump to 0x000 (end of file)
+    while(pc != 13){ //while PC does not jump to 0x000 (end of file)
 
         ///////////////
         //Fetch Stage//
@@ -68,23 +68,28 @@ int main() {
         ////////////////
         instDecode();
         cout<<"Decode Stage Finished. Type: "<<shadow_IDEX.type<<endl;
-        if(shadow_IDEX.nop){
+        if(shadow_IDEX.type == N){
             cout<<"Stage Passed, NOP detected"<<endl;
         }
         else {
             cout << "Decoding: " << IFID.mc << endl;
             if (shadow_IDEX.type == R) {
-                cout << "rd: " << +shadow_IDEX.rd << endl
-                     << "rs: " << +shadow_IDEX.rs << endl
-                     << "rt: " << +shadow_IDEX.rt << endl
-                     << "shamt: " << +shadow_IDEX.shamt << endl
-                     << "funct: " << +shadow_IDEX.funct << endl;
+                cout<< "rd: " << +shadow_IDEX.rd << endl
+                    << "rs: " << +shadow_IDEX.rs << endl
+                    << "rsVal: " << +shadow_IDEX.rsVal << endl
+                    << "rt: " << +shadow_IDEX.rt << endl
+                    << "rtVal: " << +shadow_IDEX.rtVal << endl
+                    << "shamt: " << +shadow_IDEX.shamt << endl
+                    << "funct: " << +shadow_IDEX.funct << endl;
             } else if (shadow_IDEX.type == I) {
-                cout << "rs: " << +shadow_IDEX.rs << endl
-                     << "rt: " << +shadow_IDEX.rt << endl
-                     << "Immediate: " << +shadow_IDEX.immediate << endl;
+                cout<< "rs: " << +shadow_IDEX.rs << endl
+                    << "rsVal: " << +shadow_IDEX.rsVal << endl
+                    << "rt: " << +shadow_IDEX.rt << endl
+                    << "rtVal: " << +shadow_IDEX.rtVal << endl
+                    << "Immediate: " << +shadow_IDEX.immediate << endl
+                    << "OP Code: " << +shadow_IDEX.opcode << endl;
             } else if (shadow_IDEX.type == J) {
-                cout << "Address: " << +shadow_IDEX.address << endl;
+                cout<< "Address: " << +shadow_IDEX.address << endl;
             }
         }
         cout<<endl;
@@ -94,24 +99,28 @@ int main() {
         /////////////////
         instExecute();
         cout<<"Execute Stage Finished. Type: "<<+shadow_EXMEM.type<<endl;
-        if(IDEX.nop == true){
+        if(shadow_EXMEM.nop == true){
             cout<<"Stage Passed, NOP detected"<<endl;
         }
         else {
             if (shadow_EXMEM.type == R) {
-                cout << "Function " << +shadow_EXMEM.funct << endl
-                     << "rs " << +shadow_EXMEM.rs << endl
-                     << "rt " << +shadow_EXMEM.rt << endl
-                     << "rd " << +shadow_EXMEM.rd << endl
-                     << "shamt " << +shadow_EXMEM.shamt << endl
-                     << "rv " << +shadow_EXMEM.rv << endl;
+                cout<< "Function " << +shadow_EXMEM.funct << endl
+                    << "rs " << +shadow_EXMEM.rs << endl
+                    << "rsVal " << +shadow_EXMEM.rsVal << endl
+                    << "rt " << +shadow_EXMEM.rt << endl
+                    << "rtVal " << +shadow_EXMEM.rtVal << endl
+                    << "rd " << +shadow_EXMEM.rd << endl
+                    << "shamt " << +shadow_EXMEM.shamt << endl
+                    << "rv " << +shadow_EXMEM.rv << endl;
             } else if (shadow_EXMEM.type == I) {
-                cout << "opcode: " << +shadow_EXMEM.opcode << endl
-                     << "immediate: " << +shadow_EXMEM.immediate << endl
-                     << "rt: " << +shadow_EXMEM.rt << endl
-                     << "rs: " << +shadow_EXMEM.rs << endl
-                     << "rv: " << +shadow_EXMEM.rv << endl
-                     << "address: "<< +shadow_EXMEM.address << endl;
+                cout<< "opcode: " << +shadow_EXMEM.opcode << endl
+                    << "immediate: " << +shadow_EXMEM.immediate << endl
+                    << "rs: " << +shadow_EXMEM.rs << endl
+                    << "rsVal " << +shadow_EXMEM.rsVal << endl
+                    << "rt: " << +shadow_EXMEM.rt << endl
+                    << "rtVal " << +shadow_EXMEM.rtVal << endl
+                    << "rv: " << +shadow_EXMEM.rv << endl
+                    << "address: "<< +shadow_EXMEM.address << endl;
             } else if (shadow_EXMEM.type == J) {
                 cout << "Jumps Are completed by Memory stage." << endl;
             }
@@ -134,13 +143,15 @@ int main() {
             } else if (shadow_MEMWB.type == I) {
                 if (EXMEM.opcode == 0x24 || EXMEM.opcode == 0x25 || EXMEM.opcode == 0x30 || EXMEM.opcode == 0x23) {
                     cout << "Memory is loaded and being prepared to be written back" << endl
+                         << "address: " << +EXMEM.address << endl
                          << "rv: " << +shadow_MEMWB.rv << endl
-                         << "rt: " << +shadow_MEMWB.rt << endl;
+                         << "rt: " << +shadow_MEMWB.rt << endl
+                         << "type: "<< +shadow_MEMWB.type<<endl;
 
                 } else if (EXMEM.opcode == 0x28 || EXMEM.opcode == 0x38 || EXMEM.opcode == 0x29 ||
                            EXMEM.opcode == 0x2b) {
-                    cout << "Value is being written into memory" << endl
-                         << "rv: " << EXMEM.rv << endl
+                    cout << "Value is written into memory" << endl
+                         << "Value: " << memory[EXMEM.address] << endl
                          << "Address: " << EXMEM.address << endl;
                 } else {
                     cout << "Memory was not accessed" << endl;

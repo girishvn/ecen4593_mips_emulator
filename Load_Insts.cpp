@@ -17,10 +17,11 @@ uint32_t program_image[] = {
         0x200A0005, //addi t2 zero 0x05
         0x00000000, //nop
         0x00000000, //nop
-        //0xAD490030, //sw t1 0x30 t2
-        //0x8D4B0030, //lw t3 0x30 t2
-        0xA5490030, //sh t1 0x30 t2
-        0x954B0030, //lhu t3 0x30 t2
+        0x00000000,
+        //0xAD490031, //sw t1 0x30 t2
+        //0x8D4B0031, //lw t3 0x30 t2
+        0xA5490034, //sh t1 0x30 t2
+        0x954B0034, //lhu t3 0x30 t2
         0x00000000,
         0x00000000,
         0x00000000, //nop

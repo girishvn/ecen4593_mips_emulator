@@ -212,89 +212,22 @@ void LB(){
 }
 
 //LOAD BYTE UNSIGNED
-void LBU(){
+void LBU() {
 
-    //LOCAL VARIABLES
-    uint32_t memVal;
-    uint32_t regVal;
-    uint8_t byteIdx; //byte index with word
-    uint32_t maskMem;
-    uint32_t maskReg;
+    //Calculating immediate address and byte index.
+    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
-    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate/4; //loading memory address into rv
-
-    regVal = reg[IDEX.rt];
-    memVal = memory[shadow_EXMEM.address];
-    byteIdx = uint8_t(IDEX.immediate%4);
-
-    switch (byteIdx) {
-        case 0: { //1th Byte
-            maskMem = 0x000000ff;
-            maskReg = 0xffffff00;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-
-            regVal = memVal | regVal;
-
-            break;
-        }
-
-        case 1: { //2th Byte
-            maskMem = 0x0000ff00;
-            maskReg = 0xffffff00;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            memVal = memVal >> 8;
-
-            regVal = memVal | regVal;
-
-            break;
-
-        }
-
-        case 2: { //3th Byte
-            maskMem = 0x00ff0000;
-            maskReg = 0xffffff00;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            memVal = memVal >> 16;
-
-            regVal = memVal | regVal;
-
-            break;
-
-        }
-
-        case 3: { //4th Byte
-            maskMem = 0xff000000;
-            maskReg = 0xffffff00;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            memVal = memVal >> 24;
-
-            regVal = memVal | regVal;
-
-            break;
-
-        }
-
-        default: {
-            std::cout<<"unusable index value in LBU"<<std::endl;
-            return;
-        }
-    }
-
-    shadow_EXMEM.rv = regVal;
+    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
     shadow_EXMEM.rt = IDEX.rt;
+    shadow_EXMEM.rtVal = IDEX.rtVal;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
     pc++;
 }
+
 
 //LOAD UNSIGNED IMMEDIATE
 void LUI(){
@@ -311,88 +244,48 @@ void LUI(){
 
 //LOAD WORD
 void LW(){
-    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate/4; //loading memory address into rv
-    shadow_EXMEM.rv = memory[shadow_EXMEM.address];
+    //Calculating immediate address and byte index.
+    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate/4;
+    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
+
+    //If storing a word, index should always be at 0
+    if(shadow_EXMEM.byteIndex != 0){
+        std::cout<<"SW immediate offset crosses memory words: "<<IDEX.funct<<std::endl;
+        return;
+    }
+
+    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
+
     pc++;
 }
 
 //LOAD UNSIGNED HALF-WORD
-void LHU(){
+void LHU() {
 
-    //LOCAL VARIABLES
-    uint32_t memVal;
-    uint32_t regVal;
-    uint8_t byteIdx; //byte index with word
-    uint32_t maskMem;
-    uint32_t maskReg;
+    //Calculating immediate address and byte index.
+    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
-    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate/4; //loading memory address into rv
-    std::cout<<"address "<<+shadow_EXMEM.address<<std::endl;
-
-    regVal = reg[IDEX.rt];
-    memVal = memory[shadow_EXMEM.address];
-
-    std::cout<<"reg val "<<+reg[IDEX.rt]<<" mem val "<<+memVal<<std::endl;
-
-    byteIdx = uint8_t(IDEX.immediate%4);
-
-    switch (byteIdx) {
-        case 0: { //1th Byte
-            maskMem = 0x0000ffff;
-            maskReg = 0xffff0000;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-
-            regVal = memVal | regVal;
-
-            break;
-        }
-
-        case 1: { //2th Byte
-            maskMem = 0x00ffff00;
-            maskReg = 0xffff0000;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            memVal = memVal >> 8;
-
-            regVal = memVal | regVal;
-
-            break;
-
-        }
-
-        case 2: { //3th Byte
-            maskMem = 0xffff0000;
-            maskReg = 0xffff0000;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            memVal = memVal >> 16;
-
-            regVal = memVal | regVal;
-
-            break;
-
-        }
-
-        default: {
-            std::cout<<"unusable index value in LHU"<<std::endl;
-            return;
-        }
+    //If storing a word, index should always be at 0
+    if (shadow_EXMEM.byteIndex == 4) {
+        std::cout << "SW immediate offset crosses memory words: " << IDEX.funct << std::endl;
+        return;
     }
 
-    shadow_EXMEM.rv = regVal;
+    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
     shadow_EXMEM.rt = IDEX.rt;
+    shadow_EXMEM.rtVal = IDEX.rtVal;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
     pc++;
 }
+
 
 /***********************************************************************************************************************
 
@@ -400,183 +293,66 @@ STORE FUNCTIONS
 
 ***********************************************************************************************************************/
 
-void SB(){
-    //LOCAL VARIABLES
-    uint32_t memVal;
-    uint32_t regVal;
-    uint8_t byteIdx; //byte index with word
-    uint32_t maskMem;
-    uint32_t maskReg;
+void SB() {
 
-    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate/4; //calculate address with offset
+    //Calculating immediate address and byte index.
+    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
-    memVal = memory[shadow_EXMEM.address];
-    regVal = reg[IDEX.rt];
-    byteIdx = uint8_t(IDEX.immediate%4);
-
-    switch (byteIdx) {
-        case 0: { //1th Byte
-            maskMem = 0xffffff00;
-            maskReg = 0x000000ff;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-
-            memVal = memVal | regVal;
-
-            break;
-        }
-
-        case 1: { //2th Byte
-            maskMem = 0xffff00ff;
-            maskReg = 0x000000ff;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            regVal = regVal << 8;
-
-            memVal = memVal | regVal;
-
-            break;
-
-        }
-
-        case 2: { //3th Byte
-            maskMem = 0xff00ffff;
-            maskReg = 0x000000ff;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            regVal = regVal << 16;
-
-            memVal = memVal | regVal;
-
-            break;
-
-        }
-
-        case 3: { //4th Byte
-            maskMem = 0x00ffffff;
-            maskReg = 0x000000ff;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            regVal = regVal << 24;
-
-            memVal = memVal | regVal;
-
-            break;
-
-        }
-
-        default: {
-            std::cout<<"unusable index value in SH"<<std::endl;
-            return;
-        }
-    }
-
-    shadow_EXMEM.rv = memVal;
-    shadow_EXMEM.rs = IDEX.rs;
-    shadow_EXMEM.rt = IDEX.rt;
+    shadow_EXMEM.rtVal = IDEX.rtVal;
+    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
+    //shadow_EXMEM.rt = IDEX.rt; //dont think we need this since we have rtVal
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.immediate = IDEX.immediate;
+    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
     pc++;
 }
 
+
 //STORE WORD
 void SW(){
-    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate/4; //calculate address with offset
+    //Calculating immediate address and byte index.
+    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate/4;
+    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
 
-    if(IDEX.immediate%4 != 0){
+    //If storing a word, index should always be at 0
+    if(shadow_EXMEM.byteIndex != 0){
         std::cout<<"SW immediate offset crosses memory words: "<<IDEX.funct<<std::endl;
         return;
     }
 
-    shadow_EXMEM.rv =  reg[IDEX.rt]; //stores full word
-    shadow_EXMEM.rs = IDEX.rs;
-    shadow_EXMEM.rt = IDEX.rt;
+    shadow_EXMEM.rtVal =  IDEX.rtVal;
+    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
+    //shadow_EXMEM.rt = IDEX.rt; //dont think we need this since we have rtVal
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.immediate = IDEX.immediate;
+    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
     pc++;
-
-    return;
 }
 
 //STORE HALF WORD
-void SH(){
+void SH() {
 
-    //LOCAL VARIABLES
-    uint32_t memVal;
-    uint32_t regVal;
-    uint8_t byteIdx; //byte index with word
-    uint32_t maskMem;
-    uint32_t maskReg;
+    //Calculating immediate address and byte index.
+    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
-    shadow_EXMEM.address = reg[IDEX.rs] + IDEX.immediate/4; //calculate address with offset
-
-    memVal = memory[shadow_EXMEM.address];
-    regVal = reg[IDEX.rt];
-    byteIdx = uint8_t(IDEX.immediate%4);
-
-    switch (byteIdx) {
-        case 0: { //1th Byte
-            maskMem = 0xffff0000;
-            maskReg = 0x0000ffff;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-
-            memVal = memVal | regVal;
-
-            break;
-        }
-
-        case 1: { //2th Byte
-            maskMem = 0xff0000ff;
-            maskReg = 0x0000ffff;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            regVal = regVal << 8;
-
-            memVal = memVal | regVal;
-
-            break;
-        }
-
-        case 2: { //3th Byte
-            maskMem = 0x0000ffff;
-            maskReg = 0x0000ffff;
-
-            memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-            regVal = regVal << 16;
-
-            memVal = memVal | regVal;
-
-            break;
-        }
-
-        default: { //4th Byte
-            std::cout<<"unusable index value in SH"<<std::endl;
-            return;
-        }
+    //If storing a half word, index should only be at 1, 2, or 3
+    if (shadow_EXMEM.byteIndex == 3) {
+        std::cout << "SH immediate offset crosses memory words: " << IDEX.funct << std::endl;
+        return;
     }
 
-    shadow_EXMEM.rv =  memVal;
-    shadow_EXMEM.rs = IDEX.rs;
-    shadow_EXMEM.rt = IDEX.rt;
+    shadow_EXMEM.rtVal = IDEX.rtVal;
+    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
+    //shadow_EXMEM.rt = IDEX.rt; //dont think we need this since we have rtVal
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.immediate = IDEX.immediate;
+    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
     pc++;
-
-    return;
 }
 
 /***********************************************************************************************************************
@@ -678,6 +454,7 @@ void MOVZ(){
 
 void NOP(){
     shadow_EXMEM.nop = true;
+
     pc++;
 }
 
@@ -761,8 +538,12 @@ void instExecute() {
     //nop instruction detection
     shadow_EXMEM.nop = false; //nop by defualt is false
 
+    if(IDEX.type == N){
+        NOP();
+    }
+
     //I OR J TYPE
-    if(IDEX.type == I || IDEX.type == J){
+    else if(IDEX.type == I || IDEX.type == J){
 
         //J TYPES
         if(IDEX.opcode == 0x02){ //J
@@ -821,7 +602,7 @@ void instExecute() {
         else if(IDEX.opcode == 0x24){ //LBU
             LBU();
         }
-        else if(IDEX.opcode == 0x25){ //LHU
+        else if(IDEX.opcode == 0x25) { //LHU
             LHU();
         }
         else if(IDEX.opcode == 0x28){ //SB
@@ -840,10 +621,7 @@ void instExecute() {
 
     //R TYPE
     else if(IDEX.type == R){
-        if(IDEX.mc == 0x00000000){ //NOP
-            NOP();
-        }
-        else if(IDEX.funct == 0x00){ //SLL
+        if(IDEX.funct == 0x00){ //SLL
             SLL();
         }
         else if(IDEX.funct == 0x02){ //SRL
@@ -895,7 +673,7 @@ void instExecute() {
 
     //DEFAULT CASE (MEETS NO TYPES)
     else{
-        std::cout<<"invalid opcode or input / undocumented instruction"<<std::endl;
+        std::cout<<"invalid opcode or input / undocumented instruction"<<+IDEX.opcode<<std::endl;
 
     }
 }

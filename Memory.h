@@ -7,8 +7,15 @@
 
 #include "global_vars.h"
 
-void WriteIntoMemory(void);
+void WriteWordIntoMemory();
+void WriteHalfWordIntoMemory();
+void WriteByteIntoMemory();
+
+void LoadWordFromMemory(void);
+void LoadHalfWordFromMemory(void);
+void LoadByteFromMemory(void);
 void LoadFromMemory(void);
+
 void instMemory(void);
 
 #endif //ECEN4593_MIPS_EMULATOR_MEMORY_H
