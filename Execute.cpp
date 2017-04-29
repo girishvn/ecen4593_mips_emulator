@@ -11,7 +11,7 @@ ARITHMETIC FUNCTIONS
 
 ***********************************************************************************************************************/
 
-void ADD(){ //R
+void ADD(){
     shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) + int32_t(reg[IDEX.rt])));
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -19,7 +19,7 @@ void ADD(){ //R
     pc++;
 }
 
-void ADDI(){ //I
+void ADDI(){
     shadow_EXMEM.rv = uint32_t((int32_t(reg[IDEX.rs]) + int32_t(IDEX.immediate)));
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
@@ -27,7 +27,7 @@ void ADDI(){ //I
     pc++;
 }
 
-void ADDIU(){ //I
+void ADDIU(){
     shadow_EXMEM.rv = reg[IDEX.rs] + IDEX.immediate;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
@@ -35,7 +35,7 @@ void ADDIU(){ //I
     pc++;
 }
 
-void ADDU(){ //R
+void ADDU(){
     shadow_EXMEM.rv = reg[IDEX.rs] + reg[IDEX.rt];
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -65,7 +65,7 @@ LOGICAL FUNCTIONS
 
 ***********************************************************************************************************************/
 
-void AND(){ //R
+void AND(){
     shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.rt];
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -73,7 +73,7 @@ void AND(){ //R
     pc++;
 }
 
-void ANDI(){ //I
+void ANDI(){
     shadow_EXMEM.rv = reg[IDEX.rs] & reg[IDEX.immediate];
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;

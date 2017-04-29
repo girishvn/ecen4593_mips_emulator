@@ -4,7 +4,7 @@
 
 /***********************************************************************************************************************
 
-CLASS NAME: _decode
+CLASS NAME: Decode
 
  USE: Implements the decode (ID) stage of the processor pipeline
 
