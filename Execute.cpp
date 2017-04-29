@@ -137,27 +137,6 @@ void BEQ(){
     shadow_EXMEM.type = IDEX.type;
 }
 
-void BGEZ(){ //uneeded
-    if(int32_t(reg[IDEX.rs]) >= 0){
-        pc += reg[IDEX.immediate];
-    }
-    else{
-        pc++;
-    }
-    shadow_EXMEM.type = IDEX.type;
-}
-
-void BGEZAL(){ //uneeded
-    if(int32_t(reg[IDEX.rs]) >= 0){
-        reg[shadow_EXMEM.ra] = pc++;
-        pc += IDEX.immediate;
-    }
-    else{
-        pc++;
-    }
-    shadow_EXMEM.type = IDEX.type;
-}
-
 void BGTZ(){
     if(int32_t(reg[IDEX.rs]) > 0){
         pc += IDEX.immediate;
@@ -180,17 +159,6 @@ void BLEZ(){
 
 void BLTZ(){
     if(int32_t(reg[IDEX.rs]) < 0){
-        pc += IDEX.immediate;
-    }
-    else{
-        pc++;
-    }
-    shadow_EXMEM.type = IDEX.type;
-}
-
-void BLTZAL(){ //uneeded
-    if(int32_t(reg[IDEX.rs]) < 0){
-        reg[shadow_EXMEM.ra] = pc++;
         pc += IDEX.immediate;
     }
     else{
@@ -625,14 +593,6 @@ void SLL(){
     pc++;
 }
 
-void SLLV(){ //uneeded
-    shadow_EXMEM.rv = reg[IDEX.rt]<<reg[IDEX.rs];
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
 void SLT(){
     if(reg[IDEX.rs] < reg[IDEX.rt]){
         shadow_EXMEM.rv = 1;
@@ -682,24 +642,8 @@ void SLTU(){
     pc++;
 }
 
-void SRA(){ //uneeded
-    shadow_EXMEM.rv = reg[IDEX.rt]>>IDEX.shamt;
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
 void SRL(){
     shadow_EXMEM.rv = reg[IDEX.rt]>>IDEX.shamt;
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
-void SRLV(){ //uneeded
-    shadow_EXMEM.rv = reg[IDEX.rt]>>reg[IDEX.rs];
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
 
@@ -736,6 +680,69 @@ void NOP(){
     shadow_EXMEM.nop = true;
     pc++;
 }
+
+/***********************************************************************************************************************
+
+UNNEEDED FUNCTIONS
+
+***********************************************************************************************************************/
+
+void BGEZ(){ //uneeded
+    if(int32_t(reg[IDEX.rs]) >= 0){
+        pc += reg[IDEX.immediate];
+    }
+    else{
+        pc++;
+    }
+    shadow_EXMEM.type = IDEX.type;
+}
+
+void BGEZAL(){ //uneeded
+    if(int32_t(reg[IDEX.rs]) >= 0){
+        reg[shadow_EXMEM.ra] = pc++;
+        pc += IDEX.immediate;
+    }
+    else{
+        pc++;
+    }
+    shadow_EXMEM.type = IDEX.type;
+}
+
+void BLTZAL(){ //uneeded
+    if(int32_t(reg[IDEX.rs]) < 0){
+        reg[shadow_EXMEM.ra] = pc++;
+        pc += IDEX.immediate;
+    }
+    else{
+        pc++;
+    }
+    shadow_EXMEM.type = IDEX.type;
+}
+
+void SLLV(){ //uneeded
+    shadow_EXMEM.rv = reg[IDEX.rt]<<reg[IDEX.rs];
+    shadow_EXMEM.rd = IDEX.rd;
+    shadow_EXMEM.type = IDEX.type;
+
+    pc++;
+}
+
+void SRA(){ //uneeded
+    shadow_EXMEM.rv = reg[IDEX.rt]>>IDEX.shamt;
+    shadow_EXMEM.rd = IDEX.rd;
+    shadow_EXMEM.type = IDEX.type;
+
+    pc++;
+}
+
+void SRLV(){ //uneeded
+    shadow_EXMEM.rv = reg[IDEX.rt]>>reg[IDEX.rs];
+    shadow_EXMEM.rd = IDEX.rd;
+    shadow_EXMEM.type = IDEX.type;
+
+    pc++;
+}
+
 
 /***********************************************************************************************************************
 
