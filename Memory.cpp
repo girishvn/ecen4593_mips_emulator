@@ -5,14 +5,21 @@
 #include "Memory.h"
 #include "Decode.h"
 
+/***********************************************************************************************************************
+
+CALLABLE FUNCTIONS
+
+***********************************************************************************************************************/
+
 void WriteIntoMemory(){
     memory[EXMEM.address] = EXMEM.rv;
     shadow_MEMWB.type = EXMEM.type;
     shadow_MEMWB.opcode = EXMEM.opcode;
+    shadow_MEMWB.nop = true;
 }
 
 void LoadFromMemory(){
-    shadow_MEMWB.rv = memory[EXMEM.address];
+    shadow_MEMWB.rv = EXMEM.rv;
     shadow_MEMWB.rt = EXMEM.rt;
     shadow_MEMWB.type = EXMEM.type;
     shadow_MEMWB.opcode = EXMEM.opcode;

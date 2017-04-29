@@ -53,7 +53,7 @@ int main() {
     //reg[$fp] = memory[1]; //init frame pointer
 
 
-    while(pc != 11){ //while PC does not jump to 0x000 (end of file)
+    while(pc != 12){ //while PC does not jump to 0x000 (end of file)
 
         ///////////////
         //Fetch Stage//
@@ -157,7 +157,7 @@ int main() {
         instWriteBack();
         cout<<"Write Back Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(MEMWB.nop == true){
-            cout<<"Stage Passed, NOP detected"<<endl;
+            cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
         }
         else {
             if (MEMWB.type == R || MEMWB.type == I) {
@@ -172,8 +172,10 @@ int main() {
         escapeShadowRealm(); //transfer data from shadow registers to real registers
         cout<<"All registers have escaped the shadow realm."<<endl;
         cout<<"**************************************"<<endl;
+
+        cout<<int(reg[9])<<" "<<int(reg[10])<<" "<<reg[11]<<" "<<memory[17]<<endl;
     }
-    cout<<int(reg[9])<<" "<<int(reg[10])<<" "<<reg[11]<<endl;
+    cout<<int(reg[9])<<" "<<int(reg[10])<<" "<<reg[11]<<" "<<memory[17]<<endl;
     cout<<"Program has finished running"<<endl;
 
 /***********************************************************************************************************************

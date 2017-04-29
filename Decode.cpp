@@ -12,7 +12,6 @@ CLASS NAME: _decode
 
 #include "Decode.h"
 
-
 using namespace std;
 
 /***********************************************************************************************************************
@@ -70,9 +69,17 @@ void instType(uint32_t machineCode) {
 ***********************************************************************************************************************/
 void instRDecode(uint32_t machineCode) {
 
+    //used registers
     shadow_IDEX.rd = uint8_t((0x1f) & (machineCode >> 11)); //rd register: bits 11-15
     shadow_IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
     shadow_IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+
+    //reg values
+    shadow_IDEX.rdVal = reg[shadow_IDEX.rd];
+    shadow_IDEX.rsVal = reg[shadow_IDEX.rs];
+    shadow_IDEX.rtVal = reg[shadow_IDEX.rt];
+
+    //other parameters
     shadow_IDEX.shamt =  uint8_t((0x1f) & (machineCode >> 6)); //shamt value: bits 6-10
     shadow_IDEX.funct =  uint8_t((0x3f) & (machineCode)); //function code: bits 0-5
 
@@ -91,8 +98,15 @@ void instRDecode(uint32_t machineCode) {
 ***********************************************************************************************************************/
 void instIDecode(uint32_t machineCode) {
 
+    //used registers
     shadow_IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
     shadow_IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+
+    //reg values
+    shadow_IDEX.rsVal = reg[shadow_IDEX.rs];
+    shadow_IDEX.rtVal = reg[shadow_IDEX.rt];
+
+    //other parameters
     shadow_IDEX.immediate =  uint16_t((0xffff) & (machineCode)); //immediate value: bits 0-15
 
 }
@@ -110,6 +124,7 @@ void instIDecode(uint32_t machineCode) {
 ***********************************************************************************************************************/
 void instJDecode(uint32_t machineCode) {
 
+    //other parameters
     shadow_IDEX.address =  uint32_t((0x3ffffff) & (machineCode)); //address value: bits 0-26
 
 }
@@ -128,11 +143,9 @@ void instJDecode(uint32_t machineCode) {
 void instDecode(void) {
 
     uint32_t machineCode = IFID.mc;
-    if(IFID.mc == 0x00){ //NOP detection
-        shadow_IDEX.nop = true;
-        return;
-    }
+
     shadow_IDEX.nop = false;
+    shadow_IDEX.mc = machineCode;
 
     instType(machineCode); //checks type (R, I, J)
     int inst_type = shadow_IDEX.type;
@@ -154,7 +167,7 @@ void instDecode(void) {
         }
 
         default: { //Error in input machine code
-            std::cout<<"invalid opcode or input / undocumented instruction"<<std::endl;
+            cout<<"invalid opcode or input / undocumented instruction"<<endl;
             return;
         }
     }

@@ -55,7 +55,7 @@ enum reg_bank_names{
 
 /***********************************************************************************************************************
 
-memory: Total data and program image memory
+MEMORY: Total data and program image memory
 
 ***********************************************************************************************************************/
 
@@ -83,7 +83,9 @@ struct _IFID {
 
 struct _IDEX {
 
-    bool nop = true;;
+    uint32_t mc; //machine code
+
+    bool nop = true;
 
     int type; //R, I, J
 
@@ -94,6 +96,11 @@ struct _IDEX {
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
+
+    //register values
+    uint32_t rdVal;
+    uint32_t rsVal;
+    uint32_t rtVal;
 
     //R-type specific
     uint8_t shamt; //shamt
