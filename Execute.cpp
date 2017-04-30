@@ -10,7 +10,7 @@ Sign/Zero Extend FUNCTIONS
 
 ***********************************************************************************************************************/
 
-int32_t zeroExt(int16_t imm) {
+int32_t zeroExt(int16_t imm) { //good
     int32_t zeroExtImm = int32_t(imm);
     int32_t zeroMask = 0x0000FFFF;
 
@@ -33,7 +33,7 @@ void ADD(){ //good
     pc++;
 }
 
-void ADDI(){
+void ADDI(){ //good
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.immediate;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
@@ -41,7 +41,7 @@ void ADDI(){
     pc++;
 }
 
-void ADDIU(){
+void ADDIU(){ //good
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.immediate;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
@@ -49,7 +49,7 @@ void ADDIU(){
     pc++;
 }
 
-void ADDU(){
+void ADDU(){ //good
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -57,7 +57,7 @@ void ADDU(){
     pc++;
 }
 
-void SUB(){
+void SUB(){ //good
     shadow_EXMEM.rv = IDEX.rsVal - IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -65,7 +65,7 @@ void SUB(){
     pc++;
 }
 
-void SUBU(){
+void SUBU(){ //good
     shadow_EXMEM.rv = IDEX.rsVal - IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -79,7 +79,7 @@ LOGICAL FUNCTIONS
 
 ***********************************************************************************************************************/
 
-void AND(){
+void AND(){ //good
     shadow_EXMEM.rv = IDEX.rsVal & IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -87,7 +87,7 @@ void AND(){
     pc++;
 }
 
-void ANDI(){
+void ANDI(){ //good
     int32_t imm = zeroExt(IDEX.immediate);
 
     shadow_EXMEM.rv = IDEX.rsVal & imm;
@@ -97,7 +97,7 @@ void ANDI(){
     pc++;
 }
 
-void OR(){
+void OR(){ //good
     shadow_EXMEM.rv = IDEX.rsVal | IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -105,7 +105,7 @@ void OR(){
     pc++;
 }
 
-void ORI(){
+void ORI(){ //good
     int32_t imm = zeroExt(IDEX.immediate);
 
     shadow_EXMEM.rv = IDEX.rsVal | imm;
@@ -115,7 +115,7 @@ void ORI(){
     pc++;
 }
 
-void XOR(){
+void XOR(){ //good
     shadow_EXMEM.rv = IDEX.rsVal ^ IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -123,7 +123,7 @@ void XOR(){
     pc++;
 }
 
-void XORI(){
+void XORI(){ //good
     int32_t imm = zeroExt(IDEX.immediate);
 
     shadow_EXMEM.rv = IDEX.rsVal ^ imm;
@@ -133,7 +133,7 @@ void XORI(){
     pc++;
 }
 
-void NOR(){
+void NOR(){ //good
     shadow_EXMEM.rv = ~(IDEX.rsVal | IDEX.rtVal);
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
@@ -146,10 +146,12 @@ void NOR(){
 BRANCH FUNCTIONS
 
 ***********************************************************************************************************************/
+//NOTE: IF PC IS INCREMENTED IN FETCH INSTEAD OF EXECUTE: GET RID OF +1 INCREMENTATION OF PC IN BRANCHES AND JUMPS
+
 
 void BEQ(){
     if(IDEX.rsVal == IDEX.rtVal){
-        pc += IDEX.immediate;
+        pc += IDEX.immediate + 1;
     }
     else{
         pc++;
@@ -157,9 +159,9 @@ void BEQ(){
     shadow_EXMEM.type = IDEX.type;
 }
 
-void BGTZ(){
+void BGTZ(){ //same as beq
     if(IDEX.rsVal > 0){
-        pc += IDEX.immediate;
+        pc += IDEX.immediate + 1;
     }
     else{
         pc++;
@@ -167,9 +169,9 @@ void BGTZ(){
     shadow_EXMEM.type = IDEX.type;
 }
 
-void BLEZ(){
+void BLEZ(){ //same as beq
     if(IDEX.rsVal <= 0){
-        pc += IDEX.immediate;
+        pc += IDEX.immediate + 1;
     }
     else{
         pc++;
@@ -177,9 +179,9 @@ void BLEZ(){
     shadow_EXMEM.type = IDEX.type;
 }
 
-void BLTZ(){
+void BLTZ(){ //same as beq
     if(IDEX.rsVal < 0){
-        pc += IDEX.immediate;
+        pc += IDEX.immediate + 1;
     }
     else{
         pc++;
@@ -187,9 +189,9 @@ void BLTZ(){
     shadow_EXMEM.type = IDEX.type;
 }
 
-void BNE(){
+void BNE(){ //same as beq
     if(IDEX.rsVal != IDEX.rtVal){
-        pc += int(IDEX.immediate) + 1;
+        pc += IDEX.immediate + 1;
     }
     else{
         pc++;
@@ -204,19 +206,29 @@ JUMP FUNCTIONS
 ***********************************************************************************************************************/
 
 void JUMP(){
-    pc = (pc & 0xf0000000) | (IDEX.address << 2);
+    int32_t npc;
+    npc = ((4*pc + 4) & 0xf0000000) | (IDEX.address << 2);
+    pc = npc >> 2;
+
     shadow_EXMEM.type = IDEX.type;
 }
 
 void JAL(){
     shadow_EXMEM.rv = pc + 2;
-    pc = (pc & 0xf0000000) | (IDEX.address << 2);
+
+    int32_t npc;
+    npc = ((4*pc + 4) & 0xf0000000) | (IDEX.address << 2);
+    pc = npc >> 2;
+
     shadow_EXMEM.opcode = IDEX.opcode; //After Execute stage, this function now acts as a R type
     shadow_EXMEM.type = IDEX.type;
 }
 
 void JR(){
-    pc = IDEX.rsVal;
+    int32_t npc;
+    npc = IDEX.rsVal;
+    pc = npc >> 2;
+
     shadow_EXMEM.type = IDEX.type;
 }
 
@@ -251,7 +263,7 @@ void LBU() {
 //LOAD UPPER IMMEDIATE
 void LUI(){
 
-    uint32_t regVal = reg[IDEX.rt] & 0x0000ffff;
+    int32_t regVal = IDEX.rtVal & 0x0000ffff;
     regVal = regVal | (IDEX.immediate << 16);
 
     shadow_EXMEM.rv = regVal; //loading upper half of immediate value into rv

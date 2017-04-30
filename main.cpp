@@ -45,6 +45,10 @@ void escapeShadowRealm(void) { //the shadow realm is always void
 
 int main() {
 
+    int32_t t1 = 0x0000AA22;
+    int16_t t2 = 0xFF21;
+    int32_t t3 = t1 + t2;
+
     //init all values for operation:
     Initialize_Simulation_Memory(); //copy program image into memory array
     pc = memory[5]; //set program counter value
