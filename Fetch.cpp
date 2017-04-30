@@ -20,7 +20,7 @@
 void instFetch(void) {
 
     uint32_t instMC; //instruction machine code
-    instMC = memory[pc]; //grab correct instruction from instruction memory
+    instMC = uint32_t(memory[pc]); //grab correct instruction from instruction memory
     shadow_IFID.mc = instMC; //set next instruction to intermediate IF/ID register
 
 }

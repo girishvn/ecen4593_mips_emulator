@@ -53,8 +53,6 @@ int main() {
 
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
-        cout<<"Program Counter value: "<<pc<<endl;
-
         ///////////////
         //Fetch Stage//
         instFetch();
@@ -108,7 +106,7 @@ int main() {
         /////////////////
 
         cout<<"Execute Stage Finished. Type: "<<+shadow_EXMEM.type<<endl;
-        if(shadow_EXMEM.nop == true){
+        if(shadow_EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
         }
         else {
@@ -147,7 +145,7 @@ int main() {
         ////////////////
 
         cout<<"Memory Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
-        if(EXMEM.nop == true){
+        if(EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
         }
         else {
@@ -188,7 +186,7 @@ int main() {
         ////////////////////
         instWriteBack();
         cout<<"Write Back Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
-        if(MEMWB.nop == true){
+        if(MEMWB.nop){
             cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
         }
         else {
