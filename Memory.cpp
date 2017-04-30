@@ -17,7 +17,7 @@ void WriteWordIntoMemory(){
 
 void WriteHalfWordIntoMemory(){
     //LOCAL VARIABLES used to properly store values into memory without overwriting unused bits
-    uint32_t memVal;
+    int32_t memVal;
     uint32_t maskMem;
     uint32_t maskReg;
 
@@ -69,7 +69,7 @@ void WriteHalfWordIntoMemory(){
 
 void WriteByteIntoMemory(){
     //LOCAL VARIABLES used to properly store values into memory without overwriting unused bits
-    uint32_t memVal;
+    int32_t memVal;
     uint32_t maskMem;
     uint32_t maskReg;
 
@@ -145,8 +145,8 @@ void LoadWordFromMemory(void){
 
 void LoadHalfWordFromMemory(void){
     //LOCAL VARIABLES
-    uint32_t memVal;
-    uint32_t regVal;
+    int32_t memVal;
+    int32_t regVal;
     uint32_t maskMem;
     uint32_t maskReg;
 
@@ -204,8 +204,8 @@ void LoadHalfWordFromMemory(void){
 
 void LoadByteFromMemory(void){
     //LOCAL VARIABLES
-    uint32_t memVal;
-    uint32_t regVal;
+    int32_t memVal;
+    int32_t regVal;
     uint32_t maskMem;
     uint32_t maskReg;
 
@@ -275,18 +275,10 @@ void LoadByteFromMemory(void){
     }
 }
 
-void LoadFromMemory(){
-    shadow_MEMWB.rv = EXMEM.rv;
-    shadow_MEMWB.rt = EXMEM.rt;
-    shadow_MEMWB.type = EXMEM.type;
-    shadow_MEMWB.opcode = EXMEM.opcode;
-}
-
-
 void instMemory(){
 
     //nop instruction detection
-    if(EXMEM.nop == true){ //NOP detection
+    if(EXMEM.nop){ //NOP detection
         shadow_MEMWB.nop = true;
         return;
     }
@@ -342,12 +334,10 @@ void instMemory(){
     else if(EXMEM.type == R){
         shadow_MEMWB.rv = EXMEM.rv;
         shadow_MEMWB.rd = EXMEM.rd;
-        shadow_MEMWB.ra = EXMEM.ra;
     }
     //Special case for Jump and Link
     if(EXMEM.opcode == 0x03){
         shadow_MEMWB.rv = EXMEM.rv;
-        shadow_MEMWB.ra = EXMEM.ra;
         shadow_MEMWB.opcode = EXMEM.opcode;
     }
 

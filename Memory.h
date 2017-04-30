@@ -14,7 +14,6 @@ void WriteByteIntoMemory();
 void LoadWordFromMemory(void);
 void LoadHalfWordFromMemory(void);
 void LoadByteFromMemory(void);
-void LoadFromMemory(void);
 
 void instMemory(void);
 

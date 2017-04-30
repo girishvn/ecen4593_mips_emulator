@@ -17,7 +17,7 @@ reg_bank_names: Enumeration to name all indices in the reg array
 
 ***********************************************************************************************************************/
 
-extern uint32_t reg[32]; //32-register system
+extern int32_t reg[32]; //32-register system
 enum reg_bank_names{
     $zero,
     $at,
@@ -59,7 +59,7 @@ MEMORY: Total data and program image memory
 
 ***********************************************************************************************************************/
 
-extern uint32_t memory[1200];
+extern int32_t memory[0x1200];
 
 /***********************************************************************************************************************
 
@@ -67,7 +67,7 @@ extern uint32_t memory[1200];
 
 ***********************************************************************************************************************/
 
-extern uint32_t pc; //program counter
+extern int32_t pc; //program counter
 
 /***********************************************************************************************************************
 
@@ -96,19 +96,19 @@ struct _IDEX {
     uint8_t rt;
 
     //register values
-    uint32_t rdVal;
-    uint32_t rsVal;
-    uint32_t rtVal;
+    int32_t rdVal;
+    int32_t rsVal;
+    int32_t rtVal;
 
     //R-type specific
     uint8_t shamt; //shamt
     uint8_t funct; //function
 
     //I-type specific
-    uint16_t immediate;
+    int16_t immediate;
 
     //J-type specific
-    uint32_t address;
+    int32_t address;
 
 };
 
@@ -125,24 +125,23 @@ struct _EXMEM {
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
-    uint8_t ra;
 
     //register values
-    uint32_t rdVal;
-    uint32_t rsVal;
-    uint32_t rtVal;
+    int32_t rdVal;
+    int32_t rsVal;
+    int32_t rtVal;
 
     //R-type specific
     uint8_t shamt; //shamt
     uint8_t funct; //function
 
     //I-type specific
-    uint16_t immediate;
+    int16_t immediate;
 
     //J-type specific
-    uint32_t address;
+    int32_t address;
     uint8_t byteIndex;
-    uint32_t rv;
+    int32_t rv;
 
 };
 
@@ -159,24 +158,23 @@ struct _MEMWB {
     uint8_t rd;
     uint8_t rs;
     uint8_t rt;
-    uint8_t ra;
 
     //register values
-    uint32_t rdVal;
-    uint32_t rsVal;
-    uint32_t rtVal;
+    int32_t rdVal;
+    int32_t rsVal;
+    int32_t rtVal;
 
     //R-type specific
     uint8_t shamt; //shamt
     uint8_t funct; //function
 
     //I-type specific
-    uint16_t immediate;
+    int16_t immediate;
 
     //J-type specific
-    uint32_t address;
+    int32_t address;
 
-    uint32_t rv;
+    int32_t rv;
 
 };
 

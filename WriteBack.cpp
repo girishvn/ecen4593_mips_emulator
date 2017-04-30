@@ -8,7 +8,7 @@
 void instWriteBack(){
 
     //nop instruction detection
-    if(MEMWB.nop == true){ //NOP detection
+    if(MEMWB.nop){ //NOP detection
         return;
     }
 
@@ -21,6 +21,6 @@ void instWriteBack(){
 
     //Special case for Jump and Link
     if(MEMWB.type == J && MEMWB.opcode == 0x03){
-        reg[MEMWB.ra] = MEMWB.rv;
+        reg[$ra] = MEMWB.rv;
     }
 }

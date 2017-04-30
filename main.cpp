@@ -125,7 +125,7 @@ int main() {
             }
             else if (shadow_EXMEM.type == I) {
                 cout<< "I OP Code: " << +shadow_EXMEM.opcode
-                    << " immediate: " << +shadow_EXMEM.immediate
+                    << " immediate: " << +IDEX.immediate
                     << " rs: " << +shadow_EXMEM.rs
                     << " rsVal " << +shadow_EXMEM.rsVal
                     << " rt: " << +shadow_EXMEM.rt
@@ -212,5 +212,8 @@ int main() {
     }
 
     cout<<"Program has finished running"<<endl;
+    for(int i = 6; i<10; i++){
+        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
+    }
     return 1;
 }

@@ -285,7 +285,7 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
 */
 
 const int inst_memory_size = sizeof(program_image) / sizeof(program_image[0]); //define size of program image
-uint32_t memory[1200] = {0}; //size of memory
+int32_t memory[0x1200] = {0}; //size of memory
 
 /***********************************************************************************************************************
 
