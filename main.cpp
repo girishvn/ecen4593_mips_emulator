@@ -51,7 +51,6 @@ int main() {
     reg[$sp] = memory[0]; //init stack pointer
     reg[$fp] = memory[1]; //init frame pointer
 
-
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         cout<<"Program Counter value: "<<pc<<endl;

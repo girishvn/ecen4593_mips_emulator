@@ -61,7 +61,7 @@ void MOVN(void); //funct: 0x0B
 void MOVZ(void); //funct: 0x0A
 
 //OTHERS
-//WRITE SEB
+int32_t zeroExt(int16_t imm); //zero extend function (called from other instructions)
 void NOP(void); //inst: 0x00000000
 
 //UNNEEDED

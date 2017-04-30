@@ -4,6 +4,20 @@
 
 #include "Execute.h"
 
+/***********************************************************************************************************************
+
+Sign/Zero Extend FUNCTIONS
+
+***********************************************************************************************************************/
+
+int32_t zeroExt(int16_t imm) {
+    int32_t zeroExtImm = int32_t(imm);
+    int32_t zeroMask = 0x0000FFFF;
+
+    zeroExtImm = zeroMask & zeroExtImm;
+
+    return zeroExtImm;
+}
 
 /***********************************************************************************************************************
 
@@ -74,7 +88,9 @@ void AND(){
 }
 
 void ANDI(){
-    shadow_EXMEM.rv = IDEX.rsVal & IDEX.immediate;
+    int32_t imm = zeroExt(IDEX.immediate);
+
+    shadow_EXMEM.rv = IDEX.rsVal & imm;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
 
@@ -90,7 +106,9 @@ void OR(){
 }
 
 void ORI(){
-    shadow_EXMEM.rv = IDEX.rsVal | IDEX.immediate;
+    int32_t imm = zeroExt(IDEX.immediate);
+
+    shadow_EXMEM.rv = IDEX.rsVal | imm;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
 
@@ -106,7 +124,9 @@ void XOR(){
 }
 
 void XORI(){
-    shadow_EXMEM.rv = IDEX.rsVal ^ IDEX.immediate;
+    int32_t imm = zeroExt(IDEX.immediate);
+
+    shadow_EXMEM.rv = IDEX.rsVal ^ imm;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
 
