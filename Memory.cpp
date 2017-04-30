@@ -2,6 +2,7 @@
 // Created by Karros Huang on 4/23/17.
 //
 
+#include <iostream>
 #include "Memory.h"
 #include "Decode.h"
 

@@ -54,8 +54,8 @@ int main() {
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         cout<<"Program Counter: "<<pc<<endl;
-        if(pc == 12){
-            cout<<"pc is at 12"<<endl;
+        if(pc == 25){
+            cout<<"pc is at 25"<<endl;
         }
         ///////////////
         //Fetch Stage//
@@ -173,7 +173,7 @@ int main() {
                            EXMEM.opcode == 0x2b) {
                     cout << "Value is written into memory" << endl
                          << "Value: " << memory[EXMEM.address] << endl
-                         << "Address: " << EXMEM.rv << endl;
+                         << "Address: " << EXMEM.address << endl;
                 }
                 else {
                     cout << "Memory was not accessed" << endl;
