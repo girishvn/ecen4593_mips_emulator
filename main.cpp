@@ -54,8 +54,8 @@ int main() {
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         cout<<"Program Counter: "<<pc<<endl;
-        if(pc == 25){
-            cout<<"pc is at 25"<<endl;
+        if(pc == 10){
+            cout<<"pc is at 10"<<endl;
         }
         ///////////////
         //Fetch Stage//

@@ -164,7 +164,7 @@ BRANCH FUNCTIONS
 
 void BEQ(){
     if(IDEX.rsVal == IDEX.rtVal){
-        pc += IDEX.immediate + 1;
+        pc += IDEX.immediate/4 + 1;
     }
     else{
         pc++;
@@ -233,7 +233,7 @@ void JUMP(){
 }
 
 void JAL(){
-    shadow_EXMEM.rv = (pc + 2) << 2;
+    shadow_EXMEM.rv = (pc + 2) * 4;
 
     int32_t npc;
     npc = ((4*pc + 4) & 0xf0000000) | (IDEX.address << 2);
