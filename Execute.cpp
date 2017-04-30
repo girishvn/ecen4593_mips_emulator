@@ -171,6 +171,7 @@ void BEQ(){
     }
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.nop = true;
 }
 
 void BGTZ(){ //same as beq
@@ -182,6 +183,7 @@ void BGTZ(){ //same as beq
     }
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.nop = true;
 }
 
 void BLEZ(){ //same as beq
@@ -193,6 +195,7 @@ void BLEZ(){ //same as beq
     }
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.nop = true;
 }
 
 void BLTZ(){ //same as beq
@@ -204,6 +207,7 @@ void BLTZ(){ //same as beq
     }
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.nop = true;
 }
 
 void BNE(){ //same as beq
@@ -215,6 +219,7 @@ void BNE(){ //same as beq
     }
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.nop = true;
 }
 
 /***********************************************************************************************************************

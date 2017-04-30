@@ -13,6 +13,7 @@ CALLABLE FUNCTIONS
 ***********************************************************************************************************************/
 
 void WriteWordIntoMemory(){
+
     memory[EXMEM.address] = EXMEM.rtVal;
 }
 

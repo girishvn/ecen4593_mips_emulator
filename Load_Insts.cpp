@@ -258,7 +258,7 @@ uint32_t program_image[] = {
         0x00000000,
         0x00000000,
         0x00000000,
-        0x0a000000,
+        0x0a000000, //LOCATION 243 (first array index)
         0x00000d00,    // 	nop
         0x00b00000,    // 	nop
         0x000000e0,
@@ -507,7 +507,7 @@ uint32_t program_image[] = {
         0x000f0f00,
         0x00f0f000,
         0x0f0f0000,
-        0x0000e000};
+        0x0000e000}; //LOCATION 493 (last data filled in array)
 #endif
 
 #ifdef PROGRAMLOAD

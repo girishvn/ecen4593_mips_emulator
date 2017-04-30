@@ -54,14 +54,7 @@ int main() {
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         cout<<"Program Counter: "<<pc<<endl;
-        if(pc == 19){
-            cout<<"pc is at 19"<<endl;
 
-         //   for(int i = 243; i < 494; i++){ //print out number array
-         //       cout<<memory[i]<<endl;
-         //   }
-
-        }
         ///////////////
         //Fetch Stage//
         instFetch();
@@ -137,7 +130,7 @@ int main() {
                      << " rtVal " << +shadow_EXMEM.rtVal
                      << " rv: " << +shadow_EXMEM.rv
                      << " address: " << +shadow_EXMEM.address << endl;
-            } else if (shadow_EXMEM.type == J && shadow_EXMEM.opcode != 0x03) {
+            } else if (shadow_EXMEM.type == J && shadow_EXMEM.opcode != 0x02) {
                 cout << "J OP Code: " << +shadow_EXMEM.opcode << endl
                      << "New PC address calculated is: " << pc << endl;
             } else if (shadow_EXMEM.type == J && shadow_EXMEM.opcode == 0x03) {
@@ -227,8 +220,15 @@ int main() {
     }
 
     cout<<"Program has finished running"<<endl;
+
+    for(int i = 243; i < 494; i++){ //print out number arra
+        cout<<memory[i]<<endl;
+    }
+
     for(int i = 6; i<10; i++){
         cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
     }
+
+
     return 1;
 }
