@@ -338,9 +338,9 @@ void instMemory(){
     //Special case for Jump and Link
     if(EXMEM.opcode == 0x03){
         shadow_MEMWB.rv = EXMEM.rv;
-        shadow_MEMWB.opcode = EXMEM.opcode;
     }
 
     //Always pass on the type of the instruction to the next stage
     shadow_MEMWB.type = EXMEM.type;
+    shadow_MEMWB.opcode = EXMEM.opcode;
 }

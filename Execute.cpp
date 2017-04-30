@@ -29,6 +29,7 @@ void ADD(){ //good
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -37,6 +38,7 @@ void ADDI(){ //good
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.immediate;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -45,6 +47,7 @@ void ADDIU(){ //good
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.immediate;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -53,6 +56,7 @@ void ADDU(){ //good
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -61,6 +65,7 @@ void SUB(){ //good
     shadow_EXMEM.rv = IDEX.rsVal - IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -69,6 +74,7 @@ void SUBU(){ //good
     shadow_EXMEM.rv = IDEX.rsVal - IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -83,6 +89,7 @@ void AND(){ //good
     shadow_EXMEM.rv = IDEX.rsVal & IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -93,6 +100,7 @@ void ANDI(){ //good
     shadow_EXMEM.rv = IDEX.rsVal & imm;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -101,6 +109,7 @@ void OR(){ //good
     shadow_EXMEM.rv = IDEX.rsVal | IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -111,6 +120,7 @@ void ORI(){ //good
     shadow_EXMEM.rv = IDEX.rsVal | imm;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -119,6 +129,7 @@ void XOR(){ //good
     shadow_EXMEM.rv = IDEX.rsVal ^ IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -129,6 +140,7 @@ void XORI(){ //good
     shadow_EXMEM.rv = IDEX.rsVal ^ imm;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -137,6 +149,7 @@ void NOR(){ //good
     shadow_EXMEM.rv = ~(IDEX.rsVal | IDEX.rtVal);
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -157,6 +170,7 @@ void BEQ(){
         pc++;
     }
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 }
 
 void BGTZ(){ //same as beq
@@ -167,6 +181,7 @@ void BGTZ(){ //same as beq
         pc++;
     }
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 }
 
 void BLEZ(){ //same as beq
@@ -177,6 +192,7 @@ void BLEZ(){ //same as beq
         pc++;
     }
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 }
 
 void BLTZ(){ //same as beq
@@ -187,6 +203,7 @@ void BLTZ(){ //same as beq
         pc++;
     }
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 }
 
 void BNE(){ //same as beq
@@ -197,6 +214,7 @@ void BNE(){ //same as beq
         pc++;
     }
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 }
 
 /***********************************************************************************************************************
@@ -211,6 +229,7 @@ void JUMP(){
     pc = npc >> 2;
 
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 }
 
 void JAL(){
@@ -230,6 +249,7 @@ void JR(){
     pc = npc >> 2;
 
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 }
 
 /***********************************************************************************************************************
@@ -246,7 +266,7 @@ void LB(){
 void LBU() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
     //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
@@ -263,7 +283,7 @@ void LBU() {
 //LOAD UPPER IMMEDIATE
 void LUI(){
 
-    int32_t regVal = IDEX.rtVal & 0x0000ffff;
+    int32_t regVal = IDEX.rtVal/4 & 0x0000ffff;
     regVal = regVal | (IDEX.immediate << 16);
 
     shadow_EXMEM.rv = regVal; //loading upper half of immediate value into rv
@@ -276,7 +296,7 @@ void LUI(){
 //LOAD WORD
 void LW(){
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate/4;
+    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
 
     //If storing a word, index should always be at 0
@@ -298,7 +318,7 @@ void LW(){
 void LHU() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
     //If storing a word, index should always be at 0
@@ -327,7 +347,7 @@ STORE FUNCTIONS
 void SB() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
     shadow_EXMEM.rtVal = IDEX.rtVal;
@@ -344,7 +364,7 @@ void SB() {
 //STORE WORD
 void SW(){
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate/4;
+    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
 
     //If storing a word, index should always be at 0
@@ -367,7 +387,7 @@ void SW(){
 void SH() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal + IDEX.immediate / 4;
+    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
     //If storing a half word, index should only be at 1, 2, or 3
@@ -396,6 +416,7 @@ void SLL(){
     shadow_EXMEM.rv = IDEX.rtVal<<IDEX.shamt;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -406,6 +427,7 @@ void SLT(){
     }
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -419,6 +441,7 @@ void SLTI(){
     }
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -432,6 +455,7 @@ void SLTIU(){
     }
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -445,6 +469,7 @@ void SLTU(){
     }
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -453,6 +478,7 @@ void SRL(){
     shadow_EXMEM.rv = IDEX.rtVal>>IDEX.shamt;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
     pc++;
 }
@@ -467,6 +493,7 @@ void MOVN(){
         shadow_EXMEM.type = J; //failed mov condition and thus must not operate in memory or writeback stages
     }
 
+    shadow_EXMEM.opcode = IDEX.opcode;
     pc++;
 }
 
@@ -480,6 +507,7 @@ void MOVZ(){
         shadow_EXMEM.type = J; //failed mov condition and thus must not operate in memory or writeback stages
     }
 
+    shadow_EXMEM.opcode = IDEX.opcode;
     pc++;
 }
 

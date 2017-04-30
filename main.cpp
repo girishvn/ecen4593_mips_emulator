@@ -45,10 +45,6 @@ void escapeShadowRealm(void) { //the shadow realm is always void
 
 int main() {
 
-    int32_t t1 = 0x0000AA22;
-    int16_t t2 = 0xFF21;
-    int32_t t3 = t1 + t2;
-
     //init all values for operation:
     Initialize_Simulation_Memory(); //copy program image into memory array
     pc = memory[5]; //set program counter value
@@ -57,6 +53,10 @@ int main() {
 
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
+        cout<<"Program Counter: "<<pc<<endl;
+        if(pc == 12){
+            cout<<"pc is at 12"<<endl;
+        }
         ///////////////
         //Fetch Stage//
         instFetch();
@@ -115,28 +115,30 @@ int main() {
         }
         else {
             if (shadow_EXMEM.type == R) {
-                cout<< "R Function " << +shadow_EXMEM.funct
-                    << " rd " << +shadow_EXMEM.rd
-                    << " rs " << +shadow_EXMEM.rs
-                    << " rsVal " << +shadow_EXMEM.rsVal
-                    << " rt " << +shadow_EXMEM.rt
-                    << " rtVal " << +shadow_EXMEM.rtVal
-                    << " shamt " << +shadow_EXMEM.shamt
-                    << " rv " << +shadow_EXMEM.rv << endl;
-            }
-            else if (shadow_EXMEM.type == I) {
-                cout<< "I OP Code: " << +shadow_EXMEM.opcode
-                    << " immediate: " << +IDEX.immediate
-                    << " rs: " << +shadow_EXMEM.rs
-                    << " rsVal " << +shadow_EXMEM.rsVal
-                    << " rt: " << +shadow_EXMEM.rt
-                    << " rtVal " << +shadow_EXMEM.rtVal
-                    << " rv: " << +shadow_EXMEM.rv
-                    << " address: "<< +shadow_EXMEM.address << endl;
-            }
-            else if (shadow_EXMEM.type == J) {
-                cout<< "J OP Code: " << +shadow_EXMEM.opcode
-                    << " Jumps Are completed by Memory stage." << endl;
+                cout << "R Function " << +shadow_EXMEM.funct
+                     << " rd " << +shadow_EXMEM.rd
+                     << " rs " << +shadow_EXMEM.rs
+                     << " rsVal " << +shadow_EXMEM.rsVal
+                     << " rt " << +shadow_EXMEM.rt
+                     << " rtVal " << +shadow_EXMEM.rtVal
+                     << " shamt " << +shadow_EXMEM.shamt
+                     << " rv " << +shadow_EXMEM.rv << endl;
+            } else if (shadow_EXMEM.type == I) {
+                cout << "I OP Code: " << +shadow_EXMEM.opcode
+                     << " immediate: " << +IDEX.immediate
+                     << " rs: " << +shadow_EXMEM.rs
+                     << " rsVal " << +shadow_EXMEM.rsVal
+                     << " rt: " << +shadow_EXMEM.rt
+                     << " rtVal " << +shadow_EXMEM.rtVal
+                     << " rv: " << +shadow_EXMEM.rv
+                     << " address: " << +shadow_EXMEM.address << endl;
+            } else if (shadow_EXMEM.type == J && shadow_EXMEM.opcode != 0x03) {
+                cout << "J OP Code: " << +shadow_EXMEM.opcode << endl
+                     << "New PC address calculated is: " << pc << endl;
+            } else if (shadow_EXMEM.type == J && shadow_EXMEM.opcode == 0x03) {
+                cout << "J OP Code: " << +shadow_EXMEM.opcode << endl
+                     << "New PC address calculated is: " << pc << endl
+                     << "Calculated return address to store in ra: " << shadow_MEMWB.rv << endl;
             }
         }
         cout<<endl;
@@ -171,14 +173,18 @@ int main() {
                            EXMEM.opcode == 0x2b) {
                     cout << "Value is written into memory" << endl
                          << "Value: " << memory[EXMEM.address] << endl
-                         << "Address: " << EXMEM.address << endl;
+                         << "Address: " << EXMEM.rv << endl;
                 }
                 else {
                     cout << "Memory was not accessed" << endl;
                 }
             }
-            else if (shadow_MEMWB.type == J) {
+            else if (shadow_MEMWB.type == J && shadow_MEMWB.opcode != 0x03) {
                 cout << "Jumps are completed before memory stage." << endl;
+            }
+            //Special case for JAL
+            else if(shadow_MEMWB.type == J && shadow_MEMWB.opcode == 0x03){
+                cout << "Going to save the return address " << shadow_MEMWB.rv << " into ra." <<endl;
             }
         }
         cout<<endl;
@@ -194,11 +200,14 @@ int main() {
             cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
         }
         else {
-            if (MEMWB.type == R || MEMWB.type == I) {
+            if (MEMWB.type == I) {
                 cout << "Written back: " << MEMWB.rv << " Into register: " << +MEMWB.rt << endl;
-            }
-            else if (shadow_EXMEM.type == J) {
-                cout << "Jumps Are completed by Write Back stage." << endl;
+            } else if (MEMWB.type == R){
+                cout << "Written back: " << MEMWB.rv << " Into register: " << +MEMWB.rd << endl;
+            } else if (shadow_MEMWB.type == J && shadow_MEMWB.opcode != 0x03) {
+                cout << "Jumps are completed before memory stage." << endl;
+            } else if(shadow_MEMWB.type == J && shadow_MEMWB.opcode == 0x03){ //special case for JAL
+                cout << "Wrote back the return address value " << MEMWB.rv << " into ra." <<endl;
             }
         }
         cout<<endl;

@@ -29,7 +29,7 @@ uint32_t program_image[] = {
         0x00000000};//nop
 */
 uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
-        0x00001025,     // 	move	v0,zero    <load_arrays>:
+        0x00001025,     // 	move	v0,zero    <load_arrays>: PC = 10
         0x24060064,     // 	li	a2,100
         0x8c830000,     // 	lw	v1,0(a0)
         0x00621821,     // 	addu	v1,v1,v0
@@ -285,7 +285,7 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
 */
 
 const int inst_memory_size = sizeof(program_image) / sizeof(program_image[0]); //define size of program image
-int32_t memory[0x1200] = {0}; //size of memory
+int32_t memory[1200] = {0}; //size of memory
 
 /***********************************************************************************************************************
 
