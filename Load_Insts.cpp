@@ -75,7 +75,7 @@ uint32_t program_image[] = {
         0x01ab6023,   // 	subu	t4,t5,t3
         0x1980fff5,   // 	blez	t4,4008a4 <bubble_sort+0x48>
         0x00801825,   // 	move	v1,a0
-        0x000c4880,   // 	sll	t1,t4,0x2
+        0x000c4880,   // 	sll	t1,t4,0x2                         PC = 60
         0x00894821,   // 	addu	t1,a0,t1	0x8c190812,	//		flush memory location for testing
         0x1000ffe3,   // 	b	40086c <bubble_sort+0x10>
         0x00005025,   // 	move	t2,zero
@@ -85,7 +85,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x28a20002,   // 	slti	v0,a1,2
+        0x28a20002,   // 	slti	v0,a1,2                     PC = 70
         0x14400029,   // 	bnez	v0,400990 <insertion_sort+0xac>
         0x248e0004,   // 	addiu	t6,a0,4
         0x0080c025,   // 	move	t8,a0
@@ -95,7 +95,7 @@ uint32_t program_image[] = {
         0x240f0001,   // 	li	t7,1
         0xac690000,   // 	sw	t1,0(v1)
         0x24420001,   // 	addiu	v0,v0,1
-        0x104d000c,   // 	beq	v0,t5,400940 <insertion_sort+0x5c>
+        0x104d000c,   // 	beq	v0,t5,400940 <insertion_sort+0x5c> PC = 80
         0xacc80000,   // 	sw	t0,0(a2)
         0x006c1821,   // 	addu	v1,v1,t4
         0x00831821,   // 	addu	v1,a0,v1
@@ -105,7 +105,7 @@ uint32_t program_image[] = {
         0x8ce9fffc,   // 	lw	t1,-4(a3)
         0x0109502a,   // 	slt	t2,t0,t1
         0x1540fff4,   // 	bnez	t2,400904 <insertion_sort+0x20>
-        0x00863021,   // 	addu	a2,a0,a2
+        0x00863021,   // 	addu	a2,a0,a2 PC = 90
         0x10000003,   // 	b	400948 <insertion_sort+0x64>
         0x25ef0001,   // 	addiu	t7,t7,1
         0x01a01025,   // 	move	v0,t5
@@ -115,7 +115,7 @@ uint32_t program_image[] = {
         0x10af0010,   // 	beq	a1,t7,400994 <insertion_sort+0xb0>
         0x27390004,   // 	addiu	t9,t9,4
         0x19e0fffa,   // 	blez	t7,400944 <insertion_sort+0x60>
-        0x01c01825,   // 	move	v1,t6
+        0x01c01825,   // 	move	v1,t6 PC = 100
         0x8dc80000,   // 	lw	t0,0(t6)
         0x8f090000,   // 	lw	t1,0(t8)
         0x0109382a,   // 	slt	a3,t0,t1
@@ -125,7 +125,7 @@ uint32_t program_image[] = {
         0x01c03825,   // 	move	a3,t6
         0x272cfffc,   // 	addiu	t4,t9,-4
         0x018e6023,   // 	subu	t4,t4,t6
-        0x272bfff8,   // 	addiu	t3,t9,-8
+        0x272bfff8,   // 	addiu	t3,t9,-8 PC = 110
         0x1000ffde,   // 	b	400904 <insertion_sort+0x20>
         0x01785823,   // 	subu	t3,t3,t8
         0x00001025,   // 	move	v0,zero
@@ -135,7 +135,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x18c0000e,   // 	blez	a2,4009dc <check_result+0x3c>
+        0x18c0000e,   // 	blez	a2,4009dc <check_result+0x3c> PC = 120
         0x00801825,   // 	move	v1,a0
         0x00063080,   // 	sll	a2,a2,0x2
         0x00862021,   // 	addu	a0,a0,a2
@@ -145,7 +145,7 @@ uint32_t program_image[] = {
         0x8ca80000,   // 	lw	t0,0(a1)
         0x00e83826,   // 	xor	a3,a3,t0
         0x00c7100b,   // 	movn	v0,a2,a3
-        0x24630004,   // 	addiu	v1,v1,4
+        0x24630004,   // 	addiu	v1,v1,4 PC = 138
         0x1464fffa,   // 	bne	v1,a0,4009b8 <check_result+0x18>
         0x24a50004,   // 	addiu	a1,a1,4
         0x03e00008,   // 	jr	ra
@@ -165,7 +165,7 @@ uint32_t program_image[] = {
         0xafa207ec,   // 	sw	v0,2028(sp)
         0x240600fa,   // 	li	a2,250
         0x27b10404,   // 	addiu	s1,sp,1028
-        0x02202825,   // 	move	a1,s1
+        0x02202825,   // 	move	a1,s1               PC = 150
         0x27b0001c,   // 	addiu	s0,sp,28
         0x02002025,   // 	move	a0,s0
         0x0c00000a,   // 	jal	10 <copy_array>
@@ -175,7 +175,7 @@ uint32_t program_image[] = {
         0x0c00001e,   // 	jal	30 <bubble_sort>
         0x00000000,   // 	nop
         0x00409025,   // 	move	s2,v0
-        0x240500fa,   // 	li	a1,250
+        0x240500fa,   // 	li	a1,250                  PC = 160
         0x02202025,   // 	move	a0,s1
         0x0c000046,   // 	jal 70 <insertion_sort>
         0x00000000,   // 	nop

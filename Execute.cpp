@@ -164,7 +164,7 @@ BRANCH FUNCTIONS
 
 void BEQ(){
     if(IDEX.rsVal == IDEX.rtVal){
-        pc += IDEX.immediate/4 + 1;
+        pc += IDEX.immediate + 1;
     }
     else{
         pc++;
@@ -424,6 +424,9 @@ void SLL(){
 void SLT(){
     if(IDEX.rsVal < IDEX.rtVal){
         shadow_EXMEM.rv = 1;
+    }
+    else{
+        shadow_EXMEM.rv = 0;
     }
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;

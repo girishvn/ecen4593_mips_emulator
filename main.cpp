@@ -54,8 +54,13 @@ int main() {
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         cout<<"Program Counter: "<<pc<<endl;
-        if(pc == 10){
-            cout<<"pc is at 10"<<endl;
+        if(pc == 19){
+            cout<<"pc is at 19"<<endl;
+
+         //   for(int i = 243; i < 494; i++){ //print out number array
+         //       cout<<memory[i]<<endl;
+         //   }
+
         }
         ///////////////
         //Fetch Stage//
