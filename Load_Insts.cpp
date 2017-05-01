@@ -10,7 +10,7 @@
 
 ***********************************************************************************************************************/
 #define PROGRAM1
-//#define PROGRAMLOAD
+//#define IDKPROGRAM1
 //#define IDKPROGRAM2
 
 #ifdef PROGRAM1
@@ -510,7 +510,7 @@ uint32_t program_image[] = {
         0x0000e000}; //LOCATION 493 (last data filled in array)
 #endif
 
-#ifdef PROGRAMLOAD
+#ifdef IDKPROGRAM1
 uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
         0x00001025,     // 	move	v0,zero    <load_arrays>: PC = 10
         0x24060064,     // 	li	a2,100

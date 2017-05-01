@@ -51,6 +51,15 @@ int main() {
     reg[$sp] = memory[0]; //init stack pointer
     reg[$fp] = memory[1]; //init frame pointer
 
+    /* PRINTING OUT INITIAL ARRAY
+    int count
+    for(int i = 243; i < 493; i++){ //print out number arra
+        count++;
+        cout<<memory[i]<<" "<<count<<endl;
+    }
+     */
+
+
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
         cout<<"Program Counter: "<<pc<<endl;
@@ -221,14 +230,15 @@ int main() {
 
     cout<<"Program has finished running"<<endl;
 
-    for(int i = 243; i < 494; i++){ //print out number arra
+    /* PRINT OUT FINAL ARRAY VALUES
+    for(int i = 243; i < 493; i++){ //print out number arra
         cout<<memory[i]<<endl;
     }
 
     for(int i = 6; i<10; i++){
         cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
     }
-
+    */
 
     return 1;
 }
