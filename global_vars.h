@@ -71,6 +71,15 @@ extern int32_t pc; //program counter
 
 /***********************************************************************************************************************
 
+ Delayed Branch variables: Only works with single staged pipeline.
+
+***********************************************************************************************************************/
+
+extern int32_t BranchPC; //Calculated branch address
+extern bool BranchFlag; //Set true if a branch instruction is set
+
+/***********************************************************************************************************************
+
 Intermediate registers global structs
 
 ***********************************************************************************************************************/
@@ -140,6 +149,7 @@ struct _EXMEM {
     uint8_t byteIndex;
     int32_t rv;
     bool nop = true;
+
 
 };
 

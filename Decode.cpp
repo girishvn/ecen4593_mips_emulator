@@ -145,7 +145,12 @@ void instJDecode(uint32_t machineCode) {
 ***********************************************************************************************************************/
 void instDecode(void) {
 
-    pc++; //increment PC in decode
+    if(BranchFlag){
+        pc = BranchPC;
+    }
+    else{
+        pc++; //increment PC in decode
+    }
 
     uint32_t machineCode = IFID.mc;
 

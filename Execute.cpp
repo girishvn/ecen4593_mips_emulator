@@ -166,7 +166,8 @@ BRANCH FUNCTIONS
 void BEQ(){
 
     if(IDEX.rsVal == IDEX.rtVal){
-        pc += IDEX.immediate;
+        BranchPC = pc + IDEX.immediate;
+        BranchFlag = true;
     }
 
     shadow_EXMEM.type = IDEX.type;
@@ -178,7 +179,8 @@ void BEQ(){
 void BGTZ(){ //same as beq
 
     if(IDEX.rsVal > 0){
-        pc += IDEX.immediate ;
+        BranchPC = pc + IDEX.immediate;
+        BranchFlag = true;
     }
 
     shadow_EXMEM.type = IDEX.type;
@@ -190,7 +192,8 @@ void BGTZ(){ //same as beq
 void BLEZ(){ //same as beq
 
     if(IDEX.rsVal <= 0){
-        pc += IDEX.immediate ;
+        BranchPC = pc + IDEX.immediate;
+        BranchFlag = true;
     }
 
     shadow_EXMEM.type = IDEX.type;
@@ -202,7 +205,8 @@ void BLEZ(){ //same as beq
 void BLTZ(){ //same as beq
 
     if(IDEX.rsVal < 0){
-        pc += IDEX.immediate + 1;
+        BranchPC = pc + IDEX.immediate;
+        BranchFlag = true;
     }
 
     shadow_EXMEM.type = IDEX.type;
@@ -214,7 +218,8 @@ void BLTZ(){ //same as beq
 void BNE(){ //same as beq
 
     if(IDEX.rsVal != IDEX.rtVal){
-        pc += IDEX.immediate;
+        BranchPC = pc + IDEX.immediate;
+        BranchFlag = true;
     }
 
     shadow_EXMEM.type = IDEX.type;
@@ -233,7 +238,8 @@ void JUMP(){
 
     int32_t npc;
     npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
-    pc = npc >> 2;
+    BranchPC = npc >> 2;
+    BranchFlag = true;
 
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
@@ -246,7 +252,8 @@ void JAL(){
 
     int32_t npc;
     npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
-    pc = npc >> 2;
+    BranchPC = npc >> 2;
+    BranchFlag = true;
 
     shadow_EXMEM.opcode = IDEX.opcode; //After Execute stage, this function now acts as a R type
     shadow_EXMEM.type = IDEX.type;
@@ -257,7 +264,8 @@ void JR(){
 
     int32_t npc;
     npc = IDEX.rsVal;
-    pc = npc >> 2;
+    BranchPC = npc >> 2;
+    BranchFlag = true;
 
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
@@ -541,9 +549,6 @@ void BGEZ(){ //uneeded
     if(int32_t(reg[IDEX.rs]) >= 0){
         pc += reg[IDEX.immediate];
     }
-    else{
-        pc++;
-    }
     shadow_EXMEM.type = IDEX.type;
 }
 
@@ -610,6 +615,7 @@ void instExecute() {
 
     //nop instruction detection
     shadow_EXMEM.nop = false; //nop by defualt is false
+    BranchFlag = false;
 
     if(IDEX.type == N){
         NOP();

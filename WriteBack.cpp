@@ -7,6 +7,13 @@
 
 void instWriteBack(){
 
+    if(MEMWB.rd == 0 || MEMWB.rt == 0){
+        std::cout<<"BAD WRITE: RETURN PUSH TO REG 0"<<std::endl;
+        //reg[32] = MEMWB.rv;
+        //std::cout<<+MEMWB.rd<< " " <<+MEMWB.rt<<std::endl;
+        return;
+    }
+
     //nop instruction detection
     if(MEMWB.nop){ //NOP detection
         return;

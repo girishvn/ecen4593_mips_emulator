@@ -8,7 +8,8 @@
 
 int32_t reg[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //32-register system
 int32_t pc = 0; //program counter
-
+int32_t BranchPC = -1; //Calculated branch address
+bool BranchFlag = false; //Set true if a branch instruction is set
 //Intermediate Registers (declarations)
 
 _IFID IFID; //intermediate fetch/decode register

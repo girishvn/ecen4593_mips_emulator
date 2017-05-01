@@ -39,26 +39,26 @@ void thePurge(void){
     shadow_IDEX.address = 0;
 
     //EXMEM
-    shadow_IDEX.type = 0;
-    shadow_IDEX.opcode = 0;
-    shadow_IDEX.rd = 32;
-    shadow_IDEX.rs = 32;
-    shadow_IDEX.rt = 32;
-    shadow_IDEX.rsVal = 0;
-    shadow_IDEX.rtVal = 0;
-    shadow_IDEX.immediate = 0;
-    shadow_IDEX.address = 0;
+    shadow_EXMEM.type = 0;
+    shadow_EXMEM.opcode = 0;
+    shadow_EXMEM.rd = 32;
+    shadow_EXMEM.rs = 32;
+    shadow_EXMEM.rt = 32;
+    shadow_EXMEM.rsVal = 0;
+    shadow_EXMEM.rtVal = 0;
+    shadow_EXMEM.immediate = 0;
+    shadow_EXMEM.address = 0;
     shadow_EXMEM.byteIndex = 0;
     shadow_EXMEM.rv = 0;
     shadow_EXMEM.nop = false;
 
     //MEMWB
-    shadow_IDEX.type = 0;
-    shadow_IDEX.opcode = 0;
-    shadow_IDEX.rd = 32;
-    shadow_IDEX.rt = 32;
-    shadow_EXMEM.rv = 0;
-    shadow_EXMEM.nop = false;
+    shadow_MEMWB.type = 0;
+    shadow_MEMWB.opcode = 0;
+    shadow_MEMWB.rd = 32;
+    shadow_MEMWB.rt = 32;
+    shadow_MEMWB.rv = 0;
+    shadow_MEMWB.nop = false;
 
 }
 
@@ -99,6 +99,7 @@ void escapeShadowRealm(void) { //the shadow realm is always void
 
 int main() {
 
+    thePurge();
     //init all values for operation:
     Initialize_Simulation_Memory(); //copy program image into memory array
     pc = memory[5]; //set program counter value
@@ -111,15 +112,16 @@ int main() {
 
         //PRINTING OUT INITIAL ARRAY & Printing after bubble sorting
 
-        if(pc == 155 || pc == 159) {
-            int cntr = 0;
-
-            for (int i = 243; i < 493; i++) { //print out number array
-                cntr++;
-                cout << memory[i] <<" "<<memory[i+250]<<" "<<cntr<<" "<<i<< endl;
-            }
+        if(pc == 159){
+            cout<<"program counter is at 159"<<endl;
+            cout<<reg[$s2]<<endl;
         }
-        */
+//        if(pc == 155 || pc == 159 || pc == 164){
+//            cout<<"program counter is at 155"<<endl;
+//            for(int i = 243; i < 493; i++){ //print out number arra
+//                cout << memory[i] <<" "<<memory[i+250]<< endl;
+//            }
+//        }
 
         //checking insertion sort
         /*
@@ -291,17 +293,12 @@ int main() {
         cout<<endl;
         MEMWB = shadow_MEMWB;
 
-        cout<<memory[493]<<" :493 memory val"<<endl;
-        cout<<memory[494]<<" :494 memory val"<<endl;
-        cout<<memory[495]<<" :495 memory val"<<endl;
-        cout<<reg[$v0]<<" reg v0 "<<reg[$a1]<<" reg a1"<<endl;
-
         //Transferring all shadow registers into normal registers.
         //escapeShadowRealm(); //transfer data from shadow registers to real registers
         //cout<<"All registers have escaped the shadow realm."<<endl;
         cout<<"Instruction has been passed through pipeline."<<endl;
         cout<<"**************************************"<<endl;
-        thePurge();
+        //thePurge();
 
     }
     cout<<"Program has finished running"<<endl;
