@@ -83,9 +83,8 @@ struct _IFID {
 
 struct _IDEX {
 
-    uint32_t mc; //machine code
-
-    int type = 0x00; //R, I, J
+    //R, I, J, NOP
+    int type = 0x00;
 
     //opcode
     uint8_t opcode;
@@ -96,7 +95,6 @@ struct _IDEX {
     uint8_t rt;
 
     //register values
-    int32_t rdVal;
     int32_t rsVal;
     int32_t rtVal;
 
@@ -114,9 +112,8 @@ struct _IDEX {
 
 struct _EXMEM {
 
-    bool nop = true;
-
-    int type; //R, I, J
+    //R, I, J, NOP
+    int type;
 
     //opcode
     uint8_t opcode;
@@ -127,7 +124,6 @@ struct _EXMEM {
     uint8_t rt;
 
     //register values
-    int32_t rdVal;
     int32_t rsVal;
     int32_t rtVal;
 
@@ -140,15 +136,15 @@ struct _EXMEM {
 
     //J-type specific
     int32_t address;
+
     uint8_t byteIndex;
     int32_t rv;
+    bool nop = true;
 
 };
 
 struct _MEMWB {
 
-    bool nop = true;;
-
     int type; //R, I, J
 
     //opcode
@@ -156,25 +152,10 @@ struct _MEMWB {
 
     //registers number. NOT VALUE INSIDE
     uint8_t rd;
-    uint8_t rs;
     uint8_t rt;
 
-    //register values
-    int32_t rdVal;
-    int32_t rsVal;
-    int32_t rtVal;
-
-    //R-type specific
-    uint8_t shamt; //shamt
-    uint8_t funct; //function
-
-    //I-type specific
-    int16_t immediate;
-
-    //J-type specific
-    int32_t address;
-
     int32_t rv;
+    bool nop = true;;
 
 };
 

@@ -26,57 +26,58 @@ ARITHMETIC FUNCTIONS
 ***********************************************************************************************************************/
 
 void ADD(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
+
 }
 
-void ADDI(){ //good
+void ADDI(){
+
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.immediate;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void ADDIU(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.immediate;
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void ADDU(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal + IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void SUB(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal - IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void SUBU(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal - IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 /***********************************************************************************************************************
@@ -86,15 +87,16 @@ LOGICAL FUNCTIONS
 ***********************************************************************************************************************/
 
 void AND(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal & IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void ANDI(){ //good
+
     int32_t imm = zeroExt(IDEX.immediate);
 
     shadow_EXMEM.rv = IDEX.rsVal & imm;
@@ -102,19 +104,19 @@ void ANDI(){ //good
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void OR(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal | IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void ORI(){ //good
+
     int32_t imm = zeroExt(IDEX.immediate);
 
     shadow_EXMEM.rv = IDEX.rsVal | imm;
@@ -122,19 +124,19 @@ void ORI(){ //good
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void XOR(){ //good
+
     shadow_EXMEM.rv = IDEX.rsVal ^ IDEX.rtVal;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void XORI(){ //good
+
     int32_t imm = zeroExt(IDEX.immediate);
 
     shadow_EXMEM.rv = IDEX.rsVal ^ imm;
@@ -142,16 +144,15 @@ void XORI(){ //good
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void NOR(){ //good
+
     shadow_EXMEM.rv = ~(IDEX.rsVal | IDEX.rtVal);
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 /***********************************************************************************************************************
@@ -163,63 +164,63 @@ BRANCH FUNCTIONS
 
 
 void BEQ(){
+
     if(IDEX.rsVal == IDEX.rtVal){
-        pc += IDEX.immediate + 1;
+        pc += IDEX.immediate;
     }
-    else{
-        pc++;
-    }
+
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
     shadow_EXMEM.nop = true;
+
 }
 
 void BGTZ(){ //same as beq
+
     if(IDEX.rsVal > 0){
-        pc += IDEX.immediate + 1;
+        pc += IDEX.immediate ;
     }
-    else{
-        pc++;
-    }
+
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
     shadow_EXMEM.nop = true;
+
 }
 
 void BLEZ(){ //same as beq
+
     if(IDEX.rsVal <= 0){
-        pc += IDEX.immediate + 1;
+        pc += IDEX.immediate ;
     }
-    else{
-        pc++;
-    }
+
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
     shadow_EXMEM.nop = true;
+
 }
 
 void BLTZ(){ //same as beq
+
     if(IDEX.rsVal < 0){
         pc += IDEX.immediate + 1;
     }
-    else{
-        pc++;
-    }
+
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
     shadow_EXMEM.nop = true;
+
 }
 
 void BNE(){ //same as beq
+
     if(IDEX.rsVal != IDEX.rtVal){
-        pc += IDEX.immediate + 1;
+        pc += IDEX.immediate;
     }
-    else{
-        pc++;
-    }
+
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
     shadow_EXMEM.nop = true;
+
 }
 
 /***********************************************************************************************************************
@@ -229,32 +230,38 @@ JUMP FUNCTIONS
 ***********************************************************************************************************************/
 
 void JUMP(){
+
     int32_t npc;
-    npc = ((4*pc + 4) & 0xf0000000) | (IDEX.address << 2);
+    npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
     pc = npc >> 2;
 
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+
 }
 
 void JAL(){
-    shadow_EXMEM.rv = (pc + 2) * 4;
+
+    shadow_EXMEM.rv = (pc + 1)*4;
 
     int32_t npc;
-    npc = ((4*pc + 4) & 0xf0000000) | (IDEX.address << 2);
+    npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
     pc = npc >> 2;
 
     shadow_EXMEM.opcode = IDEX.opcode; //After Execute stage, this function now acts as a R type
     shadow_EXMEM.type = IDEX.type;
+
 }
 
 void JR(){
+
     int32_t npc;
     npc = IDEX.rsVal;
     pc = npc >> 2;
 
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+
 }
 
 /***********************************************************************************************************************
@@ -264,7 +271,9 @@ LOAD FUNCTIONS
 ***********************************************************************************************************************/
 //LOAD BYTE
 void LB(){
+
     return;
+
 }
 
 //LOAD BYTE UNSIGNED
@@ -281,9 +290,7 @@ void LBU() {
     shadow_EXMEM.opcode = IDEX.opcode;
     //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
-    pc++;
 }
-
 
 //LOAD UPPER IMMEDIATE
 void LUI(){
@@ -295,11 +302,12 @@ void LUI(){
 
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
-    pc++;
+
 }
 
 //LOAD WORD
 void LW(){
+
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
@@ -316,7 +324,6 @@ void LW(){
     shadow_EXMEM.opcode = IDEX.opcode;
     //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
-    pc++;
 }
 
 //LOAD UNSIGNED HALF-WORD
@@ -339,7 +346,6 @@ void LHU() {
     shadow_EXMEM.opcode = IDEX.opcode;
     //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
-    pc++;
 }
 
 
@@ -362,12 +368,12 @@ void SB() {
     shadow_EXMEM.opcode = IDEX.opcode;
     //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
-    pc++;
 }
 
 
 //STORE WORD
 void SW(){
+
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
@@ -385,7 +391,6 @@ void SW(){
     shadow_EXMEM.opcode = IDEX.opcode;
     //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
-    pc++;
 }
 
 //STORE HALF WORD
@@ -408,7 +413,6 @@ void SH() {
     shadow_EXMEM.opcode = IDEX.opcode;
     //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
-    pc++;
 }
 
 /***********************************************************************************************************************
@@ -418,15 +422,16 @@ OTHER THINGS THAT DO NOT BELONG
 ***********************************************************************************************************************/
 
 void SLL(){
+
     shadow_EXMEM.rv = IDEX.rtVal<<IDEX.shamt;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void SLT(){
+
     if(IDEX.rsVal < IDEX.rtVal){
         shadow_EXMEM.rv = 1;
     }
@@ -437,10 +442,10 @@ void SLT(){
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void SLTI(){
+
     if(IDEX.rsVal < IDEX.immediate){
         shadow_EXMEM.rv = 1;
     }
@@ -451,10 +456,10 @@ void SLTI(){
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void SLTIU(){
+
     if(IDEX.rsVal < IDEX.immediate){
         shadow_EXMEM.rv = 1;
     }
@@ -465,10 +470,10 @@ void SLTIU(){
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void SLTU(){
+
     if(IDEX.rsVal < IDEX.rtVal){
         shadow_EXMEM.rv = 1;
     }
@@ -479,19 +484,19 @@ void SLTU(){
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void SRL(){
+
     shadow_EXMEM.rv = IDEX.rtVal>>IDEX.shamt;
     shadow_EXMEM.rd = IDEX.rd;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    pc++;
 }
 
 void MOVN(){
+
     if(IDEX.rtVal != 0x0000){
         shadow_EXMEM.rv = reg[IDEX.rs];
         shadow_EXMEM.rd = IDEX.rd;
@@ -502,10 +507,11 @@ void MOVN(){
     }
 
     shadow_EXMEM.opcode = IDEX.opcode;
-    pc++;
+
 }
 
 void MOVZ(){
+
     if(IDEX.rtVal == 0x0000){
         shadow_EXMEM.rv = reg[IDEX.rs];
         shadow_EXMEM.rd = IDEX.rd;
@@ -516,13 +522,13 @@ void MOVZ(){
     }
 
     shadow_EXMEM.opcode = IDEX.opcode;
-    pc++;
+
 }
 
 void NOP(){
+
     shadow_EXMEM.nop = true;
 
-    pc++;
 }
 
 /***********************************************************************************************************************

@@ -15,7 +15,7 @@
 
 #ifdef PROGRAM1
 uint32_t program_image[] = {
-        0x00000bb8,	//	$sp = 3000
+        0x00000bb8,	//	$sp = 3000                                                                                PC = 0
         0x00000bb8,	//	$fp = 3000
         0x00000000,
         0x00000000,
@@ -25,17 +25,19 @@ uint32_t program_image[] = {
         0x00000000,
         0x00000000,
         0x00000000,
-        0x18c00008,   // 	blez	a2,400854 <copy_array+0x24>     PC = 10
+        0x18c00008,   // 	blez	a2,400854 <copy_array+0x24>                                                  PC = 10
         0x00801025,   // 	move	v0,a0
         0x00063080,   // 	sll	a2,a2,0x2
         0x00862021,   // 	addu	a0,a0,a2
         0x8c430000,   // 	lw	v1,0(v0)
         0xaca30000,   // 	sw	v1,0(a1)
-        0x24420004,   // 	addiu	v0,v0,4
-        0x1444fffc,   // 	bne	v0,a0,400840 <copy_array+0x10>
-        0x24a50004,   // 	addiu	a1,a1,4
+        0x24420004,   // 	addiu	v0,v0,4 //GIRISH INSERT
+        0x24a50004,   // 	addiu	a1,a1,4 //GIRISH INSERT
+        0x1444fffb,   // 	bne	v0,a0,400840 <copy_array+0x10>
+        //0x1444fffc,   // 	bne	v0,a0,400840 <copy_array+0x10> //GIRISH COMMENT
+        //0x24a50004,   // 	addiu	a1,a1,4 //GIRISH COMMENT
         0x03e00008,   // 	jr	ra
-        0x00000000,   // 	nop                                     PC = 20
+        0x00000000,   // 	nop                                                                                  PC = 20
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
@@ -45,7 +47,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x1ca00018,   // 	bgtz	a1,4008c0 <bubble_sort+0x64>    PC = 30
+        0x1ca00018,   // 	bgtz	a1,4008c0 <bubble_sort+0x64>                                                 PC = 30
         0x00005825,   // 	move	t3,zero
         0x03e00008,   // 	jr	ra
         0x00001025,   // 	move	v0,zero
@@ -55,7 +57,7 @@ uint32_t program_image[] = {
         0x11000004,   // 	beqz	t0,40088c <bubble_sort+0x30>
         0x00000000,   // 	nop
         0xac670000,   // 	sw	a3,0(v1)
-        0xac660004,   // 	sw	a2,4(v1)                            PC = 40
+        0xac660004,   // 	sw	a2,4(v1)                                                                         PC = 40
         0x240a0001,   // 	li	t2,1
         0x24630004,   // 	addiu	v1,v1,4
         0x1469fff6,   // 	bne	v1,t1,40086c <bubble_sort+0x10>
@@ -65,7 +67,7 @@ uint32_t program_image[] = {
         0x00aa580a,   // 	movz	t3,a1,t2
         0x00a05825,   // 	move	t3,a1
         0x256b0001,   // 	addiu	t3,t3,1
-        0x0165182a,   // 	slt	v1,t3,a1                           PC = 50
+        0x0165182a,   // 	slt	v1,t3,a1                                                                         PC = 50
         0x14600006,   // 	bnez	v1,4008cc <bubble_sort+0x70>
         0x01ab6023,   // 	subu	t4,t5,t3
         0x03e00008,   // 	jr	ra
@@ -75,7 +77,7 @@ uint32_t program_image[] = {
         0x01ab6023,   // 	subu	t4,t5,t3
         0x1980fff5,   // 	blez	t4,4008a4 <bubble_sort+0x48>
         0x00801825,   // 	move	v1,a0
-        0x000c4880,   // 	sll	t1,t4,0x2                         PC = 60
+        0x000c4880,   // 	sll	t1,t4,0x2                                                                        PC = 60
         0x00894821,   // 	addu	t1,a0,t1	0x8c190812,	//		flush memory location for testing
         0x1000ffe3,   // 	b	40086c <bubble_sort+0x10>
         0x00005025,   // 	move	t2,zero
@@ -85,7 +87,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x28a20002,   // 	slti	v0,a1,2                     PC = 70
+        0x28a20002,   // 	slti	v0,a1,2                                                                      PC = 70
         0x14400029,   // 	bnez	v0,400990 <insertion_sort+0xac>
         0x248e0004,   // 	addiu	t6,a0,4
         0x0080c025,   // 	move	t8,a0
@@ -95,7 +97,7 @@ uint32_t program_image[] = {
         0x240f0001,   // 	li	t7,1
         0xac690000,   // 	sw	t1,0(v1)
         0x24420001,   // 	addiu	v0,v0,1
-        0x104d000c,   // 	beq	v0,t5,400940 <insertion_sort+0x5c> PC = 80
+        0x104d000c,   // 	beq	v0,t5,400940 <insertion_sort+0x5c>                                               PC = 80
         0xacc80000,   // 	sw	t0,0(a2)
         0x006c1821,   // 	addu	v1,v1,t4
         0x00831821,   // 	addu	v1,a0,v1
@@ -105,7 +107,7 @@ uint32_t program_image[] = {
         0x8ce9fffc,   // 	lw	t1,-4(a3)
         0x0109502a,   // 	slt	t2,t0,t1
         0x1540fff4,   // 	bnez	t2,400904 <insertion_sort+0x20>
-        0x00863021,   // 	addu	a2,a0,a2 PC = 90
+        0x00863021,   // 	addu	a2,a0,a2                                                                     PC = 90
         0x10000003,   // 	b	400948 <insertion_sort+0x64>
         0x25ef0001,   // 	addiu	t7,t7,1
         0x01a01025,   // 	move	v0,t5
@@ -115,7 +117,7 @@ uint32_t program_image[] = {
         0x10af0010,   // 	beq	a1,t7,400994 <insertion_sort+0xb0>
         0x27390004,   // 	addiu	t9,t9,4
         0x19e0fffa,   // 	blez	t7,400944 <insertion_sort+0x60>
-        0x01c01825,   // 	move	v1,t6 PC = 100
+        0x01c01825,   // 	move	v1,t6                                                                       PC = 100
         0x8dc80000,   // 	lw	t0,0(t6)
         0x8f090000,   // 	lw	t1,0(t8)
         0x0109382a,   // 	slt	a3,t0,t1
@@ -125,7 +127,7 @@ uint32_t program_image[] = {
         0x01c03825,   // 	move	a3,t6
         0x272cfffc,   // 	addiu	t4,t9,-4
         0x018e6023,   // 	subu	t4,t4,t6
-        0x272bfff8,   // 	addiu	t3,t9,-8 PC = 110
+        0x272bfff8,   // 	addiu	t3,t9,-8                                                                    PC = 110
         0x1000ffde,   // 	b	400904 <insertion_sort+0x20>
         0x01785823,   // 	subu	t3,t3,t8
         0x00001025,   // 	move	v0,zero
@@ -135,7 +137,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x18c0000e,   // 	blez	a2,4009dc <check_result+0x3c> PC = 120
+        0x18c0000e,   // 	blez	a2,4009dc <check_result+0x3c>                                               PC = 120
         0x00801825,   // 	move	v1,a0
         0x00063080,   // 	sll	a2,a2,0x2
         0x00862021,   // 	addu	a0,a0,a2
@@ -145,7 +147,7 @@ uint32_t program_image[] = {
         0x8ca80000,   // 	lw	t0,0(a1)
         0x00e83826,   // 	xor	a3,a3,t0
         0x00c7100b,   // 	movn	v0,a2,a3
-        0x24630004,   // 	addiu	v1,v1,4 PC = 138
+        0x24630004,   // 	addiu	v1,v1,4                                                                     PC = 130
         0x1464fffa,   // 	bne	v1,a0,4009b8 <check_result+0x18>
         0x24a50004,   // 	addiu	a1,a1,4
         0x03e00008,   // 	jr	ra
@@ -155,7 +157,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x27bdf7f8,   // 	addiu	sp,sp,-2056        PC = 140 START OF PROGRAM
+        0x27bdf7f8,   // 	addiu	sp,sp,-2056                                                                 PC = 140 START OF PROGRAM
         0xafbf0804,   // 	sw	ra,2052(sp)
         0xafb30800,   // 	sw	s3,2048(sp)
         0xafb207fc,   // 	sw	s2,2044(sp)
@@ -165,7 +167,7 @@ uint32_t program_image[] = {
         0xafa207ec,   // 	sw	v0,2028(sp)
         0x240600fa,   // 	li	a2,250
         0x27b10404,   // 	addiu	s1,sp,1028
-        0x02202825,   // 	move	a1,s1               PC = 150
+        0x02202825,   // 	move	a1,s1                                                                       PC = 150
         0x27b0001c,   // 	addiu	s0,sp,28
         0x02002025,   // 	move	a0,s0
         0x0c00000a,   // 	jal	10 <copy_array>
@@ -175,7 +177,7 @@ uint32_t program_image[] = {
         0x0c00001e,   // 	jal	30 <bubble_sort>
         0x00000000,   // 	nop
         0x00409025,   // 	move	s2,v0
-        0x240500fa,   // 	li	a1,250                  PC = 160
+        0x240500fa,   // 	li	a1,250                                                                          PC = 160
         0x02202025,   // 	move	a0,s1
         0x0c000046,   // 	jal 70 <insertion_sort>
         0x00000000,   // 	nop
@@ -185,7 +187,7 @@ uint32_t program_image[] = {
         0x02002025,   // 	move	a0,s0
         0x0c000078,   // 	jal	120 <check_result>
         0x00000000,   // 	nop
-        0x0240a020,	  // 	move $s32 to $s4 to be stored into result memory location
+        0x0240a020,	  // 	move $s32 to $s4 to be stored into result memory location                           PC = 170
         0x0272902a,   // 	slt	s2,s3,s2
         0x16400003,   // 	bnez	s2,400a90 <main+0xac>
         0x3c03000f,   // 	lui	v1,0xf
@@ -195,7 +197,7 @@ uint32_t program_image[] = {
         0xac130020,	  //	sw $s3, 32($zero) 	store number of passes through insertion sort
         0xac020024,	  //	sw $v0, 36($zero)	if 0, the two arrays are equal, 1 they are not equal
         0x8c0804b0,	  //	lw $t0, 1200($zero)	Using the data in memory location 300 to verify sort
-        0xac080018,	  //	sw $t0, 24($zero)
+        0xac080018,	  //	sw $t0, 24($zero)                                                                   PC = 180
         0x8c001018,	  //	flush cache to memory to view via memory
         0x8c00101c,	  //	flush cache to memory to view via memory
         0x8c001020,	  //	flush cache to memory to view via memory
@@ -205,17 +207,17 @@ uint32_t program_image[] = {
         0x00000000,	  //	nop
         0x00000000,	  //	nop
         0x00000008,   // 	jr	to PC = 0, indicating end of program
+        0x00000000,	  //	nop                                                                                 PC = 190
         0x00000000,	  //	nop
         0x00000000,	  //	nop
         0x00000000,	  //	nop
-        0x00000000,	  //	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
-        0x00000000,    // 	nop
+        0x00000000,    // 	nop                                                                                 PC = 200
         0x00000000,
         0x00000000,
         0x00000000,
@@ -225,8 +227,27 @@ uint32_t program_image[] = {
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
+        0x00000000,    // 	nop                                                                                 PC = 210
         0x00000000,    // 	nop
         0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    //                                                                                       PC = 220
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000,
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop
+        0x00000000,    // 	nop                                                                                 PC = 230
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
@@ -236,26 +257,7 @@ uint32_t program_image[] = {
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,    // 	nop
-        0x00000000,
-        0x00000000,
+        0x00000000,    //                                                                                       PC = 240
         0x00000000,
         0x00000000,
         0x0a000000, //LOCATION 243 (first array index)
@@ -264,8 +266,8 @@ uint32_t program_image[] = {
         0x000000e0,
         0x00030000,    // 	nop
         0x0f000000,    // 	nop
-        0x0000f000,
-        0xffffffff,
+        0x0000f000,    //
+        0xffffffff,    //                                                                                       PC = 250
         0x0a0a0000,
         0x0f0f0f0f,
         0xf0f0f0f0,
@@ -275,7 +277,7 @@ uint32_t program_image[] = {
         0xa5a5a5a5,
         0x5a5a5a5a,
         0x0acccbaa,
-        0x00000000,
+        0x00000000,   //                                                                                        PC = 260
         0xffffffff,
         0xf034a04a,
         0xaaaaaaaa,
@@ -285,7 +287,7 @@ uint32_t program_image[] = {
         0xeeeeeeee,
         0x99999999,
         0x88888888,
-        0x77777777,
+        0x77777777,    //                                                                                       PC = 270
         0x66666666,
         0x55555555,
         0x44444444,
@@ -295,7 +297,7 @@ uint32_t program_image[] = {
         0x00000001,
         0x00000010,
         0x00000100,
-        0x00001000,
+        0x00001000,    //                                                                                       PC = 280
         0x00010000,
         0x00100000,
         0x01000000,
@@ -507,7 +509,7 @@ uint32_t program_image[] = {
         0x000f0f00,
         0x00f0f000,
         0x0f0f0000,
-        0x0000e000}; //LOCATION 493 (last data filled in array)
+        0x0000e000}; //LOCATION 492 (last data filled in array)
 #endif
 
 #ifdef IDKPROGRAM1

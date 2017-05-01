@@ -12,6 +12,58 @@ using namespace std;
 
 /***********************************************************************************************************************
 
+ FUNCTION NAME: thePurge
+
+ DESCRIPTION: Re-initilizes all intermediate register values
+
+ INPUTS: void
+
+ OUTPUTS: void
+
+***********************************************************************************************************************/
+
+void thePurge(void){
+
+    //IFID
+    shadow_IFID.mc = 0;
+
+    //IDEX
+    shadow_IDEX.type = 0;
+    shadow_IDEX.opcode = 0;
+    shadow_IDEX.rd = 32;
+    shadow_IDEX.rs = 32;
+    shadow_IDEX.rt = 32;
+    shadow_IDEX.rsVal = 0;
+    shadow_IDEX.rtVal = 0;
+    shadow_IDEX.immediate = 0;
+    shadow_IDEX.address = 0;
+
+    //EXMEM
+    shadow_IDEX.type = 0;
+    shadow_IDEX.opcode = 0;
+    shadow_IDEX.rd = 32;
+    shadow_IDEX.rs = 32;
+    shadow_IDEX.rt = 32;
+    shadow_IDEX.rsVal = 0;
+    shadow_IDEX.rtVal = 0;
+    shadow_IDEX.immediate = 0;
+    shadow_IDEX.address = 0;
+    shadow_EXMEM.byteIndex = 0;
+    shadow_EXMEM.rv = 0;
+    shadow_EXMEM.nop = false;
+
+    //MEMWB
+    shadow_IDEX.type = 0;
+    shadow_IDEX.opcode = 0;
+    shadow_IDEX.rd = 32;
+    shadow_IDEX.rt = 32;
+    shadow_EXMEM.rv = 0;
+    shadow_EXMEM.nop = false;
+
+}
+
+/***********************************************************************************************************************
+
  FUNCTION NAME: instFetch
 
  DESCRIPTION: Passes instruction machine code to intermediate register IFID
@@ -28,6 +80,8 @@ void escapeShadowRealm(void) { //the shadow realm is always void
     IDEX = shadow_IDEX;
     EXMEM = shadow_EXMEM;
     MEMWB = shadow_MEMWB;
+
+    thePurge();
 
 }
 
@@ -51,16 +105,32 @@ int main() {
     reg[$sp] = memory[0]; //init stack pointer
     reg[$fp] = memory[1]; //init frame pointer
 
-    /* PRINTING OUT INITIAL ARRAY
-    int count
-    for(int i = 243; i < 493; i++){ //print out number arra
-        count++;
-        cout<<memory[i]<<" "<<count<<endl;
-    }
-     */
-
-
+    //MAIN PIPELINE LOOP
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
+
+
+        //PRINTING OUT INITIAL ARRAY & Printing after bubble sorting
+
+        if(pc == 155 || pc == 159) {
+            int cntr = 0;
+
+            for (int i = 243; i < 493; i++) { //print out number array
+                cntr++;
+                cout << memory[i] <<" "<<memory[i+250]<<" "<<cntr<<" "<<i<< endl;
+            }
+        }
+        */
+
+        //checking insertion sort
+        /*
+        if(pc == 164) {
+            cout<<"done with array sorts"<<endl;
+            for (int i = 243; i < 493; i++) { //print out number array
+                cout << memory[i] <<" "<<memory[i+250]<<" "<<i<< endl;
+            }
+        }
+         */
+
 
         cout<<"Program Counter: "<<pc<<endl;
 
@@ -200,8 +270,9 @@ int main() {
 
         ////////////////////
         //Write Back Stage//
-        ////////////////////
         instWriteBack();
+        ////////////////////
+
         cout<<"Write Back Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(MEMWB.nop){
             cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
@@ -220,25 +291,29 @@ int main() {
         cout<<endl;
         MEMWB = shadow_MEMWB;
 
+        cout<<memory[493]<<" :493 memory val"<<endl;
+        cout<<memory[494]<<" :494 memory val"<<endl;
+        cout<<memory[495]<<" :495 memory val"<<endl;
+        cout<<reg[$v0]<<" reg v0 "<<reg[$a1]<<" reg a1"<<endl;
+
         //Transferring all shadow registers into normal registers.
         //escapeShadowRealm(); //transfer data from shadow registers to real registers
         //cout<<"All registers have escaped the shadow realm."<<endl;
         cout<<"Instruction has been passed through pipeline."<<endl;
         cout<<"**************************************"<<endl;
+        thePurge();
 
     }
-
     cout<<"Program has finished running"<<endl;
 
-    /* PRINT OUT FINAL ARRAY VALUES
+    //PRINT OUT FINAL ARRAY VALUES
     for(int i = 243; i < 493; i++){ //print out number arra
-        cout<<memory[i]<<endl;
+        cout << memory[i] <<" "<<memory[i+250]<< endl;
     }
-
     for(int i = 6; i<10; i++){
         cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
     }
-    */
+
 
     return 1;
 }

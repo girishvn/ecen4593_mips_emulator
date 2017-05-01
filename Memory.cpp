@@ -140,9 +140,11 @@ void WriteByteIntoMemory(){
 }
 
 void LoadWordFromMemory(void){
+
     shadow_MEMWB.rv = memory[EXMEM.address];
     shadow_MEMWB.rt = EXMEM.rt;
     std::cout<<"address val: "<<EXMEM.address<<" "<<shadow_MEMWB.rv<<std::endl;
+
 }
 
 void LoadHalfWordFromMemory(void){
