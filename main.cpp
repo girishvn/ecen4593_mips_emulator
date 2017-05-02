@@ -105,14 +105,16 @@ int main() {
     reg[$sp] = memory[0]; //init stack pointer
     reg[$fp] = memory[1]; //init frame pointer
 
+
+
     //MAIN PIPELINE LOOP
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
 
         //PRINTING OUT INITIAL ARRAY & Printing after bubble sorting
 
-        if(pc == 159){
-            cout<<"program counter is at 159"<<endl;
+        if(pc == 96){
+            cout<<"program counter is at 96"<<endl;
             cout<<""<<endl;
         }
 

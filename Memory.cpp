@@ -150,36 +150,25 @@ void LoadWordFromMemory(void){
 void LoadHalfWordFromMemory(void){
     //LOCAL VARIABLES
     int32_t memVal;
-    int32_t regVal;
     uint32_t maskMem;
-    uint32_t maskReg;
 
-    regVal = EXMEM.rtVal;
     memVal = memory[EXMEM.address];
     shadow_MEMWB.rt = IDEX.rt;
 
     switch (EXMEM.byteIndex) {
         case 0: { //1th Byte
             maskMem = 0x0000ffff;
-            maskReg = 0xffff0000;
-
             memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-
-            shadow_MEMWB.rv = memVal | regVal;
+            shadow_MEMWB.rv = memVal;
 
             break;
         }
 
         case 1: { //2th Byte
             maskMem = 0x00ffff00;
-            maskReg = 0xffff0000;
-
             memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
             memVal = memVal >> 8;
-
-            shadow_MEMWB.rv = memVal | regVal;
+            shadow_MEMWB.rv = memVal;
 
             break;
 
@@ -187,14 +176,9 @@ void LoadHalfWordFromMemory(void){
 
         case 2: { //3th Byte
             maskMem = 0xffff0000;
-            maskReg = 0xffff0000;
-
             memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
             memVal = memVal >> 16;
-
-            shadow_MEMWB.rv = memVal | regVal;
-
+            shadow_MEMWB.rv = memVal;
             break;
 
         }
@@ -206,68 +190,95 @@ void LoadHalfWordFromMemory(void){
     }
 }
 
-void LoadByteFromMemory(void){
+void LoadByteSignedFromMemory(void){
     //LOCAL VARIABLES
     int32_t memVal;
-    int32_t regVal;
     uint32_t maskMem;
-    uint32_t maskReg;
+    uint32_t maskSign = 0xffffff00;
 
-    regVal = EXMEM.rtVal;
     memVal = memory[EXMEM.address];
     shadow_MEMWB.rt = IDEX.rt;
 
     switch (EXMEM.byteIndex) {
         case 0: { //1th Byte
             maskMem = 0x000000ff;
-            maskReg = 0xffffff00;
-
             memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
-
-            shadow_MEMWB.rv = memVal | regVal;
-
+            memVal = maskSign | memVal;
+            shadow_MEMWB.rv = memVal;
             break;
         }
 
         case 1: { //2th Byte
             maskMem = 0x0000ff00;
-            maskReg = 0xffffff00;
-
             memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
             memVal = memVal >> 8;
-
-            shadow_MEMWB.rv = memVal | regVal;
-
+            shadow_MEMWB.rv = memVal;
             break;
-
         }
 
         case 2: { //3th Byte
             maskMem = 0x00ff0000;
-            maskReg = 0xffffff00;
-
             memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
             memVal = memVal >> 16;
-
-            shadow_MEMWB.rv = memVal | regVal;
-
+            shadow_MEMWB.rv = memVal;
             break;
 
         }
 
         case 3: { //4th Byte
             maskMem = 0xff000000;
-            maskReg = 0xffffff00;
-
             memVal = maskMem & memVal;
-            regVal = maskReg & regVal;
             memVal = memVal >> 24;
+            shadow_MEMWB.rv = memVal;
+            break;
 
-            shadow_MEMWB.rv = memVal | regVal;
+        }
 
+        default: {
+            std::cout<<"unusable index value in LBU"<<std::endl;
+            return;
+        }
+    }
+}
+
+void LoadByteUnsignedFromMemory(void){
+    //LOCAL VARIABLES
+    int32_t memVal;
+    uint32_t maskMem;
+
+    memVal = memory[EXMEM.address];
+    shadow_MEMWB.rt = IDEX.rt;
+
+    switch (EXMEM.byteIndex) {
+        case 0: { //1th Byte
+            maskMem = 0x000000ff;
+            memVal = maskMem & memVal;
+            shadow_MEMWB.rv = memVal;
+            break;
+        }
+
+        case 1: { //2th Byte
+            maskMem = 0x0000ff00;
+            memVal = maskMem & memVal;
+            memVal = memVal >> 8;
+            shadow_MEMWB.rv = memVal;
+            break;
+        }
+
+        case 2: { //3th Byte
+            maskMem = 0x00ff0000;
+            memVal = maskMem & memVal;
+            memVal = memVal >> 16;
+            shadow_MEMWB.rv = memVal;
+            break;
+
+        }
+
+        case 3: { //4th Byte
+            maskMem = 0xff000000;
+            memVal = maskMem & memVal;
+            memVal = memVal >> 24;
+            shadow_MEMWB.rv = memVal;
             break;
 
         }
@@ -307,12 +318,8 @@ void instMemory(){
                 break;
             }
             //Load Instructions
-            case 0x0F: {
-
-                break;
-            }
             case 0x20: {
-
+                LoadByteSignedFromMemory();
                 break;
             }
             case 0x23: {
@@ -320,7 +327,7 @@ void instMemory(){
                 break;
             }
             case 0x24: {
-                LoadByteFromMemory();
+                LoadByteUnsignedFromMemory();
                 break;
             }
             case 0x25: {

@@ -38,7 +38,7 @@ void instType(uint32_t machineCode) {
         shadow_IDEX.type = N;
         return;
     }
-    else if (opcode == ROPCode) { //R-type instruction
+    else if (opcode == ROPCode || opcode == sebOPCode) { //R-type instruction
 
         shadow_IDEX.type = R;
         return;

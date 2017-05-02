@@ -13,8 +13,8 @@ void WriteByteIntoMemory();
 
 void LoadWordFromMemory(void);
 void LoadHalfWordFromMemory(void);
-void LoadByteFromMemory(void);
-
+void LoadByteUnsignedFromMemory(void);
+void LoadByteSignedFromMemory(void);
 void instMemory(void);
 
 #endif //ECEN4593_MIPS_EMULATOR_MEMORY_H

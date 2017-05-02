@@ -280,7 +280,14 @@ LOAD FUNCTIONS
 //LOAD BYTE
 void LB(){
 
-    return;
+    //Calculating immediate address and byte index.
+    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
+    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
+
+    shadow_EXMEM.rt = IDEX.rt;
+    shadow_EXMEM.rtVal = IDEX.rtVal;
+    shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
 }
 
@@ -291,12 +298,10 @@ void LBU() {
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
-    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.rtVal = IDEX.rtVal;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
 }
 
@@ -326,11 +331,9 @@ void LW(){
         return;
     }
 
-    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
 }
 
@@ -347,12 +350,10 @@ void LHU() {
         return;
     }
 
-    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.rtVal = IDEX.rtVal;
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
 }
 
@@ -370,11 +371,8 @@ void SB() {
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
     shadow_EXMEM.rtVal = IDEX.rtVal;
-    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
-    //shadow_EXMEM.rt = IDEX.rt; //dont think we need this since we have rtVal
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
 }
 
@@ -393,11 +391,8 @@ void SW(){
     }
 
     shadow_EXMEM.rtVal =  IDEX.rtVal;
-    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
-    //shadow_EXMEM.rt = IDEX.rt; //dont think we need this since we have rtVal
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
 }
 
@@ -415,11 +410,8 @@ void SH() {
     }
 
     shadow_EXMEM.rtVal = IDEX.rtVal;
-    //shadow_EXMEM.rs = IDEX.rs; //dont think weneed this since we have rsVal
-    //shadow_EXMEM.rt = IDEX.rt; //dont think we need this since we have rtVal
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
-    //shadow_EXMEM.immediate = IDEX.immediate; //dont think we need this since we calculate address
 
 }
 
@@ -428,6 +420,24 @@ void SH() {
 OTHER THINGS THAT DO NOT BELONG
 
 ***********************************************************************************************************************/
+void SEB(){
+    int32_t regVal = IDEX.rt;
+    regVal = 0x000000FF & regVal;
+    int32_t mask1 = 0xFFFFFF00;
+    int32_t mask0 = 0x00000000;
+
+
+    if((regVal >> 7) == 1){ //sign extend with 1's
+        shadow_EXMEM.rv = (mask1 | regVal);
+    }
+    else{ //sign extend with 0's
+        shadow_EXMEM.rv = (mask0 | regVal);
+    }
+
+    shadow_EXMEM.rd = IDEX.rd; //return register passed on
+    shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
+}
 
 void SLL(){
 
