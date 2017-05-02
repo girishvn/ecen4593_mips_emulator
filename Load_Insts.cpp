@@ -9,10 +9,6 @@
  program_image: initial array to hold program instructions
 
 ***********************************************************************************************************************/
-//#define PROGRAM1
-#define PROGRAM2
-//#define PROGRAMLOADOPT
-//#define PROGRAMLOADUNOPT
 
 #ifdef PROGRAM1
 uint32_t program_image[] = {
@@ -789,7 +785,7 @@ uint32_t program_image[] = {
 
 #ifdef PROGRAMLOADOPT
 uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
-        0x00001025,     // 	move	v0,zero    <load_arrays>: PC = 10
+        0x00001025,     // 	move	v0,zero    <load_arrays>:                                                    PC = 10
         0x24060064,     // 	li	a2,100
         0x8c830000,     // 	lw	v1,0(a0)
         0x00621821,     // 	addu	v1,v1,v0
@@ -799,7 +795,7 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
         0xaca30000,     // 	sw	v1,0(a1)
         0x24420001,     // 	addiu	v0,v0,1
         0x24840004,     // 	addiu	a0,a0,4
-        0x1446fff7,     // 	bne	v0,a2,400838 <load_arrays+0x8>  PC = 20
+        0x1446fff7,     // 	bne	v0,a2,400838 <load_arrays+0x8>                                                   PC = 20
         0x24a50004,     // 	addiu	a1,a1,4
         0x8d090f90,		//lw $t1, 3576($t0)
         0xad090018,		//sw $t1, 24($t0)
@@ -809,7 +805,7 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
         0x00000000,     // 	nop
         0x00000000,     // 	nop
         0x00000000,     // 	nop
-        0x00801825,    //  	move	v1,a0		<check_result>: PC = 30
+        0x00801825,    //  	move	v1,a0		<check_result>:                                                  PC = 30
         0x24870190,    // 	addiu	a3,a0,400
         0x00001025,    // 	move	v0,zero
         0x24080001,    // 	li	t0,1
@@ -819,7 +815,7 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
         0x0104100b,    // 	movn	v0,t0,a0
         0x24630004,    // 	addiu	v1,v1,4
         0x1467fffa,    // 	bne	v1,a3,400878 <check_result+0x10>
-        0x24a50004,    // 	addiu	a1,a1,4               PC = 40
+        0x24a50004,    // 	addiu	a1,a1,4                                                                      PC = 40
         0xac02001c,		//sw $v0, 28($zero)
         0x8c18041c,		//lw $t8, 1052($zero)
         0xac030020,		//sw $v1, 32($zero)
@@ -829,7 +825,7 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
         0x00000000,    // 	nop
         0x00000000,    // 	nop
         0x00000000,    // 	nop
-        0x27bdfcb0,    // 	addiu	sp,sp,-848   <main>: PC=50   BEGINNING OF THE PROGRAM
+        0x27bdfcb0,    // 	addiu	sp,sp,-848   <main>:                                                           PC=50   BEGINNING OF THE PROGRAM
         0xafbf034c,    // 	sw	ra,844(sp)
         0xafb20348,    // 	sw	s2,840(sp)
         0xafb10344,    // 	sw	s1,836(sp)
@@ -844,7 +840,7 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
         0x02202825,    // 	move	a1,s1
         0x27b0001c,    // 	addiu	s0,sp,28
         0x02002025,    // 	move	a0,s0
-        0x0c00000a,    // 	jal	10 <load_arrays>        PC=60
+        0x0c00000a,    // 	jal	10 <load_arrays>                                                                   PC=60
         0x00000000,    // 	nop
 //		0x8fbc0010,    // 	lw	gp,16(sp)
         0x02202825,    // 	move	a1,s1
@@ -858,13 +854,13 @@ uint32_t program_image[] = {4000,4000,0,0,0,50,0,0,0,0,
         0x8fbf034c,    // 	lw	ra,844(sp)
 //		0x8f99804c,    // 	lw	t9,-32692(gp)
 //		0x0320f809,    // 	jalr	t9
-        0x00000000,    // 	nop                        PC=70
+        0x00000000,    // 	nop                                                                                    PC=70
         0x8fb20348,    // 	lw	s2,840(sp)
         0x8fb10344,    // 	lw	s1,836(sp)
         0x8fb00340,    // 	lw	s0,832(sp)
         0x00000008,    // 	jr	$zero
         0x00000000,	   //
-        0x00000000};   //
+        0x00000000};   //                                                                                          PC=76
 #endif
 
 #ifdef PROGRAMLOADUNOPT

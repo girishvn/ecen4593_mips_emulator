@@ -7,6 +7,14 @@
 
 #include "global_vars.h"
 
+#define PROGRAM1 //Bubble/Insertion Sort
+
+//#define PROGRAM2
+
+//#define PROGRAMLOADOPT //Optimized Program
+
+//#define PROGRAMLOADUNOPT //Unoptimized Program
+
 /***********************************************************************************************************************
 
  inst_memory_size: size of instruction memory

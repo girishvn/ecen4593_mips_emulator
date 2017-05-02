@@ -145,7 +145,7 @@ void instJDecode(uint32_t machineCode) {
 ***********************************************************************************************************************/
 void instDecode(void) {
 
-    if(BranchFlag){
+    if(BranchFlag == true){
         pc = BranchPC;
     }
     else{

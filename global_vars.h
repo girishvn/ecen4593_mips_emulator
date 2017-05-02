@@ -86,14 +86,16 @@ Intermediate registers global structs
 
 struct _IFID {
 
-    uint32_t mc = 0; //machine code of instruction
+    //uint32_t mc = 0; //machine code of instruction
+    uint32_t mc;
 
 };
 
 struct _IDEX {
 
     //R, I, J, NOP
-    int type = 0x00;
+    //int type = 0x00;
+    int type;
 
     //opcode
     uint8_t opcode;
@@ -148,7 +150,8 @@ struct _EXMEM {
 
     uint8_t byteIndex;
     int32_t rv;
-    bool nop = true;
+    bool nop;
+    //bool nop = true;
 
 
 };
@@ -165,7 +168,8 @@ struct _MEMWB {
     uint8_t rt;
 
     int32_t rv;
-    bool nop = true;;
+    bool nop;
+   //bool nop = true;
 
 };
 

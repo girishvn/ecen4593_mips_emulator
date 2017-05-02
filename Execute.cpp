@@ -220,6 +220,7 @@ void BNE(){ //same as beq
     if(IDEX.rsVal != IDEX.rtVal){
         BranchPC = pc + IDEX.immediate;
         BranchFlag = true;
+        std::cout<<BranchPC<<std::endl;
     }
 
     shadow_EXMEM.type = IDEX.type;
@@ -243,6 +244,7 @@ void JUMP(){
 
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.nop = true; //no mem-access or write back
 
 }
 
@@ -269,6 +271,7 @@ void JR(){
 
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.nop = true; //no mem-access or write back
 
 }
 
@@ -548,66 +551,6 @@ void NOP(){
     shadow_EXMEM.nop = true;
 
 }
-
-/***********************************************************************************************************************
-
-UNNEEDED FUNCTIONS
-
-***********************************************************************************************************************/
-
-void BGEZ(){ //uneeded
-    if(int32_t(reg[IDEX.rs]) >= 0){
-        pc += reg[IDEX.immediate];
-    }
-    shadow_EXMEM.type = IDEX.type;
-}
-
-void BGEZAL(){ //uneeded
-    if(int32_t(reg[IDEX.rs]) >= 0){
-        shadow_EXMEM.rv = pc + 2;
-        pc += IDEX.immediate;
-    }
-    else{
-        pc++;
-    }
-    shadow_EXMEM.type = IDEX.type;
-}
-
-void BLTZAL(){ //uneeded
-    if(int32_t(reg[IDEX.rs]) < 0){
-        shadow_EXMEM.rv = pc + 2;
-        pc += IDEX.immediate;
-    }
-    else{
-        pc++;
-    }
-    shadow_EXMEM.type = IDEX.type;
-}
-
-void SLLV(){ //uneeded
-    shadow_EXMEM.rv = reg[IDEX.rt]<<reg[IDEX.rs];
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
-void SRA(){ //uneeded
-    shadow_EXMEM.rv = reg[IDEX.rt]>>IDEX.shamt;
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
-void SRLV(){ //uneeded
-    shadow_EXMEM.rv = reg[IDEX.rt]>>reg[IDEX.rs];
-    shadow_EXMEM.rd = IDEX.rd;
-    shadow_EXMEM.type = IDEX.type;
-
-    pc++;
-}
-
 
 /***********************************************************************************************************************
 

@@ -65,14 +65,6 @@ int32_t zeroExt(int16_t imm); //zero extend function (called from other instruct
 void NOP(void); //inst: 0x00000000
 void SEB(void);
 
-//UNNEEDED
-void BGEZAL(void); //unneeded
-void BGEZ(void); //unneeded
-void BLTZAL(void); //unneeded
-void SLLV(void); //unneeded
-void SRA(void); //unneeded
-void SRLV(void); //unneeded
-
 /***********************************************************************************************************************
 
 CALLABLE FUNCTIONS

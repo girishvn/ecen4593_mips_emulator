@@ -334,6 +334,10 @@ void instMemory(){
                 LoadHalfWordFromMemory();
                 break;
             }
+            case 0x0F:{
+                shadow_MEMWB.nop = true;
+                break;
+            }
             //I types that do not access memory
             default: {
                 shadow_MEMWB.rv = EXMEM.rv;

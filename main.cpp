@@ -105,15 +105,10 @@ int main() {
     reg[$sp] = memory[0]; //init stack pointer
     reg[$fp] = memory[1]; //init frame pointer
 
-
     //MAIN PIPELINE LOOP
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
-
-        //PRINTING OUT INITIAL ARRAY & Printing after bubble sorting
-
-
-
+        thePurge();
 
         cout<<"Program Counter: "<<pc<<endl;
 
@@ -122,16 +117,18 @@ int main() {
         instFetch();
         ///////////////
 
+        /*
         cout<<"Instruction Fetched: "<<shadow_IFID.mc<<endl;
         cout<<endl;
-
-        IFID = shadow_IFID;
+         */
 
         ////////////////
         //Decode Stage//
+        IFID = shadow_IFID;
         instDecode();
         ////////////////
 
+        /*
         cout<<"Decode Stage Finished. Type: "<<shadow_IDEX.type<<endl;
         if(shadow_IDEX.type == N){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -161,14 +158,15 @@ int main() {
             }
         }
         cout<<endl;
-
-        IDEX = shadow_IDEX;
+         */
 
         /////////////////
         //Execute Stage//
+        IDEX = shadow_IDEX;
         instExecute();
         /////////////////
 
+        /*
         cout<<"Execute Stage Finished. Type: "<<+shadow_EXMEM.type<<endl;
         if(shadow_EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -191,8 +189,7 @@ int main() {
                      << " rt: " << +shadow_EXMEM.rt
                      << " rtVal " << +shadow_EXMEM.rtVal
                      << " rv: " << +shadow_EXMEM.rv
-                     << " address: " << +shadow_EXMEM.address << endl
-                     << " byte address: " << +shadow_EXMEM.byteIndex << endl;
+                     << " address: " << +shadow_EXMEM.address << endl;
             } else if (shadow_EXMEM.type == J && shadow_EXMEM.opcode != 0x02) {
                 cout << "J OP Code: " << +shadow_EXMEM.opcode << endl
                      << "New PC address calculated is: " << pc << endl;
@@ -203,14 +200,15 @@ int main() {
             }
         }
         cout<<endl;
-
-        EXMEM = shadow_EXMEM;
+        */
 
         ////////////////
         //Memory Stage//
+        EXMEM = shadow_EXMEM;
         instMemory();
         ////////////////
 
+        /*
         cout<<"Memory Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -249,14 +247,15 @@ int main() {
             }
         }
         cout<<endl;
-
-        MEMWB = shadow_MEMWB;
+        */
 
         ////////////////////
         //Write Back Stage//
+        MEMWB = shadow_MEMWB;
         instWriteBack();
         ////////////////////
 
+        /*
         cout<<"Write Back Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(MEMWB.nop){
             cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
@@ -273,24 +272,38 @@ int main() {
             }
         }
         cout<<endl;
+        */
 
         //Transferring all shadow registers into normal registers.
         //escapeShadowRealm(); //transfer data from shadow registers to real registers
         //cout<<"All registers have escaped the shadow realm."<<endl;
         cout<<"Instruction has been passed through pipeline."<<endl;
         cout<<"**************************************"<<endl;
-        //thePurge();
 
     }
     cout<<"Program has finished running"<<endl;
 
     //PRINT OUT FINAL ARRAY VALUES
-    for(int i = 243; i < 493; i++){ //print out number arra
-        cout << memory[i] <<" "<<memory[i+250]<< endl;
+#ifdef PROGRAM1
+    for(int i = 243; i < 493; i++){
+        cout<<memory[i]<<" "<<memory[i + 250]<<" "<<i<<endl;
     }
-    for(int i = 6; i<10; i++){
+
+    for(int i = 6; i < 10; i++){
         cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
     }
+#endif
+
+#ifdef PROGRAMLOADOPT
+    for(int i = 795; i < 895; i++){
+        cout<<memory[i]<<" "<<memory[i + 100]<<" "<<i<<endl;
+    }
+
+    for(int i = 6; i<9; i++){
+        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
+    }
+#endif
+
 
 
     return 1;
