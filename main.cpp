@@ -81,7 +81,7 @@ void escapeShadowRealm(void) { //the shadow realm is always void
     EXMEM = shadow_EXMEM;
     MEMWB = shadow_MEMWB;
 
-    thePurge();
+    thePurge(); //inits all intermediate register vaues
 
 }
 
@@ -99,8 +99,7 @@ void escapeShadowRealm(void) { //the shadow realm is always void
 
 int main() {
 
-    thePurge();
-    //init all values for operation:
+    thePurge(); //init all values for operation:
     Initialize_Simulation_Memory(); //copy program image into memory array
     pc = memory[5]; //set program counter value
     reg[$sp] = memory[0]; //init stack pointer
@@ -112,9 +111,9 @@ int main() {
 
         //PRINTING OUT INITIAL ARRAY & Printing after bubble sorting
 
-        if(pc == 159){
-            cout<<"program counter is at 159"<<endl;
-            cout<<reg[$s2]<<endl;
+        if(pc == 133){
+            cout<<"program counter is at 133"<<" "<<+reg[$v0]<<endl;
+            cout<<""<<endl;
         }
 //        if(pc == 155 || pc == 159 || pc == 164){
 //            cout<<"program counter is at 155"<<endl;

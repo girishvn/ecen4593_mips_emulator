@@ -506,12 +506,12 @@ void SRL(){
 void MOVN(){
 
     if(IDEX.rtVal != 0x0000){
-        shadow_EXMEM.rv = reg[IDEX.rs];
+        shadow_EXMEM.rv = IDEX.rsVal;
         shadow_EXMEM.rd = IDEX.rd;
         shadow_EXMEM.type = IDEX.type;
     }
     else{
-        shadow_EXMEM.type = J; //failed mov condition and thus must not operate in memory or writeback stages
+        shadow_EXMEM.nop = true; //failed mov condition and thus must not operate in memory or writeback stages
     }
 
     shadow_EXMEM.opcode = IDEX.opcode;
@@ -521,12 +521,12 @@ void MOVN(){
 void MOVZ(){
 
     if(IDEX.rtVal == 0x0000){
-        shadow_EXMEM.rv = reg[IDEX.rs];
+        shadow_EXMEM.rv = IDEX.rsVal;
         shadow_EXMEM.rd = IDEX.rd;
         shadow_EXMEM.type = IDEX.type;
     }
     else{
-        shadow_EXMEM.type = J; //failed mov condition and thus must not operate in memory or writeback stages
+        shadow_EXMEM.nop = true; //failed mov condition and thus must not operate in memory or writeback stages
     }
 
     shadow_EXMEM.opcode = IDEX.opcode;
