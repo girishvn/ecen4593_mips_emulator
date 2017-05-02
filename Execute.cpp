@@ -713,6 +713,9 @@ void instExecute() {
         if(IDEX.funct == 0x00){ //SLL
             SLL();
         }
+        else if(IDEX.funct == 0x1F){
+            SEB();
+        }
         else if(IDEX.funct == 0x02){ //SRL
             SRL();
         }

@@ -69,7 +69,6 @@ void SEB(void);
 void BGEZAL(void); //unneeded
 void BGEZ(void); //unneeded
 void BLTZAL(void); //unneeded
-
 void SLLV(void); //unneeded
 void SRA(void); //unneeded
 void SRLV(void); //unneeded
