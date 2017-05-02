@@ -303,13 +303,13 @@ void LBU() {
 //LOAD UPPER IMMEDIATE
 void LUI(){
 
-    int32_t regVal = IDEX.rtVal/4 & 0x0000ffff;
-    regVal = regVal | (IDEX.immediate << 16);
-
+    int32_t regVal = IDEX.rtVal & 0x0000ffff;
+    regVal = regVal | (int32_t(IDEX.immediate) << 16);
     shadow_EXMEM.rv = regVal; //loading upper half of immediate value into rv
 
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.type = IDEX.type;
+    shadow_EXMEM.opcode = IDEX.opcode;
 
 }
 

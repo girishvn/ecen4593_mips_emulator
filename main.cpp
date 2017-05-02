@@ -111,10 +111,11 @@ int main() {
 
         //PRINTING OUT INITIAL ARRAY & Printing after bubble sorting
 
-        if(pc == 133){
-            cout<<"program counter is at 133"<<" "<<+reg[$v0]<<endl;
+        if(pc == 159){
+            cout<<"program counter is at 159"<<endl;
             cout<<""<<endl;
         }
+
 //        if(pc == 155 || pc == 159 || pc == 164){
 //            cout<<"program counter is at 155"<<endl;
 //            for(int i = 243; i < 493; i++){ //print out number arra
