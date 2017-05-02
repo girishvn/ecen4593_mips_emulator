@@ -478,7 +478,7 @@ void SLTI(){
 
 void SLTIU(){
 
-    if(IDEX.rsVal < IDEX.immediate){
+    if(IDEX.rsVal < uint16_t(IDEX.immediate)){
         shadow_EXMEM.rv = 1;
     }
     else{

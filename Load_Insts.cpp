@@ -524,7 +524,8 @@ uint32_t program_image[] = {
         0x00000000,
         0x00000000,
         0x80a70000,   // 	lb	a3,0(a1)        PC = 10
-        0x10e0001e,   // 	beqz	a3,4008b0 <ceasar_encrypt+0x80>
+        0x10e0001e,   // 	beqz	v1,v1,-26
+        0x7c033c20,   // 	a3,4008b0 <ceasar_encrypt+0x80>
         0x24a50001,   // 	addiu	a1,a1,1
         0x30e200ff,   // 	andi	v0,a3,0xff
         0x2443ff9f,   // 	addiu	v1,v0,-97
@@ -548,8 +549,7 @@ uint32_t program_image[] = {
         0x7c033c20,   // 	seb	a3,v1
         0x28e2005b,   // 	slti	v0,a3,91
         0x14400002,   // 	bnez	v0,40089c <ceasar_encrypt+0x6c>
-        0x2463ffe6,   // 	addiu	v1,v1,-26
-        0x7c033c20,   // 	seb	a3,v1
+        0x2463ffe6,   // 	addiu	seb	a3,v1
         0xa0c70000,   // 	sb	a3,0(a2)
         0x80a70000,   // 	lb	a3,0(a1)
         0x24c60001,   // 	addiu	a2,a2,1

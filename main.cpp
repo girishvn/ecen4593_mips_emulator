@@ -106,34 +106,13 @@ int main() {
     reg[$fp] = memory[1]; //init frame pointer
 
 
-
     //MAIN PIPELINE LOOP
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
 
         //PRINTING OUT INITIAL ARRAY & Printing after bubble sorting
 
-        if(pc == 96){
-            cout<<"program counter is at 96"<<endl;
-            cout<<""<<endl;
-        }
 
-//        if(pc == 155 || pc == 159 || pc == 164){
-//            cout<<"program counter is at 155"<<endl;
-//            for(int i = 243; i < 493; i++){ //print out number arra
-//                cout << memory[i] <<" "<<memory[i+250]<< endl;
-//            }
-//        }
-
-        //checking insertion sort
-        /*
-        if(pc == 164) {
-            cout<<"done with array sorts"<<endl;
-            for (int i = 243; i < 493; i++) { //print out number array
-                cout << memory[i] <<" "<<memory[i+250]<<" "<<i<< endl;
-            }
-        }
-         */
 
 
         cout<<"Program Counter: "<<pc<<endl;
@@ -212,7 +191,8 @@ int main() {
                      << " rt: " << +shadow_EXMEM.rt
                      << " rtVal " << +shadow_EXMEM.rtVal
                      << " rv: " << +shadow_EXMEM.rv
-                     << " address: " << +shadow_EXMEM.address << endl;
+                     << " address: " << +shadow_EXMEM.address << endl
+                     << " byte address: " << +shadow_EXMEM.byteIndex << endl;
             } else if (shadow_EXMEM.type == J && shadow_EXMEM.opcode != 0x02) {
                 cout << "J OP Code: " << +shadow_EXMEM.opcode << endl
                      << "New PC address calculated is: " << pc << endl;
@@ -293,7 +273,6 @@ int main() {
             }
         }
         cout<<endl;
-        MEMWB = shadow_MEMWB;
 
         //Transferring all shadow registers into normal registers.
         //escapeShadowRealm(); //transfer data from shadow registers to real registers
