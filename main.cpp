@@ -108,6 +108,12 @@ int main() {
     //MAIN PIPELINE LOOP
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
+        if(pc == 10) {
+
+            cout << +reg[$a3] << " reg a3" << endl;
+
+        }
+
         thePurge();
 
         cout<<"Program Counter: "<<pc<<endl;
@@ -117,10 +123,8 @@ int main() {
         instFetch();
         ///////////////
 
-        /*
         cout<<"Instruction Fetched: "<<shadow_IFID.mc<<endl;
         cout<<endl;
-         */
 
         ////////////////
         //Decode Stage//
@@ -128,7 +132,6 @@ int main() {
         instDecode();
         ////////////////
 
-        /*
         cout<<"Decode Stage Finished. Type: "<<shadow_IDEX.type<<endl;
         if(shadow_IDEX.type == N){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -137,6 +140,7 @@ int main() {
             cout << "Decoding: " << IFID.mc << endl;
             if (shadow_IDEX.type == R) {
                 cout<< "R Function: " << +shadow_IDEX.funct
+                    <<"R OP code: " << +shadow_IDEX.opcode
                     << " rd: " << +shadow_IDEX.rd
                     << " rs: " << +shadow_IDEX.rs
                     << " rsVal: " << +shadow_IDEX.rsVal
@@ -158,7 +162,6 @@ int main() {
             }
         }
         cout<<endl;
-         */
 
         /////////////////
         //Execute Stage//
@@ -166,7 +169,7 @@ int main() {
         instExecute();
         /////////////////
 
-        /*
+
         cout<<"Execute Stage Finished. Type: "<<+shadow_EXMEM.type<<endl;
         if(shadow_EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -200,7 +203,7 @@ int main() {
             }
         }
         cout<<endl;
-        */
+
 
         ////////////////
         //Memory Stage//
@@ -208,7 +211,7 @@ int main() {
         instMemory();
         ////////////////
 
-        /*
+
         cout<<"Memory Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -247,7 +250,7 @@ int main() {
             }
         }
         cout<<endl;
-        */
+
 
         ////////////////////
         //Write Back Stage//
@@ -255,7 +258,7 @@ int main() {
         instWriteBack();
         ////////////////////
 
-        /*
+
         cout<<"Write Back Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(MEMWB.nop){
             cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
@@ -272,7 +275,7 @@ int main() {
             }
         }
         cout<<endl;
-        */
+
 
         //Transferring all shadow registers into normal registers.
         //escapeShadowRealm(); //transfer data from shadow registers to real registers
@@ -289,6 +292,12 @@ int main() {
         cout<<memory[i]<<" "<<memory[i + 250]<<" "<<i<<endl;
     }
 
+    for(int i = 6; i < 10; i++){
+        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
+    }
+#endif
+
+#ifdef PROGRAM2
     for(int i = 6; i < 10; i++){
         cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
     }

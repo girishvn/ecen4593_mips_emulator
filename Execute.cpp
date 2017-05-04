@@ -163,7 +163,7 @@ BRANCH FUNCTIONS
 //NOTE: IF PC IS INCREMENTED IN FETCH INSTEAD OF EXECUTE: GET RID OF +1 INCREMENTATION OF PC IN BRANCHES AND JUMPS
 
 
-void BEQ(){
+void BEQ(){ //good
 
     if(IDEX.rsVal == IDEX.rtVal){
         BranchPC = pc + IDEX.immediate;
@@ -176,7 +176,7 @@ void BEQ(){
 
 }
 
-void BGTZ(){ //same as beq
+void BGTZ(){ //good
 
     if(IDEX.rsVal > 0){
         BranchPC = pc + IDEX.immediate;
@@ -189,7 +189,7 @@ void BGTZ(){ //same as beq
 
 }
 
-void BLEZ(){ //same as beq
+void BLEZ(){ //good
 
     if(IDEX.rsVal <= 0){
         BranchPC = pc + IDEX.immediate;
@@ -202,7 +202,7 @@ void BLEZ(){ //same as beq
 
 }
 
-void BLTZ(){ //same as beq
+void BLTZ(){ //good
 
     if(IDEX.rsVal < 0){
         BranchPC = pc + IDEX.immediate;
@@ -215,7 +215,7 @@ void BLTZ(){ //same as beq
 
 }
 
-void BNE(){ //same as beq
+void BNE(){ //good
 
     if(IDEX.rsVal != IDEX.rtVal){
         BranchPC = pc + IDEX.immediate;
@@ -235,7 +235,7 @@ JUMP FUNCTIONS
 
 ***********************************************************************************************************************/
 
-void JUMP(){
+void JUMP(){ //good
 
     int32_t npc;
     npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
@@ -248,7 +248,7 @@ void JUMP(){
 
 }
 
-void JAL(){
+void JAL(){ //good
 
     shadow_EXMEM.rv = (pc + 1)*4;
 
@@ -262,7 +262,7 @@ void JAL(){
 
 }
 
-void JR(){
+void JR(){ //good
 
     int32_t npc;
     npc = IDEX.rsVal;
@@ -312,7 +312,7 @@ void LBU() {
 void LUI(){
 
     int32_t regVal = IDEX.rtVal & 0x0000ffff;
-    regVal = regVal | (int32_t(IDEX.immediate) << 16);
+    regVal = regVal | (int32_t((IDEX.immediate) << 16) & 0xffff0000);
     shadow_EXMEM.rv = regVal; //loading upper half of immediate value into rv
 
     shadow_EXMEM.rt = IDEX.rt;
@@ -322,7 +322,7 @@ void LUI(){
 }
 
 //LOAD WORD
-void LW(){
+void LW(){ //good
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
@@ -381,7 +381,7 @@ void SB() {
 
 
 //STORE WORD
-void SW(){
+void SW(){ //good
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
@@ -424,7 +424,7 @@ OTHER THINGS THAT DO NOT BELONG
 
 ***********************************************************************************************************************/
 void SEB(){
-    int32_t regVal = IDEX.rt;
+    int32_t regVal = reg[IDEX.rt];
     regVal = 0x000000FF & regVal;
     int32_t mask1 = 0xFFFFFF00;
     int32_t mask0 = 0x00000000;
@@ -653,11 +653,11 @@ void instExecute() {
 
     //R TYPE
     else if(IDEX.type == R){
-        if(IDEX.funct == 0x00){ //SLL
-            SLL();
-        }
-        else if(IDEX.funct == 0x1F){
+        if(IDEX.opcode == 0x1F){
             SEB();
+        }
+        else if(IDEX.funct == 0x00){ //SLL
+            SLL();
         }
         else if(IDEX.funct == 0x02){ //SRL
             SRL();

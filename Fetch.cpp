@@ -23,4 +23,6 @@ void instFetch(void) {
     instMC = uint32_t(memory[pc]); //grab correct instruction from instruction memory
     shadow_IFID.mc = instMC; //set next instruction to intermediate IF/ID register
 
+    //reg[$v0] = 0x0000001f;
+
 }

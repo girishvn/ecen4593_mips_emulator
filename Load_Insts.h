@@ -7,9 +7,9 @@
 
 #include "global_vars.h"
 
-#define PROGRAM1 //Bubble/Insertion Sort
+//#define PROGRAM1 //Bubble/Insertion Sort
 
-//#define PROGRAM2
+#define PROGRAM2
 
 //#define PROGRAMLOADOPT //Optimized Program
 

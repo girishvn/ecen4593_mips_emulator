@@ -143,7 +143,7 @@ void LoadWordFromMemory(void){
 
     shadow_MEMWB.rv = memory[EXMEM.address];
     shadow_MEMWB.rt = EXMEM.rt;
-    std::cout<<"address val: "<<EXMEM.address<<" "<<shadow_MEMWB.rv<<std::endl;
+    std::cout<<"address: "<<EXMEM.address<<" val"<<shadow_MEMWB.rv<<std::endl;
 
 }
 
@@ -193,52 +193,31 @@ void LoadHalfWordFromMemory(void){
 void LoadByteSignedFromMemory(void){
     //LOCAL VARIABLES
     int32_t memVal;
-    uint32_t maskMem;
-    uint32_t maskSign = 0xffffff00;
+    uint32_t maskMem = 0x000000ff;
+    uint32_t maskSignNeg = 0xffffff00;
 
     memVal = memory[EXMEM.address];
     shadow_MEMWB.rt = IDEX.rt;
 
-    switch (EXMEM.byteIndex) {
-        case 0: { //1th Byte
-            maskMem = 0x000000ff;
-            memVal = maskMem & memVal;
-            memVal = maskSign | memVal;
-            shadow_MEMWB.rv = memVal;
-            break;
+    if(EXMEM.byteIndex < 4){
+
+        memVal = memVal >> 8*EXMEM.byteIndex;
+        memVal = maskMem & memVal;
+        if(memVal >> 7 == 1){ //sign extend with 1;
+            memVal = maskSignNeg | memVal;
         }
+        //else already sign extended with 0's
 
-        case 1: { //2th Byte
-            maskMem = 0x0000ff00;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 8;
-            shadow_MEMWB.rv = memVal;
-            break;
-        }
+        shadow_MEMWB.rv = memVal;
+        return;
 
-        case 2: { //3th Byte
-            maskMem = 0x00ff0000;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 16;
-            shadow_MEMWB.rv = memVal;
-            break;
-
-        }
-
-        case 3: { //4th Byte
-            maskMem = 0xff000000;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 24;
-            shadow_MEMWB.rv = memVal;
-            break;
-
-        }
-
-        default: {
-            std::cout<<"unusable index value in LBU"<<std::endl;
-            return;
-        }
     }
+
+    else{ //index is 4
+        std::cout<<"unusable index value in LBU"<<std::endl;
+        return;
+    }
+
 }
 
 void LoadByteUnsignedFromMemory(void){
@@ -334,11 +313,6 @@ void instMemory(){
                 LoadHalfWordFromMemory();
                 break;
             }
-            case 0x0F:{
-                shadow_MEMWB.nop = true;
-                break;
-            }
-            //I types that do not access memory
             default: {
                 shadow_MEMWB.rv = EXMEM.rv;
                 shadow_MEMWB.rt = EXMEM.rt;
