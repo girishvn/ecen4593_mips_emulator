@@ -7,6 +7,10 @@
 
 void instWriteBack(){
 
+    if((MEMWB.rd == $v1 && MEMWB.type == R) || (MEMWB.rt == $v1 && MEMWB.type == I)){
+        std::cout<<"v1"<<std::endl;
+    }
+
     if((MEMWB.rd == 0 && MEMWB.type == R) || (MEMWB.rt == 0 && MEMWB.type == I)){
         std::cout<<"BAD WRITE: RETURN PUSH TO REG 0"<<std::endl;
         return;

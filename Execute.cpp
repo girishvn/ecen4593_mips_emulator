@@ -285,7 +285,7 @@ void LB(){
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
-    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
+    shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.rtVal = IDEX.rtVal;
@@ -299,7 +299,7 @@ void LBU() {
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
-    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
+    shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     shadow_EXMEM.rt = IDEX.rt;
     shadow_EXMEM.rtVal = IDEX.rtVal;
@@ -326,7 +326,7 @@ void LW(){ //good
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
-    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
+    shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a word, index should always be at 0
     if(shadow_EXMEM.byteIndex != 0){
@@ -345,7 +345,7 @@ void LHU() {
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
-    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
+    shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a word, index should always be at 0
     if (shadow_EXMEM.byteIndex == 4) {
@@ -371,7 +371,7 @@ void SB() {
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
-    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
+    shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     shadow_EXMEM.rtVal = 0x000000ff & IDEX.rtVal; //only lowest byte stored
     shadow_EXMEM.type = IDEX.type;
@@ -385,11 +385,12 @@ void SW(){ //good
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
-    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate%4);
+    shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a word, index should always be at 0
     if(shadow_EXMEM.byteIndex != 0){
-        std::cout<<"SW immediate offset crosses memory words: "<<IDEX.funct<<std::endl;
+        std::cout<<"SW immediate offset crosses memory words: "<<+IDEX.funct<<std::endl;
+        std::cout<<"address: "<<+shadow_EXMEM.address<<" byte index: "<<+shadow_EXMEM.byteIndex<<std::endl;
         return;
     }
 
@@ -404,7 +405,7 @@ void SH() {
 
     //Calculating immediate address and byte index.
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
-    shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
+    shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a half word, index should only be at 1, 2, or 3
     if (shadow_EXMEM.byteIndex == 3) {

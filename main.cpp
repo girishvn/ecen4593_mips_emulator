@@ -108,10 +108,8 @@ int main() {
     //MAIN PIPELINE LOOP
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
 
-        if(pc == 10) {
-
-            cout << +reg[$a3] << " reg a3" << endl;
-
+        if(pc == 38) {
+            cout<<"pc = 38 "<<endl;
         }
 
         thePurge();
@@ -298,12 +296,25 @@ int main() {
 #endif
 
 #ifdef PROGRAM2
+    for(int i = 395; i < 495; i++){
+        cout<<memory[i]<<" "<<i<<endl;
+    }
     for(int i = 6; i < 10; i++){
         cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
     }
 #endif
 
 #ifdef PROGRAMLOADOPT
+    for(int i = 795; i < 895; i++){
+        cout<<memory[i]<<" "<<memory[i + 100]<<" "<<i<<endl;
+    }
+
+    for(int i = 6; i<9; i++){
+        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
+    }
+#endif
+
+#ifdef PROGRAMLOADUNOPT
     for(int i = 795; i < 895; i++){
         cout<<memory[i]<<" "<<memory[i + 100]<<" "<<i<<endl;
     }
