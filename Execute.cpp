@@ -373,7 +373,7 @@ void SB() {
     shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
     shadow_EXMEM.byteIndex = uint8_t(IDEX.immediate % 4);
 
-    shadow_EXMEM.rtVal = IDEX.rtVal;
+    shadow_EXMEM.rtVal = 0x000000ff & IDEX.rtVal; //only lowest byte stored
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
@@ -495,7 +495,7 @@ void SLTIU(){
 
 void SLTU(){
 
-    if(IDEX.rsVal < IDEX.rtVal){
+    if(uint32_t(IDEX.rsVal) < uint16_t(IDEX.rtVal)){
         shadow_EXMEM.rv = 1;
     }
     else{
@@ -570,7 +570,7 @@ void instExecute() {
     shadow_EXMEM.nop = false; //nop by defualt is false
     BranchFlag = false;
 
-    if(IDEX.type == N){
+    if(IDEX.type == N){ //NOP
         NOP();
     }
 
@@ -625,7 +625,7 @@ void instExecute() {
         else if(IDEX.opcode == 0x0F){ //LUI
             LUI();
         }
-        else if(IDEX.opcode == 0x20){ //LUI
+        else if(IDEX.opcode == 0x20){ //LB
             LB(); //needs to be written
         }
         else if(IDEX.opcode == 0x23){ //LW

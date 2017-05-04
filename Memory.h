@@ -12,7 +12,7 @@ void WriteHalfWordIntoMemory();
 void WriteByteIntoMemory();
 
 void LoadWordFromMemory(void);
-void LoadHalfWordFromMemory(void);
+void LoadHalfWordUnsignedFromMemory(void);
 void LoadByteUnsignedFromMemory(void);
 void LoadByteSignedFromMemory(void);
 void instMemory(void);

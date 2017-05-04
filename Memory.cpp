@@ -12,7 +12,13 @@ CALLABLE FUNCTIONS
 
 ***********************************************************************************************************************/
 
-void WriteWordIntoMemory(){
+/***********************************************************************************************************************
+
+STORE WORD FUNCTIONS
+
+***********************************************************************************************************************/
+
+void WriteWordIntoMemory(){ //store word
 
     memory[EXMEM.address] = EXMEM.rtVal;
 }
@@ -139,55 +145,47 @@ void WriteByteIntoMemory(){
     }
 }
 
+/***********************************************************************************************************************
+
+LOAD WORD FUNCTIONS
+
+***********************************************************************************************************************/
+
 void LoadWordFromMemory(void){
 
     shadow_MEMWB.rv = memory[EXMEM.address];
     shadow_MEMWB.rt = EXMEM.rt;
-    std::cout<<"address: "<<EXMEM.address<<" val"<<shadow_MEMWB.rv<<std::endl;
 
 }
 
-void LoadHalfWordFromMemory(void){
+void LoadHalfWordUnsignedFromMemory(void){
     //LOCAL VARIABLES
     int32_t memVal;
-    uint32_t maskMem;
+    uint32_t maskMem = 0x0000ffff;
+    uint32_t maskSignNeg = 0xffff0000;
 
     memVal = memory[EXMEM.address];
-    shadow_MEMWB.rt = IDEX.rt;
+    shadow_MEMWB.rt = IDEX.rt; //save register
 
-    switch (EXMEM.byteIndex) {
-        case 0: { //1th Byte
-            maskMem = 0x0000ffff;
-            memVal = maskMem & memVal;
-            shadow_MEMWB.rv = memVal;
+    if(EXMEM.byteIndex < 3) {
 
-            break;
+        memVal = memVal >> 8*EXMEM.byteIndex;
+        memVal = maskMem & memVal;
+        if(memVal >> 15 == 1){ //sign extend with 1;
+            memVal = maskSignNeg | memVal;
         }
+        //else already sign extended with 0's
 
-        case 1: { //2th Byte
-            maskMem = 0x00ffff00;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 8;
-            shadow_MEMWB.rv = memVal;
+        shadow_MEMWB.rv = memVal;
+        return;
 
-            break;
-
-        }
-
-        case 2: { //3th Byte
-            maskMem = 0xffff0000;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 16;
-            shadow_MEMWB.rv = memVal;
-            break;
-
-        }
-
-        default: {
-            std::cout << "unusable index value in LHU" << std::endl;
-            return;
-        }
     }
+
+    else{ //index is 3
+        std::cout<<"unusable index value in LHU"<<std::endl;
+        return;
+    }
+
 }
 
 void LoadByteSignedFromMemory(void){
@@ -214,7 +212,7 @@ void LoadByteSignedFromMemory(void){
     }
 
     else{ //index is 4
-        std::cout<<"unusable index value in LBU"<<std::endl;
+        std::cout<<"unusable index value in LB"<<std::endl;
         return;
     }
 
@@ -223,51 +221,35 @@ void LoadByteSignedFromMemory(void){
 void LoadByteUnsignedFromMemory(void){
     //LOCAL VARIABLES
     int32_t memVal;
-    uint32_t maskMem;
+    uint32_t maskMem = 0x000000ff;
+    uint32_t maskUnsigned = 0x000000ff;
 
     memVal = memory[EXMEM.address];
     shadow_MEMWB.rt = IDEX.rt;
 
-    switch (EXMEM.byteIndex) {
-        case 0: { //1th Byte
-            maskMem = 0x000000ff;
-            memVal = maskMem & memVal;
-            shadow_MEMWB.rv = memVal;
-            break;
-        }
+    if(EXMEM.byteIndex < 4){
 
-        case 1: { //2th Byte
-            maskMem = 0x0000ff00;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 8;
-            shadow_MEMWB.rv = memVal;
-            break;
-        }
+        memVal = memVal >> 8*EXMEM.byteIndex;
+        memVal = maskMem & memVal;
 
-        case 2: { //3th Byte
-            maskMem = 0x00ff0000;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 16;
-            shadow_MEMWB.rv = memVal;
-            break;
+        memVal = maskUnsigned | memVal;
 
-        }
+        shadow_MEMWB.rv = memVal;
+        return;
 
-        case 3: { //4th Byte
-            maskMem = 0xff000000;
-            memVal = maskMem & memVal;
-            memVal = memVal >> 24;
-            shadow_MEMWB.rv = memVal;
-            break;
+    }
 
-        }
-
-        default: {
-            std::cout<<"unusable index value in LBU"<<std::endl;
-            return;
-        }
+    else{ //index is 4
+        std::cout<<"unusable index value in LBU"<<std::endl;
+        return;
     }
 }
+
+/***********************************************************************************************************************
+
+MAIN CALLABLE FUNCTIONS
+
+***********************************************************************************************************************/
 
 void instMemory(){
 
@@ -310,7 +292,7 @@ void instMemory(){
                 break;
             }
             case 0x25: {
-                LoadHalfWordFromMemory();
+                LoadHalfWordUnsignedFromMemory();
                 break;
             }
             default: {
