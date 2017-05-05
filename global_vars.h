@@ -63,12 +63,13 @@ extern int32_t memory[1200];
 
 /***********************************************************************************************************************
 
- pc: program counter global variable
+ pc: program counter global variable, clock cycle, and instruction count
 
 ***********************************************************************************************************************/
 
 extern int32_t pc; //program counter
-
+extern uint32_t ClockCycles; //CPU cycle count
+extern uint32_t InstructionCount; //Instruction count
 /***********************************************************************************************************************
 
  Delayed Branch variables: Only works with single staged pipeline.

@@ -106,14 +106,8 @@ int main() {
     reg[$fp] = memory[1]; //init frame pointer
 
     //MAIN PIPELINE LOOP
-    while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file)
-
-        if(pc == 38) {
-            cout<<"pc = 38 "<<endl;
-        }
-
+    while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file);
         thePurge();
-
         cout<<"Program Counter: "<<pc<<endl;
 
         ///////////////
@@ -282,8 +276,6 @@ int main() {
         cout<<"**************************************"<<endl;
 
     }
-    cout<<"Program has finished running"<<endl;
-
     //PRINT OUT FINAL ARRAY VALUES
 #ifdef PROGRAM1
     for(int i = 243; i < 493; i++){
@@ -324,6 +316,7 @@ int main() {
     }
 #endif
 
+    cout<<"Program has finished running"<<endl;
 
 
     return 1;

@@ -26,6 +26,7 @@ void instWriteBack(){
     }
     else if(MEMWB.type == R){
         reg[MEMWB.rd] = MEMWB.rv;
+        std::cout<<MEMWB.rv<<" "<<MEMWB.rd<<std::endl;
     }
 
     //Special case for Jump and Link

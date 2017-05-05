@@ -9,7 +9,7 @@
 
 //#define PROGRAM1 //Bubble/Insertion Sort
 
-#define PROGRAM2
+#define PROGRAM2 //Ceasar Decipher
 
 //#define PROGRAMLOADOPT //Optimized Program
 

@@ -441,6 +441,8 @@ void SEB(){
     shadow_EXMEM.rd = IDEX.rd; //return register passed on
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
+
+    std::cout<<"return val: "<<+shadow_EXMEM.rv<<" rtVal:"<<reg[IDEX.rt]<<std::endl;
 }
 
 void SLL(){
