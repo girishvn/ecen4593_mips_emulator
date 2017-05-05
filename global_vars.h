@@ -120,6 +120,14 @@ struct _IDEX {
     //J-type specific
     int32_t address;
 
+    //Control Variables
+    bool regDst;
+    bool regWrite;
+    bool ALUSrc;
+    bool PCSrc;
+    bool memRead;
+    bool memWrite;
+    bool memToReg;
 };
 
 struct _EXMEM {
@@ -154,6 +162,14 @@ struct _EXMEM {
     bool nop;
     //bool nop = true;
 
+    //Control Variables
+    bool regDst;
+    bool regWrite;
+    bool ALUSrc;
+    bool PCSrc;
+    bool memRead;
+    bool memWrite;
+    bool memToReg;
 
 };
 
@@ -170,7 +186,15 @@ struct _MEMWB {
 
     int32_t rv;
     bool nop;
-   //bool nop = true;
+
+    //Control Variables
+    bool regDst;
+    bool regWrite;
+    bool ALUSrc;
+    bool PCSrc;
+    bool memRead;
+    bool memWrite;
+    bool memToReg;
 
 };
 

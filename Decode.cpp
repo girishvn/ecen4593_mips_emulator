@@ -143,9 +143,77 @@ void instJDecode(uint32_t machineCode) {
  OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: setcontrol
+
+ DESCRIPTION: sets the controls for each specific type of opcode that will propogate through the pipeline
+
+ INPUTS: opcode
+
+ OUTPUTS: control line booleans
+
+***********************************************************************************************************************/
+
+void setcontrol(){
+    //set control lines depending on opcode
+    //R-types
+    if((shadow_IDEX.opcode == 0x00) || (shadow_IDEX.opcode == 0x1F)){
+        shadow_IDEX.regDst = true;
+        shadow_IDEX.regWrite = true;
+        shadow_IDEX.ALUSrc = false;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = false;
+    }
+    //loads
+    else if((shadow_IDEX.opcode == 0x20) || (shadow_IDEX.opcode == 0x24) || (shadow_IDEX.opcode == 0x25)
+       || (shadow_IDEX.opcode == 0x0F) || (shadow_IDEX.opcode == 0x23) ){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = true;
+        shadow_IDEX.memToReg = true;
+        shadow_IDEX.regWrite = true;
+        shadow_IDEX.memRead = true;
+        shadow_IDEX.memWrite = false;
+    }
+    //stores
+    else if((shadow_IDEX.opcode == 0x28) || (shadow_IDEX.opcode == 0x29) || (shadow_IDEX.opcode == 0x2B) ){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = true;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.regWrite = false;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = true;
+    }
+    //branches
+    else if((shadow_IDEX.opcode == 0x4) || (shadow_IDEX.opcode == 0x5) || (shadow_IDEX.opcode == 0x6)
+       || (shadow_IDEX.opcode == 0x7) || (shadow_IDEX.opcode == 0x1) || (shadow_IDEX.opcode == 0x2)
+       || (shadow_IDEX.opcode == 0x3) || ((shadow_IDEX.opcode == 0x00) && (shadow_IDEX.funct == 0x8))){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = false;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.regWrite = false;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = false;
+    }
+    //immediates
+    else if((shadow_IDEX.opcode == 0x8)||(shadow_IDEX.opcode == 0x9)||(shadow_IDEX.opcode == 0xC)
+       ||(shadow_IDEX.opcode == 0xE)||(shadow_IDEX.opcode == 0xA)||(shadow_IDEX.opcode == 0xB)
+       ||(shadow_IDEX.opcode == 0xD)){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = false;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.regWrite = true;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = false;
+    }
+}
+
 void instDecode(void) {
 
-    if(BranchFlag == true){
+    //delayed branch
+    if(BranchFlag){
         pc = BranchPC;
     }
     else{
@@ -154,8 +222,10 @@ void instDecode(void) {
 
     uint32_t machineCode = IFID.mc;
 
-    instType(machineCode); //checks type (R, I, J)
+    instType(machineCode); //checks type (R, I, J) and gets opcode
     int inst_type = shadow_IDEX.type;
+
+    setcontrol(); //Set control bits based on the decoded opcode.
 
     switch(inst_type) { //fills instruction based on type (nop, R, I, J)
         case N: {
@@ -174,9 +244,8 @@ void instDecode(void) {
             return;
         }
         default: { //Error in input machine code
-            cout<<"invalid opcode or input / undocumented instruction"<<endl;
+            cout << "invalid opcode or input / undocumented instruction" << endl;
             return;
         }
     }
-
 }
