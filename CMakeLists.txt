@@ -18,6 +18,6 @@ set(SOURCE_FILES
         WriteBack.h
         main.cpp
         Load_Insts.cpp
-        Load_Insts.h)
+        Load_Insts.h Cache.cpp Cache.h)
 
 add_executable(ecen4593_mips_emulator ${SOURCE_FILES})

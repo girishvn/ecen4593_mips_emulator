@@ -7,6 +7,7 @@
 #include "Execute.h"
 #include "Memory.h"
 #include "WriteBack.h"
+#include "Cache.h"
 
 using namespace std;
 
@@ -101,12 +102,24 @@ int main() {
 
     thePurge(); //init all values for operation:
     Initialize_Simulation_Memory(); //copy program image into memory array
+    initiCache(); //init Instruction Cache
+    initdCache(); //init Data Cache
+
     pc = memory[5]; //set program counter value
     reg[$sp] = memory[0]; //init stack pointer
     reg[$fp] = memory[1]; //init frame pointer
 
+    int cyclecount = 0;
+
     //MAIN PIPELINE LOOP
     while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file);
+
+        cyclecount++;
+
+        if(pc == 133){
+            cout<<"133 == pc"<<endl;
+        }
+
         thePurge();
         cout<<"Program Counter: "<<pc<<endl;
 
@@ -115,8 +128,8 @@ int main() {
         instFetch();
         ///////////////
 
-        cout<<"Instruction Fetched: "<<shadow_IFID.mc<<endl;
-        cout<<endl;
+        //cout<<"Instruction Fetched: "<<shadow_IFID.mc<<endl;
+        //cout<<endl;
 
         ////////////////
         //Decode Stage//
@@ -124,6 +137,7 @@ int main() {
         instDecode();
         ////////////////
 
+        /*
         cout<<"Decode Stage Finished. Type: "<<shadow_IDEX.type<<endl;
         if(shadow_IDEX.type == N){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -154,6 +168,7 @@ int main() {
             }
         }
         cout<<endl;
+        */
 
         /////////////////
         //Execute Stage//
@@ -161,7 +176,7 @@ int main() {
         instExecute();
         /////////////////
 
-
+        /*
         cout<<"Execute Stage Finished. Type: "<<+shadow_EXMEM.type<<endl;
         if(shadow_EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -195,7 +210,7 @@ int main() {
             }
         }
         cout<<endl;
-
+        */
 
         ////////////////
         //Memory Stage//
@@ -203,7 +218,7 @@ int main() {
         instMemory();
         ////////////////
 
-
+        /*
         cout<<"Memory Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(EXMEM.nop){
             cout<<"Stage Passed, NOP detected"<<endl;
@@ -242,7 +257,7 @@ int main() {
             }
         }
         cout<<endl;
-
+        */
 
         ////////////////////
         //Write Back Stage//
@@ -250,7 +265,7 @@ int main() {
         instWriteBack();
         ////////////////////
 
-
+        /*
         cout<<"Write Back Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
         if(MEMWB.nop){
             cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
@@ -274,7 +289,7 @@ int main() {
         //cout<<"All registers have escaped the shadow realm."<<endl;
         cout<<"Instruction has been passed through pipeline."<<endl;
         cout<<"**************************************"<<endl;
-
+        */
     }
     //PRINT OUT FINAL ARRAY VALUES
 #ifdef PROGRAM1
@@ -316,8 +331,7 @@ int main() {
     }
 #endif
 
-    cout<<"Program has finished running"<<endl;
-
+    cout<<"cycle count: "<<cyclecount<<endl;
 
     return 1;
 }

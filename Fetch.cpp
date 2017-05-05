@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "Fetch.h"
+#include "Cache.h"
 
 /***********************************************************************************************************************
 
@@ -20,9 +21,10 @@
 void instFetch(void) {
 
     uint32_t instMC; //instruction machine code
-    instMC = uint32_t(memory[pc]); //grab correct instruction from instruction memory
+    //instMC = uint32_t(memory[pc]); //grab correct instruction from instruction memory
+    int32_t address = pc;
+    instMC= uint32_t(iCacheRead(address));
     shadow_IFID.mc = instMC; //set next instruction to intermediate IF/ID register
-
-    //reg[$v0] = 0x0000001f;
+    std::cout<<+instMC<<std::endl;
 
 }

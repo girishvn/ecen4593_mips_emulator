@@ -519,7 +519,7 @@ uint32_t program_image[] = {
         0x00000000,
         0x00000000,
         0x00000000,
-        0x80a70000,   // 	lb	a3,0(a1)
+        0x80a70000,   // 	lb	a3,0(a1)                                                                         PC = 10
         0x10e0001e,   // 	beqz	a3,4008b0 <ceasar_encrypt+0x80>
         0x24a50001,   // 	addiu	a1,a1,1
         0x30e200ff,   // 	andi	v0,a3,0xff
@@ -529,7 +529,7 @@ uint32_t program_image[] = {
         0x10600009,   // 	beqz	v1,400874 <ceasar_encrypt+0x44>
         0x2443ffbf,   // 	addiu	v1,v0,-65
         0x00441021,   // 	addu	v0,v0,a0
-        0x304200ff,   // 	andi	v0,v0,0xff
+        0x304200ff,   // 	andi	v0,v0,0xff                                                                   PC = 20
         0x7c023c20,   // 	seb	a3,v0
         0x28e3007b,   // 	slti	v1,a3,123
         0x1460000d,   // 	bnez	v1,40089c <ceasar_encrypt+0x6c>
@@ -539,7 +539,7 @@ uint32_t program_image[] = {
         0x306300ff,   // 	andi	v1,v1,0xff
         0x2c63001a,   // 	sltiu	v1,v1,26
         0x10600007,   // 	beqz	v1,40089c <ceasar_encrypt+0x6c>
-        0x00441021,   // 	addu	v0,v0,a0
+        0x00441021,   // 	addu	v0,v0,a0                                                                     PC = 30
         0x304300ff,   // 	andi	v1,v0,0xff
         0x7c033c20,   // 	seb	a3,v1
         0x28e2005b,   // 	slti	v0,a3,91
@@ -549,7 +549,7 @@ uint32_t program_image[] = {
         0xa0c70000,   // 	sb	a3,0(a2)
         0x80a70000,   // 	lb	a3,0(a1)
         0x24c60001,   // 	addiu	a2,a2,1
-        0x14e0ffe4,   // 	bnez	a3,40083c <ceasar_encrypt+0xc>
+        0x14e0ffe4,   // 	bnez	a3,40083c <ceasar_encrypt+0xc>                                               PC = 40
         0x24a50001,   // 	addiu	a1,a1,1
         0x03e00008,   // 	jr	ra
         0x00000000,   // 	nop
@@ -559,7 +559,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x80a70000,   // 	lb	a3,0(a1)
+        0x80a70000,   // 	lb	a3,0(a1)                                                                         PC = 50
         0x10e0001e,   // 	beqz	a3,400938 <ceasar_decrypt+0x80>
         0x24a50001,   // 	addiu	a1,a1,1
         0x30e200ff,   // 	andi	v0,a3,0xff
@@ -569,7 +569,7 @@ uint32_t program_image[] = {
         0x10600009,   // 	beqz	v1,4008fc <ceasar_decrypt+0x44>
         0x2443ffbf,   // 	addiu	v1,v0,-65
         0x00441023,   // 	subu	v0,v0,a0
-        0x304200ff,   // 	andi	v0,v0,0xff
+        0x304200ff,   // 	andi	v0,v0,0xff                                                                   PC = 60
         0x7c023c20,   // 	seb	a3,v0
         0x28e30061,   // 	slti	v1,a3,97
         0x1060000d,   // 	beqz	v1,400924 <ceasar_decrypt+0x6c>
@@ -579,7 +579,7 @@ uint32_t program_image[] = {
         0x306300ff,   // 	andi	v1,v1,0xff
         0x2c63001a,   // 	sltiu	v1,v1,26
         0x10600007,   // 	beqz	v1,400924 <ceasar_decrypt+0x6c>
-        0x00441023,   // 	subu	v0,v0,a0
+        0x00441023,   // 	subu	v0,v0,a0                                                                     PC = 70
         0x304300ff,   // 	andi	v1,v0,0xff
         0x7c033c20,   // 	seb	a3,v1
         0x28e20041,   // 	slti	v0,a3,65
@@ -589,7 +589,7 @@ uint32_t program_image[] = {
         0xa0c70000,   // 	sb	a3,0(a2)
         0x80a70000,   // 	lb	a3,0(a1)
         0x24c60001,   // 	addiu	a2,a2,1
-        0x14e0ffe4,   // 	bnez	a3,4008c4 <ceasar_decrypt+0xc>
+        0x14e0ffe4,   // 	bnez	a3,4008c4 <ceasar_decrypt+0xc>                                               PC = 80
         0x24a50001,   // 	addiu	a1,a1,1
         0x03e00008,   // 	jr	ra
         0x00000000,   // 	nop
@@ -599,7 +599,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x80860000,   // 	lb	a2,0(a0)
+        0x80860000,   // 	lb	a2,0(a0)                                                                         PC = 90
         0x10c0000f,   // 	beqz	a2,400984 <compare_string+0x44>
         0x00a04025,   // 	move	t0,a1
         0x24840001,   // 	addiu	a0,a0,1
@@ -609,7 +609,7 @@ uint32_t program_image[] = {
         0x00661826,   // 	xor	v1,v1,a2
         0x0003100b,   // 	movn	v0,zero,v1
         0x24e70001,   // 	addiu	a3,a3,1
-        0x00e01825,   // 	move	v1,a3
+        0x00e01825,   // 	move	v1,a3                                                                       PC = 100
         0x80860000,   // 	lb	a2,0(a0)
         0x25080001,   // 	addiu	t0,t0,1
         0x14c0fff8,   // 	bnez	a2,400958 <compare_string+0x18>
@@ -619,7 +619,7 @@ uint32_t program_image[] = {
         0x00001825,   // 	move	v1,zero
         0x24020001,   // 	li	v0,1
         0x00a32821,   // 	addu	a1,a1,v1
-        0x80a30000,   // 	lb	v1,0(a1)
+        0x80a30000,   // 	lb	v1,0(a1)                                                                        PC = 110
         0x03e00008,   // 	jr	ra
         0x0003100b,   // 	movn	v0,zero,v1
         0x00000000,   // 	nop
@@ -629,7 +629,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x27bdfc50,   // 	addiu	sp,sp,-944
+        0x27bdfc50,   // 	addiu	sp,sp,-944                                                                  PC = 120
         0xafbf03ac,   // 	sw	ra,940(sp)
         0xafb203a8,   // 	sw	s2,936(sp)
         0xafb103a4,   // 	sw	s1,932(sp)
@@ -639,7 +639,7 @@ uint32_t program_image[] = {
         0x27b20144,   // 	addiu	s2,sp,324
         0x02403025,   // 	move	a2,s2
         0x3c020000,   // 	lui	v0,0x00
-        0x8c050008,	  //	lw $a1, 8($zero)	0x8c450008,   // 	lw	a1,8(v0)
+        0x8c050008,	  //	lw $a1, 8($zero)	0x8c450008,   // 	lw	a1,8(v0)                                PC = 130
         0x24040005,   // 	li	a0,5
         0x0c00000a,   // 	jal	10 <ceasar_encrypt>
         0x00000000,   // 	nop
@@ -649,7 +649,7 @@ uint32_t program_image[] = {
         0x24040005,   // 	li	a0,5
         0x0c000032,   // 	jal	50 <ceasar_decrypt>
         0x00000000,   // 	nop
-        0x02202825,   // 	move	a1,s1
+        0x02202825,   // 	move	a1,s1                                                                       PC = 140
         0x8c040008,	  //	lw $a0, 8($zero) 0x27a40018,   // 	addiu	a0,sp,24
         0x0c00005a,   // 	jal	90 <compare_string>
         0x00000000,   // 	nop
@@ -659,7 +659,7 @@ uint32_t program_image[] = {
         0x8fbf03ac,   // 	lw	ra,940(sp)
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x00000000,   // 	nop
+        0x00000000,   // 	nop                                                                                 PC = 150
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
@@ -669,7 +669,7 @@ uint32_t program_image[] = {
         0x8c080384,   // 	lw $t0, 900($zero)
         0x8c090690,   // 	lw $t1, 1680($zero)
         0x8c0a07bc,   // 	lw $t2, 1980($zero)
-        0xac08001c,   // 	sw $t0, 28($zero)
+        0xac08001c,   // 	sw $t0, 28($zero)                                                                   PC = 160
         0xac090020,   // 	sw $t1, 32($zero)
         0xac0a0024,   // 	sw $t2, 36($zero)
         0xac020018,   // 	sw $v0, 24($zero)
@@ -679,7 +679,7 @@ uint32_t program_image[] = {
         0x8c080418,   // 	lw $t0, 1048($zero)
         0x8fb203a8,   // 	lw	s2,936(sp)
         0x8fb103a4,   // 	lw	s1,932(sp)
-        0x8fb003a0,   // 	lw	s0,928(sp)
+        0x8fb003a0,   // 	lw	s0,928(sp)                                                                      PC = 170
         0x00000008,   // 	jr	to PC = $zero to end program
         0x27bd03b0,   // 	addiu	sp,sp,944
         0x00000000,   // 	nop
@@ -689,7 +689,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x00000000,   // 	nop
+        0x00000000,   // 	nop                                                                                 PC = 180
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
@@ -1045,6 +1045,7 @@ unsigned int program_image[] = {4000,4000,0,0,0,120,0,0,0,0,
 
 const int inst_memory_size = sizeof(program_image) / sizeof(program_image[0]); //define size of program image
 int32_t memory[1200] = {0}; //size of memory
+
 
 /***********************************************************************************************************************
 

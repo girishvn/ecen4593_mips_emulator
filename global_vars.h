@@ -6,8 +6,27 @@
 #define ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H
 
 #include <cstdint>
+#include <cstdlib>
 
-//Global Variables:
+/***********************************************************************************************************************
+
+CACHE GLOBALS
+
+***********************************************************************************************************************/
+//const uint32_t ICACHESIZE = 64; //PROGRAM1 & PROGRAM2
+//const uint32_t ICACHESIZE = 128; //PROGRAM1 & PROGRAM2
+const uint32_t ICACHESIZE = 256; //PROGRAM2
+
+//const uint32_t DCACHESIZE = 128; //PROGRAM2
+//const uint32_t DCACHESIZE = 256; //PROGRAM1 & PROGRAM2
+//const uint32_t DCACHESIZE = 512; //PROGRAM2
+const uint32_t DCACHESIZE = 1024; //PROGRAM1
+
+//const uint32_t BLOCKSIZE = 1; //PROGRAM1 & PROGRAM2
+//const uint32_t BLOCKSIZE = 4; //PROGRAM1 & PROGRAM2
+const uint32_t BLOCKSIZE = 16; //PROGRAM1 & PROGRAM2
+
+const bool writeThrough = true; //write through or write back
 
 /***********************************************************************************************************************
 
@@ -55,6 +74,34 @@ enum reg_bank_names{
 
 /***********************************************************************************************************************
 
+CACHE: Total data and program image memory
+
+***********************************************************************************************************************/
+
+struct _BLOCK {
+
+    int32_t tag = 0;
+    int8_t valid = 0;
+
+    //ENTRIES IN BLOCK
+    int32_t entryArr[BLOCKSIZE] = {0};
+
+};
+
+struct _CACHE {
+
+    uint32_t numBlocks;
+
+    //BLOCKS IN CACHE
+    _BLOCK * blockArr;
+
+};
+
+extern _CACHE iCache;
+extern _CACHE dCache;
+
+/***********************************************************************************************************************
+
 MEMORY: Total data and program image memory
 
 ***********************************************************************************************************************/
@@ -70,6 +117,7 @@ extern int32_t memory[1200];
 extern int32_t pc; //program counter
 extern uint32_t ClockCycles; //CPU cycle count
 extern uint32_t InstructionCount; //Instruction count
+
 /***********************************************************************************************************************
 
  Delayed Branch variables: Only works with single staged pipeline.
@@ -87,7 +135,6 @@ Intermediate registers global structs
 
 struct _IFID {
 
-    //uint32_t mc = 0; //machine code of instruction
     uint32_t mc;
 
 };
@@ -187,6 +234,4 @@ extern _EXMEM shadow_EXMEM;
 extern _MEMWB MEMWB;
 extern _MEMWB shadow_MEMWB;
 
-
 #endif //ECEN4593_MIPS_EMULATOR_GLOBAL_VARS_H
-
