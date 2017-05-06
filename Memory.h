@@ -15,6 +15,8 @@ void LoadWordFromMemory(void);
 void LoadHalfWordUnsignedFromMemory(void);
 void LoadByteUnsignedFromMemory(void);
 void LoadByteSignedFromMemory(void);
+
+void setMEMWBControl(void);
 void instMemory(void);
 
 #endif //ECEN4593_MIPS_EMULATOR_MEMORY_H

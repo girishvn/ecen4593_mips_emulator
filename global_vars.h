@@ -68,16 +68,17 @@ extern int32_t memory[1200];
 ***********************************************************************************************************************/
 
 extern int32_t pc; //program counter
+extern int32_t pcNext; //next value program counter should go to.
 extern uint32_t ClockCycles; //CPU cycle count
 extern uint32_t InstructionCount; //Instruction count
 /***********************************************************************************************************************
 
- Delayed Branch variables: Only works with single staged pipeline.
+Stall the pipeline. If this value is true, don't increment program counter.
 
 ***********************************************************************************************************************/
 
-extern int32_t BranchPC; //Calculated branch address
-extern bool BranchFlag; //Set true if a branch instruction is set
+extern bool stall;
+extern bool fwd;
 
 /***********************************************************************************************************************
 
@@ -87,12 +88,38 @@ Intermediate registers global structs
 
 struct _IFID {
 
+    bool nop;
+
     //uint32_t mc = 0; //machine code of instruction
     uint32_t mc;
+
+    //R, I, J, NOP
+    //int type = 0x00;
+    int type;
+
+    //opcode
+    uint8_t opcode;
+
+    //registers number. NOT VALUE INSIDE
+    uint8_t rd;
+    uint8_t rs;
+    uint8_t rt;
+
+    //R-type specific
+    uint8_t shamt; //shamt
+    uint8_t funct; //function
+
+    //I-type specific
+    int16_t immediate;
+
+    //J-type specific
+    int32_t address;
 
 };
 
 struct _IDEX {
+
+    bool nop;
 
     //R, I, J, NOP
     //int type = 0x00;
@@ -120,6 +147,9 @@ struct _IDEX {
     //J-type specific
     int32_t address;
 
+    //Jump and Link specific
+    int32_t rv;
+
     //Control Variables
     bool regDst;
     bool regWrite;
@@ -128,6 +158,8 @@ struct _IDEX {
     bool memRead;
     bool memWrite;
     bool memToReg;
+    bool isBranch;
+
 };
 
 struct _EXMEM {
@@ -163,13 +195,11 @@ struct _EXMEM {
     //bool nop = true;
 
     //Control Variables
-    bool regDst;
     bool regWrite;
-    bool ALUSrc;
-    bool PCSrc;
     bool memRead;
     bool memWrite;
     bool memToReg;
+    bool isBranch;
 
 };
 
@@ -188,12 +218,7 @@ struct _MEMWB {
     bool nop;
 
     //Control Variables
-    bool regDst;
     bool regWrite;
-    bool ALUSrc;
-    bool PCSrc;
-    bool memRead;
-    bool memWrite;
     bool memToReg;
 
 };

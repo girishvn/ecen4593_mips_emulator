@@ -7,6 +7,7 @@
 
 #include "global_vars.h"
 #include "Decode.h"
+#include "Fetch.h"
 #include <iostream>
 
 //39 total instructions needed (including seb)
@@ -32,14 +33,7 @@ void XOR(void); //funct: 0x26
 void XORI(void); //op: 0X0E
 void NOR(void); //funct: 0x27
 
-void BEQ(void); //op: 0x04
-void BGTZ(void); //op: 0x07
-void BLEZ(void); //op: 0x06
-void BLTZ(void); //op: 0x01
-void BNE(void); //op: 0x05
-void JUMP(void); //op: 0x02
-void JAL(void); //op: 0x03
-void JR(void); //funct: 0x08
+void JALEX(void); //op: 0x03
 
 void LB(void); //op: 0x20
 void LBU(void); //op: 0x24
@@ -70,7 +64,9 @@ void SEB(void); //opcode: 0x1F
 CALLABLE FUNCTIONS
 
 ***********************************************************************************************************************/
-
+void ExecuteForward(void);
+void MemoryForward(void);
+void setExMEMControl(void);
 void instExecute(void);
 
 

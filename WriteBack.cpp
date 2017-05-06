@@ -2,8 +2,9 @@
 // Created by Karros Huang on 4/23/17.
 //
 
+#include <iostream>
 #include "WriteBack.h"
-#include "Decode.h"
+#include "fetch.h"
 
 void instWriteBack(){
 

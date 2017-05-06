@@ -8,10 +8,12 @@
 
 int32_t reg[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //32-register system
 int32_t pc = 0; //program counter
+int32_t pcNext = 0;//next value program counter should go to
 uint32_t ClockCycles = 0; //Cycle Counter
 uint32_t InstructionCount = 0; //Instruction count
-int32_t BranchPC = -1; //Calculated branch address
-bool BranchFlag = false; //Set true if a branch instruction is set
+bool stall = false;
+bool fwd = false;
+
 //Intermediate Registers (declarations)
 
 _IFID IFID; //intermediate fetch/decode register

@@ -4,13 +4,30 @@
 
 #include <iostream>
 #include "Memory.h"
-#include "Decode.h"
+#include "Fetch.h"
 
 /***********************************************************************************************************************
 
 CALLABLE FUNCTIONS
 
 ***********************************************************************************************************************/
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: setMEMWBcontrol
+
+ DESCRIPTION: pass on the necessary control signals from MEMWB registers.
+
+ INPUTS: EXMEM controls that are relevant to execute stage
+
+ OUTPUTS: MEMWB control line booleans
+
+***********************************************************************************************************************/
+
+void setMEMWBControl(){
+    shadow_MEMWB.regWrite = EXMEM.regWrite;
+    shadow_MEMWB.memToReg = EXMEM.memToReg;
+}
 
 /***********************************************************************************************************************
 
@@ -260,7 +277,10 @@ void instMemory(){
     }
     shadow_MEMWB.nop = false;
 
-    if(EXMEM.type == I) {
+    //Set memwb control signals
+    setMEMWBControl();
+
+        if(EXMEM.type == I) {
         switch(EXMEM.opcode){
             //Store Instructions
             case 0x28: {

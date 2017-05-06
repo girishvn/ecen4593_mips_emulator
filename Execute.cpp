@@ -155,125 +155,6 @@ void NOR(){ //good
 
 }
 
-/***********************************************************************************************************************
-
-BRANCH FUNCTIONS
-
-***********************************************************************************************************************/
-//NOTE: IF PC IS INCREMENTED IN FETCH INSTEAD OF EXECUTE: GET RID OF +1 INCREMENTATION OF PC IN BRANCHES AND JUMPS
-
-
-void BEQ(){ //good
-
-    if(IDEX.rsVal == IDEX.rtVal){
-        BranchPC = pc + IDEX.immediate;
-        BranchFlag = true;
-    }
-
-    shadow_EXMEM.type = IDEX.type;
-    shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.nop = true;
-
-}
-
-void BGTZ(){ //good
-
-    if(IDEX.rsVal > 0){
-        BranchPC = pc + IDEX.immediate;
-        BranchFlag = true;
-    }
-
-    shadow_EXMEM.type = IDEX.type;
-    shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.nop = true;
-
-}
-
-void BLEZ(){ //good
-
-    if(IDEX.rsVal <= 0){
-        BranchPC = pc + IDEX.immediate;
-        BranchFlag = true;
-    }
-
-    shadow_EXMEM.type = IDEX.type;
-    shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.nop = true;
-
-}
-
-void BLTZ(){ //good
-
-    if(IDEX.rsVal < 0){
-        BranchPC = pc + IDEX.immediate;
-        BranchFlag = true;
-    }
-
-    shadow_EXMEM.type = IDEX.type;
-    shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.nop = true;
-
-}
-
-void BNE(){ //good
-
-    if(IDEX.rsVal != IDEX.rtVal){
-        BranchPC = pc + IDEX.immediate;
-        BranchFlag = true;
-        std::cout<<BranchPC<<std::endl;
-    }
-
-    shadow_EXMEM.type = IDEX.type;
-    shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.nop = true;
-
-}
-
-/***********************************************************************************************************************
-
-JUMP FUNCTIONS
-
-***********************************************************************************************************************/
-
-void JUMP(){ //good
-
-    int32_t npc;
-    npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
-    BranchPC = npc >> 2;
-    BranchFlag = true;
-
-    shadow_EXMEM.type = IDEX.type;
-    shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.nop = true; //no mem-access or write back
-
-}
-
-void JAL(){ //good
-
-    shadow_EXMEM.rv = (pc + 1)*4;
-
-    int32_t npc;
-    npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
-    BranchPC = npc >> 2;
-    BranchFlag = true;
-
-    shadow_EXMEM.opcode = IDEX.opcode; //After Execute stage, this function now acts as a R type
-    shadow_EXMEM.type = IDEX.type;
-
-}
-
-void JR(){ //good
-
-    int32_t npc;
-    npc = IDEX.rsVal;
-    BranchPC = npc >> 2;
-    BranchFlag = true;
-
-    shadow_EXMEM.type = IDEX.type;
-    shadow_EXMEM.opcode = IDEX.opcode;
-    shadow_EXMEM.nop = true; //no mem-access or write back
-
-}
 
 /***********************************************************************************************************************
 
@@ -549,10 +430,83 @@ void MOVZ(){
 
 }
 
+void JALEX(){
+    shadow_EXMEM.rv = IDEX.rv;
+    shadow_EXMEM.opcode = IDEX.opcode;
+    shadow_EXMEM.type = IDEX.type;
+
+}
 void NOP(){
 
     shadow_EXMEM.nop = true;
 
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: Execute forward
+
+ DESCRIPTION: if forwarding needs to be done in execute stage, forward the values
+
+ INPUTS: control signals, EX/MEM.rd, ID/EX.Rs, ID/EX.rsVal, ID/EX.rt, ID/EX.rtVal,
+
+ OUTPUTS: void (puts EX/MEM.rv into ID/EX.rtVal
+
+***********************************************************************************************************************/
+
+void ExecuteForward(){
+    if((EXMEM.regWrite && (EXMEM.rd != 0)) && (EXMEM.rd == IDEX.rs)){
+        IDEX.rsVal = EXMEM.rv;
+    }
+    if(EXMEM.regWrite && (EXMEM.rd != 0) && (EXMEM.rd == IDEX.rt)){
+        IDEX.rtVal = EXMEM.rv;
+    }
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: Memory forward
+
+ DESCRIPTION: if forwarding needs to be done in memory stage, forward the values
+
+ INPUTS: control signals, EX/MEM.rd, ID/EX.Rs, ID/EX.rsVal, ID/EX.rt, ID/EX.rtVal,
+
+ OUTPUTS: void (puts EX/MEM.rv into ID/EX.rtVal
+
+***********************************************************************************************************************/
+
+void MemoryForward(){
+    if(MEMWB.regWrite
+       && MEMWB.rd != 0
+       && !(shadow_EXMEM.regWrite && (shadow_EXMEM.rd != 0) && (shadow_EXMEM.rd != shadow_IDEX.rs))
+       && shadow_MEMWB.rd == shadow_IDEX.rs){
+        shadow_IDEX.rsVal = MEMWB.rv;
+    }
+    if(shadow_MEMWB.regWrite
+       && shadow_MEMWB.rd != 0
+       && !(shadow_EXMEM.regWrite && (shadow_EXMEM.rd != 0) && (shadow_EXMEM.rd != shadow_IDEX.rt))
+       && shadow_MEMWB.rd == shadow_IDEX.rt){
+        shadow_IDEX.rtVal = MEMWB.rv;
+    }
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: setEXMEMcontrol
+
+ DESCRIPTION: pass on the necessary control signals from IDEX registers.
+
+ INPUTS: IDEX controls that are relevant to execute stage
+
+ OUTPUTS: Execute control line booleans
+
+***********************************************************************************************************************/
+
+void setExMEMControl(){
+    shadow_EXMEM.memRead = IDEX.memRead;
+    shadow_EXMEM.memWrite = IDEX.memWrite;
+    shadow_EXMEM.regWrite = IDEX.regWrite;
+    shadow_EXMEM.memToReg = IDEX.memToReg;
 }
 
 /***********************************************************************************************************************
@@ -569,42 +523,33 @@ void NOP(){
 
 void instExecute() {
 
+    if(IDEX.nop) { //NOP detection
+        shadow_EXMEM.nop = true;
+        return;
+    }
+
     //nop instruction detection
     shadow_EXMEM.nop = false; //nop by defualt is false
-    BranchFlag = false;
 
+
+    //does anything need to be forwarded?
+    ExecuteForward();
+
+    //does MEMWB ned to foward to IDEX?
+    MemoryForward();
+
+    //set EXMEM control signals
+    setExMEMControl();
+
+    //Selecting which operation ALU should perform
     if(IDEX.type == N){ //NOP
         NOP();
     }
-
     //I OR J TYPE
-    else if(IDEX.type == I || IDEX.type == J){
-
-        //J TYPES
-        if(IDEX.opcode == 0x02){ //J
-            JUMP();
-        }
-        else if(IDEX.opcode == 0x03){ //JAL
-            JAL();
-        }
+    else if(IDEX.type == I){
 
         //I TYPES
-        else if(IDEX.opcode == 0x01){ //BLTZ
-            BLTZ();
-        }
-        else if(IDEX.opcode == 0x04){ //BEQ
-            BEQ();
-        }
-        else if(IDEX.opcode == 0x05){ //BNE
-            BNE();
-        }
-        else if(IDEX.opcode == 0x06){ //BLEZ
-            BLEZ();
-        }
-        else if(IDEX.opcode == 0x07){ //BGTZ
-            BGTZ();
-        }
-        else if(IDEX.opcode == 0x08){ //ADDI
+        if(IDEX.opcode == 0x08){ //ADDI
             ADDI();
         }
         else if(IDEX.opcode == 0x09){ //ADDIU
@@ -665,9 +610,6 @@ void instExecute() {
         else if(IDEX.funct == 0x02){ //SRL
             SRL();
         }
-        else if(IDEX.funct == 0x08){ //JR
-            JR();
-        }
         else if(IDEX.funct == 0x0A) { //MOVZ
             MOVZ();
         }
@@ -708,10 +650,13 @@ void instExecute() {
             std::cout<<"Invalid Function: "<<IDEX.funct<<std::endl;
         }
     }
+        else if(IDEX.type == R || IDEX.funct == 0x03){
+        JALEX();
+    }
 
     //DEFAULT CASE (MEETS NO TYPES)
     else{
         std::cout<<"invalid opcode or input / undocumented instruction"<<+IDEX.opcode<<std::endl;
-
     }
+
 }

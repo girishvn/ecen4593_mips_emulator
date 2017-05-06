@@ -11,55 +11,9 @@ CLASS NAME: Decode
 ***********************************************************************************************************************/
 
 #include "Decode.h"
+#include "Fetch.h"
 
 using namespace std;
-
-/***********************************************************************************************************************
-
- FUNCTION NAME: instType
-
- DESCRIPTION: Given and instruction, extracts the op-code and matches it with a instruction type (R, I, J)
-
- INPUTS: uint32_t inst (instruction machine code)
-
- OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
-
-***********************************************************************************************************************/
-void instType(uint32_t machineCode) {
-
-    //Extracting OP Code
-    uint8_t opcode = uint8_t((0x3f) & (machineCode >> 26)); //opcode: bits 26-32
-
-    shadow_IDEX.opcode = opcode;
-
-    //Checking Type (R, I , J) from OP Code
-    if(machineCode == 0x00000000){
-
-        shadow_IDEX.type = N;
-        return;
-    }
-    else if (opcode == ROPCode || opcode == sebOPCode) { //R-type instruction
-
-        shadow_IDEX.type = R;
-        return;
-    }
-
-    for(int i = 0; i < 20; i++){ //I-type instruction
-        if(opcode == IOPCode[i]){
-            shadow_IDEX.type = I;
-            return;
-        }
-    }
-
-    for(int j = 0; j < 2; j++){ //J-type instruction
-        if(opcode == JOPCode[j]){
-            shadow_IDEX.type = J;
-            return;
-        }
-    }
-
-    return; //invalid instruction op-code
-}
 
 /***********************************************************************************************************************
 
@@ -72,20 +26,18 @@ void instType(uint32_t machineCode) {
  OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instRDecode(uint32_t machineCode) {
-
-    //used registers
-    shadow_IDEX.rd = uint8_t((0x1f) & (machineCode >> 11)); //rd register: bits 11-15
-    shadow_IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
-    shadow_IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+void instRDecode(void) {
 
     //reg values
-    shadow_IDEX.rsVal = reg[shadow_IDEX.rs];
-    shadow_IDEX.rtVal = reg[shadow_IDEX.rt];
+    shadow_IDEX.rsVal = reg[IFID.rs];
+    shadow_IDEX.rtVal = reg[IFID.rt];
+    shadow_IDEX.rd = IFID.rd;
+    shadow_IDEX.rs = IFID.rs;
+    shadow_IDEX.rt = IFID.rt;
 
     //other parameters
-    shadow_IDEX.shamt =  uint8_t((0x1f) & (machineCode >> 6)); //shamt value: bits 6-10
-    shadow_IDEX.funct =  uint8_t((0x3f) & (machineCode)); //function code: bits 0-5
+    shadow_IDEX.shamt =  IFID.shamt; //shamt value: bits 6-10
+    shadow_IDEX.funct =  IFID.funct; //function code: bits 0-5
 
 }
 
@@ -100,17 +52,15 @@ void instRDecode(uint32_t machineCode) {
  OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instIDecode(uint32_t machineCode) {
-
-    //used registers
-    shadow_IDEX.rs =  uint8_t((0x1f) & (machineCode >> 21)); //rs register: bits 21-25
-    shadow_IDEX.rt =  uint8_t((0x1f) & (machineCode >> 16)); //rt register: bits 16-20
+void instIDecode(void) {
 
     //reg values
-    shadow_IDEX.rsVal = reg[shadow_IDEX.rs];
-    shadow_IDEX.rtVal = reg[shadow_IDEX.rt];
+    shadow_IDEX.rsVal = reg[IFID.rs];
+    shadow_IDEX.rtVal = reg[IFID.rt];
+    shadow_IDEX.rs = IFID.rs;
+    shadow_IDEX.rt = IFID.rt;
     //other parameters
-    shadow_IDEX.immediate =  uint16_t((0xffff) & (machineCode)); //immediate value: bits 0-15
+    shadow_IDEX.immediate =  IFID.immediate; //immediate value: bits 0-15
 
 }
 
@@ -125,11 +75,279 @@ void instIDecode(uint32_t machineCode) {
  OUTPUTS: void (fills shadow_IDEX Reg with proper instruction information)
 
 ***********************************************************************************************************************/
-void instJDecode(uint32_t machineCode) {
+void instJDecode(void) {
 
     //other parameters
-    shadow_IDEX.address =  uint32_t((0x3ffffff) & (machineCode)); //address value: bits 0-26
+    shadow_IDEX.address = IFID.address; //address value: bits 0-26
 
+}
+
+/***********************************************************************************************************************
+
+BRANCH FUNCTIONS
+
+***********************************************************************************************************************/
+//NOTE: IF PC IS INCREMENTED IN FETCH INSTEAD OF EXECUTE: GET RID OF +1 INCREMENTATION OF PC IN BRANCHES AND JUMPS
+
+
+void BEQ(){ //good
+
+    if(shadow_IDEX.rsVal == shadow_IDEX.rtVal){
+        pcNext = pc + shadow_IDEX.immediate;
+    }
+
+    shadow_IDEX.nop = true;
+
+}
+
+void BGTZ(){ //good
+
+    if(shadow_IDEX.rsVal > 0){
+        pcNext = pc + shadow_IDEX.immediate;
+    }
+
+    shadow_IDEX.nop = true;
+
+}
+
+void BLEZ(){ //good
+
+    if(shadow_IDEX.rsVal <= 0){
+        pcNext = pc + shadow_IDEX.immediate;
+    }
+
+    shadow_IDEX.nop = true;
+
+}
+
+void BLTZ(){ //good
+
+    if(shadow_IDEX.rsVal < 0){
+        pcNext = pc + shadow_IDEX.immediate;
+    }
+
+    shadow_IDEX.nop = true;
+
+}
+
+void BNE(){ //good
+
+    if(shadow_IDEX.rsVal != shadow_IDEX.rtVal){
+        pcNext = pc + shadow_IDEX.immediate;
+    }
+
+    shadow_IDEX.nop = true;
+
+}
+
+/***********************************************************************************************************************
+
+JUMP FUNCTIONS
+
+***********************************************************************************************************************/
+
+void JUMP(){ //good
+
+    int32_t npc;
+    npc = ((4*pc) & 0xf0000000) | (shadow_IDEX.address << 2);
+    pcNext = npc >> 2;
+
+    shadow_IDEX.nop = true; //no mem-access or write back
+
+}
+
+void JAL(){ //good
+
+    shadow_IDEX.rv = (pc + 1)*4;
+
+    int32_t npc;
+    npc = ((4*pc) & 0xf0000000) | (IDEX.address << 2);
+    pcNext = npc >> 2;
+    shadow_IDEX.opcode = IFID.opcode;
+    shadow_IDEX.type = IFID.type;
+
+}
+
+void JR(){ //good
+
+    int32_t npc;
+    npc = shadow_IDEX.rsVal;
+    pcNext = npc >> 2;
+
+    shadow_IDEX.nop = true; //no mem-access or write back
+
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: setIDEXcontrol
+
+ DESCRIPTION: sets the controls for each specific type of opcode that will propogate through the pipeline
+
+ INPUTS: opcode
+
+ OUTPUTS: control line booleans
+
+***********************************************************************************************************************/
+
+void setIDEXControl(){
+    //set control lines depending on opcode
+    //R-types
+    if((shadow_IFID.opcode == 0x00) || (shadow_IFID.opcode == 0x1F)){
+        shadow_IDEX.regDst = true;
+        shadow_IDEX.regWrite = true;
+        shadow_IDEX.ALUSrc = false;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = false;
+        shadow_IDEX.isBranch = false;
+    }
+
+    //loads
+    else if((shadow_IFID.opcode == 0x20) || (shadow_IFID.opcode == 0x24) || (shadow_IFID.opcode == 0x25)
+       || (shadow_IFID.opcode == 0x0F) || (shadow_IFID.opcode == 0x23) ){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = true;
+        shadow_IDEX.memToReg = true;
+        shadow_IDEX.regWrite = true;
+        shadow_IDEX.memRead = true;
+        shadow_IDEX.memWrite = false;
+        shadow_IDEX.isBranch = false;
+    }
+
+    //stores
+    else if((shadow_IFID.opcode == 0x28) || (shadow_IFID.opcode == 0x29) || (shadow_IFID.opcode == 0x2B) ){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = true;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.regWrite = false;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = true;
+        shadow_IDEX.isBranch = false;
+    }
+
+    //branches
+    else if((shadow_IFID.opcode == 0x4) || (shadow_IFID.opcode == 0x5) || (shadow_IFID.opcode == 0x6)
+       || (shadow_IFID.opcode == 0x7) || (shadow_IFID.opcode == 0x1) || (shadow_IFID.opcode == 0x2)
+       || (shadow_IFID.opcode == 0x3) || ((shadow_IFID.opcode == 0x00) && (shadow_IFID.funct == 0x8))){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = false;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.regWrite = false;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = false;
+        shadow_IDEX.isBranch = true;
+    }
+
+    //immediates
+    else if((shadow_IFID.opcode == 0x8)||(shadow_IFID.opcode == 0x9)||(shadow_IFID.opcode == 0xC)
+       ||(shadow_IFID.opcode == 0xE)||(shadow_IFID.opcode == 0xA)||(shadow_IFID.opcode == 0xB)
+       ||(shadow_IFID.opcode == 0xD)){
+        shadow_IDEX.regDst = false;
+        shadow_IDEX.ALUSrc = false;
+        shadow_IDEX.memToReg = false;
+        shadow_IDEX.regWrite = true;
+        shadow_IDEX.memRead = false;
+        shadow_IDEX.memWrite = false;
+        shadow_IDEX.isBranch = false;
+    }
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: stallPipe
+
+ DESCRIPTION: stall the pipe by setting all controls to 0 and raising stall flag
+
+ INPUTS: void
+
+ OUTPUTS: boolean for stall
+
+***********************************************************************************************************************/
+
+void stallPipe(){
+    shadow_IDEX.regDst = true;
+    shadow_IDEX.regWrite = true;
+    shadow_IDEX.ALUSrc = false;
+    shadow_IDEX.memToReg = false;
+    shadow_IDEX.memRead = false;
+    shadow_IDEX.memWrite = false;
+    shadow_IDEX.isBranch = false;
+    stall = true;
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: Execute hazards & Branch forwarding
+
+ DESCRIPTION: combo of branch forwarding and execute hazards
+
+ INPUTS: shadow_IDEX.memRead, IDEX.rt, IFID.rs, IDEX.rt, IDFID
+
+ OUTPUTS: forward boolean and rt/rs val
+
+***********************************************************************************************************************/
+
+void BranchForward(){
+    if(shadow_IDEX.isBranch && (EXMEM.regWrite)
+       && !(EXMEM.memRead) && (EXMEM.rs != 0 || EXMEM.rt != 0)
+       && (EXMEM.rs == IFID.rs)){  // Forwarding and hazards
+        shadow_IDEX.rsVal = EXMEM.rv;
+        fwd = true;
+    }
+    if(shadow_IDEX.isBranch && (EXMEM.regWrite)
+       && !(EXMEM.memRead) && (EXMEM.rs != 0 || EXMEM.rt != 0)
+       && (EXMEM.rt == IFID.rt)) {
+        shadow_IDEX.rtVal = EXMEM.rv;
+        fwd = true;
+    }
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: Data Hazard Stall
+
+ DESCRIPTION: if theres a data hazard, stall the program. happens when lw is followed by a r or i type using the same regisers
+
+ INPUTS: shadow_IDEX.memRead, IDEX.rt, IFID.rs, IDEX.rt, IDFID
+
+ OUTPUTS: stall or no stall
+
+***********************************************************************************************************************/
+
+void DataHazardStall(){
+    if(IDEX.memRead && ((IDEX.rt == IFID.rs) || (IDEX.rt == IFID.rt))){
+
+       stallPipe(); //inserting a nop in the ID/EX stage to propogate through
+
+    }
+}
+
+/***********************************************************************************************************************
+
+ FUNCTION NAME: Control Hazard Stall
+
+ DESCRIPTION: if theres a control hazard, stall the program. happens with branches.
+
+ INPUTS: shadow_IDEX.memRead, IDEX.rt, IFID.rs, IDEX.rt, IDFID
+
+ OUTPUTS: stall or no stall
+
+***********************************************************************************************************************/
+
+void ControlHazard(){
+    if(shadow_IDEX.isBranch && IDEX.regWrite && ((IDEX.rd != 0) || (IDEX.rs != 0))
+       && ((IDEX.rt == IFID.rt) || (IDEX.rs == IFID.rs))){
+
+        stallPipe();
+
+    }
+    else if(shadow_IDEX.isBranch && !(fwd) && (EXMEM.regWrite) && (EXMEM.memRead) && ((EXMEM.rd != 0) || (EXMEM.rs != 0))
+            && ((EXMEM.rt == IFID.rt) || (EXMEM.rs == IFID.rs))){ //change exmem.rs == ifid.rs to exmem.rt == ifid.rs if screws up
+
+        stallPipe();
+
+    }
 }
 
 /***********************************************************************************************************************
@@ -144,108 +362,86 @@ void instJDecode(uint32_t machineCode) {
 
 ***********************************************************************************************************************/
 
-/***********************************************************************************************************************
-
- FUNCTION NAME: setcontrol
-
- DESCRIPTION: sets the controls for each specific type of opcode that will propogate through the pipeline
-
- INPUTS: opcode
-
- OUTPUTS: control line booleans
-
-***********************************************************************************************************************/
-
-void setcontrol(){
-    //set control lines depending on opcode
-    //R-types
-    if((shadow_IDEX.opcode == 0x00) || (shadow_IDEX.opcode == 0x1F)){
-        shadow_IDEX.regDst = true;
-        shadow_IDEX.regWrite = true;
-        shadow_IDEX.ALUSrc = false;
-        shadow_IDEX.memToReg = false;
-        shadow_IDEX.memRead = false;
-        shadow_IDEX.memWrite = false;
-    }
-    //loads
-    else if((shadow_IDEX.opcode == 0x20) || (shadow_IDEX.opcode == 0x24) || (shadow_IDEX.opcode == 0x25)
-       || (shadow_IDEX.opcode == 0x0F) || (shadow_IDEX.opcode == 0x23) ){
-        shadow_IDEX.regDst = false;
-        shadow_IDEX.ALUSrc = true;
-        shadow_IDEX.memToReg = true;
-        shadow_IDEX.regWrite = true;
-        shadow_IDEX.memRead = true;
-        shadow_IDEX.memWrite = false;
-    }
-    //stores
-    else if((shadow_IDEX.opcode == 0x28) || (shadow_IDEX.opcode == 0x29) || (shadow_IDEX.opcode == 0x2B) ){
-        shadow_IDEX.regDst = false;
-        shadow_IDEX.ALUSrc = true;
-        shadow_IDEX.memToReg = false;
-        shadow_IDEX.regWrite = false;
-        shadow_IDEX.memRead = false;
-        shadow_IDEX.memWrite = true;
-    }
-    //branches
-    else if((shadow_IDEX.opcode == 0x4) || (shadow_IDEX.opcode == 0x5) || (shadow_IDEX.opcode == 0x6)
-       || (shadow_IDEX.opcode == 0x7) || (shadow_IDEX.opcode == 0x1) || (shadow_IDEX.opcode == 0x2)
-       || (shadow_IDEX.opcode == 0x3) || ((shadow_IDEX.opcode == 0x00) && (shadow_IDEX.funct == 0x8))){
-        shadow_IDEX.regDst = false;
-        shadow_IDEX.ALUSrc = false;
-        shadow_IDEX.memToReg = false;
-        shadow_IDEX.regWrite = false;
-        shadow_IDEX.memRead = false;
-        shadow_IDEX.memWrite = false;
-    }
-    //immediates
-    else if((shadow_IDEX.opcode == 0x8)||(shadow_IDEX.opcode == 0x9)||(shadow_IDEX.opcode == 0xC)
-       ||(shadow_IDEX.opcode == 0xE)||(shadow_IDEX.opcode == 0xA)||(shadow_IDEX.opcode == 0xB)
-       ||(shadow_IDEX.opcode == 0xD)){
-        shadow_IDEX.regDst = false;
-        shadow_IDEX.ALUSrc = false;
-        shadow_IDEX.memToReg = false;
-        shadow_IDEX.regWrite = true;
-        shadow_IDEX.memRead = false;
-        shadow_IDEX.memWrite = false;
-    }
-}
-
 void instDecode(void) {
 
-    //delayed branch
-    if(BranchFlag){
-        pc = BranchPC;
+    pcNext = pc + 1; //increment the pc
+
+    if(IFID.nop) { //NOP detection
+        shadow_IDEX.nop = true;
+        return;
     }
-    else{
-        pc++; //increment PC in decode
-    }
 
-    uint32_t machineCode = IFID.mc;
+    setIDEXControl(); //Set control bits based on the decoded opcode.
 
-    instType(machineCode); //checks type (R, I, J) and gets opcode
-    int inst_type = shadow_IDEX.type;
+    shadow_IDEX.type = IFID.type;
 
-    setcontrol(); //Set control bits based on the decoded opcode.
-
-    switch(inst_type) { //fills instruction based on type (nop, R, I, J)
+    switch(IFID.type) { //fills instruction based on type (nop, R, I, J)
         case N: {
-            return;
+            break;
         }
         case R: { //R-type
-            instRDecode(machineCode);
-            return;
+            instRDecode();
+            break;
         }
         case I: { //I-type
-            instIDecode(machineCode);
-            return;
+            instIDecode();
+            shadow_IDEX.opcode = IFID.opcode;
+            break;
         }
         case J: { //J-type
-            instJDecode(machineCode);
-            return;
+            instJDecode();
+            shadow_IDEX.opcode = IFID.opcode;
+            break;
         }
         default: { //Error in input machine code
             cout << "invalid opcode or input / undocumented instruction" << endl;
-            return;
+            break;
+        }
+
+    }
+    //Branch
+    BranchForward();
+    //Is there a control hazard?
+    ControlHazard();
+    //Is there a data hazard stall?
+    DataHazardStall();
+
+    //Decoded a branch instruction, now do the branch
+    if(shadow_IDEX.isBranch){
+        switch(shadow_IDEX.opcode){
+            case 0x04: { //BEQ
+                BEQ();
+                break;
+            }
+            case 0x07: { //BEQ
+                BGTZ();
+                break;
+            }
+            case 0x06: { //BEQ
+                BLEZ();
+                break;
+            }
+            case 0x01: { //BEQ
+                BLTZ();
+                break;
+            }
+            case 0x05: { //BEQ
+                BNE();
+                break;
+            }
+            case 0x02: { //BEQ
+                JUMP();
+                break;
+            }
+            case 0x03: { //BEQ
+                JAL();
+                break;
+            }
+            case 0x08: { //BEQ
+                JR();
+                break;
+            }
         }
     }
+    fwd = false;
 }

@@ -26,6 +26,13 @@ void thePurge(void){
 
     //IFID
     shadow_IFID.mc = 0;
+    shadow_IDEX.type = 0;
+    shadow_IDEX.opcode = 0;
+    shadow_IDEX.rd = 32;
+    shadow_IDEX.rs = 32;
+    shadow_IDEX.rt = 32;
+    shadow_IDEX.immediate = 0;
+    shadow_IDEX.address = 0;
 
     //IDEX
     shadow_IDEX.type = 0;
@@ -76,12 +83,16 @@ void thePurge(void){
 
 void escapeShadowRealm(void) { //the shadow realm is always void
 
-    IFID = shadow_IFID;
+    if(!stall){
+        IFID = shadow_IFID;
+        pc = pcNext;
+        InstructionCount++;
+    }
     IDEX = shadow_IDEX;
     EXMEM = shadow_EXMEM;
     MEMWB = shadow_MEMWB;
 
-    thePurge(); //inits all intermediate register vaues
+    //thePurge(); //inits all intermediate register vaues
 
 }
 
@@ -106,67 +117,99 @@ int main() {
     reg[$fp] = memory[1]; //init frame pointer
 
     //MAIN PIPELINE LOOP
-    while(pc != 0x00000000){ //while PC does not jump to 0x000 (end of file);
+    while (pc != 0x00000000) { //while PC does not jump to 0x000 (end of file);
         thePurge();
-        cout<<"Program Counter: "<<pc<<endl;
+        cout << "Program Counter: " << pc << endl;
 
         ///////////////
         //Fetch Stage//
         instFetch();
         ///////////////
 
-        cout<<"Instruction Fetched: "<<shadow_IFID.mc<<endl;
-        cout<<endl;
+        cout << "Instruction Fetched: " << shadow_IFID.mc << endl;
+        if (shadow_IFID.type == N) {
+            cout << "Stage Passed, NOP detected" << endl;
+        } else {
+            cout << "Decoding: " << IFID.mc << endl;
+            if (shadow_IFID.type == R) {
+                cout << "R Function: " << +shadow_IFID.funct
+                     << "R OP code: " << +shadow_IFID.opcode
+                     << " rd: " << +shadow_IFID.rd
+                     << " rs: " << +shadow_IFID.rs
+                     << " rt: " << +shadow_IFID.rt
+                     << " shamt: " << +shadow_IFID.shamt << endl;
+            } else if (shadow_IFID.type == I) {
+                cout << "I OP Code: " << +shadow_IFID.opcode
+                     << " rs: " << +shadow_IFID.rs
+                     << " rt: " << +shadow_IFID.rt << endl;
+            } else if (shadow_IFID.type == J) {
+                cout << "J OP Code: " << +shadow_IFID.opcode << endl;
+            }
+        }
+        cout << endl;
+
+        ////////////////////
+        //Write Back Stage//
+        //MEMWB = shadow_MEMWB;
+        instWriteBack();
+        ////////////////////
+
+
+        cout << "Write Back Stage Finished. Type: " << shadow_MEMWB.type << endl;
+        if (MEMWB.nop) {
+            cout << "Stage Passed, NOP detected or Store instruction was called" << endl;
+        } else {
+            if (MEMWB.type == I) {
+                cout << "Written back: " << MEMWB.rv << " Into register: " << +MEMWB.rt << endl;
+            } else if (MEMWB.type == R) {
+                cout << "Written back: " << MEMWB.rv << " Into register: " << +MEMWB.rd << endl;
+            } else if (shadow_MEMWB.type == J && shadow_MEMWB.opcode != 0x03) {
+                cout << "Jumps are completed before memory stage." << endl;
+            } else if (shadow_MEMWB.type == J && shadow_MEMWB.opcode == 0x03) { //special case for JAL
+                cout << "Wrote back the return address value " << MEMWB.rv << " into ra." << endl;
+            }
+        }
+        cout << endl;
 
         ////////////////
         //Decode Stage//
-        IFID = shadow_IFID;
+        //IFID = shadow_IFID;
         instDecode();
         ////////////////
 
-        cout<<"Decode Stage Finished. Type: "<<shadow_IDEX.type<<endl;
-        if(shadow_IDEX.type == N){
-            cout<<"Stage Passed, NOP detected"<<endl;
-        }
-        else {
+        cout << "Decode Stage Finished. Type: " << shadow_IDEX.type << endl;
+        if (shadow_IDEX.type == N) {
+            cout << "Stage Passed, NOP detected" << endl;
+        } else {
             cout << "Decoding: " << IFID.mc << endl;
             if (shadow_IDEX.type == R) {
-                cout<< "R Function: " << +shadow_IDEX.funct
-                    <<"R OP code: " << +shadow_IDEX.opcode
-                    << " rd: " << +shadow_IDEX.rd
-                    << " rs: " << +shadow_IDEX.rs
-                    << " rsVal: " << +shadow_IDEX.rsVal
-                    << " rt: " << +shadow_IDEX.rt
-                    << " rtVal: " << +shadow_IDEX.rtVal
-                    << " shamt: " << +shadow_IDEX.shamt << endl;
-            }
-            else if (shadow_IDEX.type == I) {
-                cout<< "I OP Code: " << +shadow_IDEX.opcode
-                    << " rs: " << +shadow_IDEX.rs
-                    << " rsVal: " << +shadow_IDEX.rsVal
-                    << " rt: " << +shadow_IDEX.rt
-                    << " rtVal: " << +shadow_IDEX.rtVal
-                    << " Immediate: " << +shadow_IDEX.immediate << endl;
-            }
-            else if (shadow_IDEX.type == J) {
-                cout<< "J OP Code: " << +shadow_IDEX.opcode
-                    << " Address: " << +shadow_IDEX.address<< endl;
+                cout << "R Function: " << +shadow_IDEX.funct
+                     << " rsVal: " << +shadow_IDEX.rsVal
+                     << " rtVal: " << +shadow_IDEX.rtVal
+                     << " shamt: " << +shadow_IDEX.shamt << endl;
+            } else if (shadow_IDEX.type == I) {
+                cout << "I OP Code: " << +shadow_IDEX.opcode
+                     << " rsVal: " << +shadow_IDEX.rsVal
+                     << " rtVal: " << +shadow_IDEX.rtVal
+                     << " Immediate: " << +shadow_IDEX.immediate << endl;
+            } else if (shadow_IDEX.type == J) {
+                cout << "J OP Code: " << +shadow_IDEX.opcode
+                     << " Address: " << +shadow_IDEX.address << endl;
             }
         }
-        cout<<endl;
+        cout << endl;
 
         /////////////////
         //Execute Stage//
-        IDEX = shadow_IDEX;
+        //IDEX = shadow_IDEX;
         instExecute();
         /////////////////
 
 
-        cout<<"Execute Stage Finished. Type: "<<+shadow_EXMEM.type<<endl;
-        if(shadow_EXMEM.nop){
-            cout<<"Stage Passed, NOP detected"<<endl;
-        }
-        else {
+        cout << "Execute Stage Finished. Type: " << +shadow_EXMEM.type << endl;
+        if (shadow_EXMEM.nop) {
+            cout << "Stage Passed, NOP detected" << endl;
+        } else {
             if (shadow_EXMEM.type == R) {
                 cout << "R Function " << +shadow_EXMEM.funct
                      << " rd " << +shadow_EXMEM.rd
@@ -194,130 +237,96 @@ int main() {
                      << "Calculated return address to store in ra: " << shadow_MEMWB.rv << endl;
             }
         }
-        cout<<endl;
+        cout << endl;
 
 
         ////////////////
         //Memory Stage//
-        EXMEM = shadow_EXMEM;
+        //EXMEM = shadow_EXMEM;
         instMemory();
         ////////////////
 
 
-        cout<<"Memory Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
-        if(EXMEM.nop){
-            cout<<"Stage Passed, NOP detected"<<endl;
-        }
-        else {
+        cout << "Memory Stage Finished. Type: " << shadow_MEMWB.type << endl;
+        if (EXMEM.nop) {
+            cout << "Stage Passed, NOP detected" << endl;
+        } else {
             if (shadow_MEMWB.type == R) {
                 cout << "R type doesn't use memory stage. Passed values from EXMEM directly to shadow_MEMWB" << endl
                      << "rv: " << +shadow_MEMWB.rv
                      << " rd: " << +shadow_MEMWB.rd << endl;
-            }
-            else if (shadow_MEMWB.type == I) {
+            } else if (shadow_MEMWB.type == I) {
                 if (EXMEM.opcode == 0x24 || EXMEM.opcode == 0x25 || EXMEM.opcode == 0x30 || EXMEM.opcode == 0x23) {
                     cout << "Memory is loaded and being prepared to be written back" << endl
                          << "address: " << +EXMEM.address << endl
                          << "rt: " << +shadow_MEMWB.rt
                          << " rv: " << +shadow_MEMWB.rv
-                         << " type: "<< +shadow_MEMWB.type<<endl;
+                         << " type: " << +shadow_MEMWB.type << endl;
 
-                }
-                else if (EXMEM.opcode == 0x28 || EXMEM.opcode == 0x38 || EXMEM.opcode == 0x29 ||
+                } else if (EXMEM.opcode == 0x28 || EXMEM.opcode == 0x38 || EXMEM.opcode == 0x29 ||
                            EXMEM.opcode == 0x2b) {
                     cout << "Value is written into memory" << endl
                          << "Value: " << memory[EXMEM.address] << endl
                          << "Address: " << EXMEM.address << endl;
-                }
-                else {
+                } else {
                     cout << "Memory was not accessed" << endl;
                 }
-            }
-            else if (shadow_MEMWB.type == J && shadow_MEMWB.opcode != 0x03) {
-                cout << "Jumps are completed before memory stage." << endl;
-            }
-            //Special case for JAL
-            else if(shadow_MEMWB.type == J && shadow_MEMWB.opcode == 0x03){
-                cout << "Going to save the return address " << shadow_MEMWB.rv << " into ra." <<endl;
-            }
-        }
-        cout<<endl;
-
-
-        ////////////////////
-        //Write Back Stage//
-        MEMWB = shadow_MEMWB;
-        instWriteBack();
-        ////////////////////
-
-
-        cout<<"Write Back Stage Finished. Type: "<<shadow_MEMWB.type<<endl;
-        if(MEMWB.nop){
-            cout<<"Stage Passed, NOP detected or Store instruction was called"<<endl;
-        }
-        else {
-            if (MEMWB.type == I) {
-                cout << "Written back: " << MEMWB.rv << " Into register: " << +MEMWB.rt << endl;
-            } else if (MEMWB.type == R){
-                cout << "Written back: " << MEMWB.rv << " Into register: " << +MEMWB.rd << endl;
             } else if (shadow_MEMWB.type == J && shadow_MEMWB.opcode != 0x03) {
                 cout << "Jumps are completed before memory stage." << endl;
-            } else if(shadow_MEMWB.type == J && shadow_MEMWB.opcode == 0x03){ //special case for JAL
-                cout << "Wrote back the return address value " << MEMWB.rv << " into ra." <<endl;
+            }
+                //Special case for JAL
+            else if (shadow_MEMWB.type == J && shadow_MEMWB.opcode == 0x03) {
+                cout << "Going to save the return address " << shadow_MEMWB.rv << " into ra." << endl;
             }
         }
-        cout<<endl;
-
+        cout << endl;
 
         //Transferring all shadow registers into normal registers.
-        //escapeShadowRealm(); //transfer data from shadow registers to real registers
-        //cout<<"All registers have escaped the shadow realm."<<endl;
-        cout<<"Instruction has been passed through pipeline."<<endl;
-        cout<<"**************************************"<<endl;
-
+        escapeShadowRealm(); //transfer data from shadow registers to real registers
+        cout<<"All registers have escaped the shadow realm."<<endl;
+        ClockCycles++;
+        //cout << "Instruction has been passed through pipeline." << endl;
+        //cout << "**************************************" << endl;
     }
-    //PRINT OUT FINAL ARRAY VALUES
+        //PRINT OUT FINAL ARRAY VALUES
 #ifdef PROGRAM1
-    for(int i = 243; i < 493; i++){
-        cout<<memory[i]<<" "<<memory[i + 250]<<" "<<i<<endl;
-    }
+        for(int i = 243; i < 493; i++){
+            cout<<memory[i]<<" "<<memory[i + 250]<<" "<<i<<endl;
+        }
 
-    for(int i = 6; i < 10; i++){
-        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
-    }
+        for(int i = 6; i < 10; i++){
+            cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
+        }
 #endif
 
 #ifdef PROGRAM2
-    for(int i = 395; i < 495; i++){
-        cout<<memory[i]<<" "<<i<<endl;
-    }
-    for(int i = 6; i < 10; i++){
-        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
-    }
+        for (int i = 395; i < 495; i++) {
+            cout << memory[i] << " " << i << endl;
+        }
+        for (int i = 6; i < 10; i++) {
+            cout << "memory location " << i << " = " << +memory[i] << endl;
+        }
 #endif
 
 #ifdef PROGRAMLOADOPT
-    for(int i = 795; i < 895; i++){
-        cout<<memory[i]<<" "<<memory[i + 100]<<" "<<i<<endl;
-    }
+        for(int i = 795; i < 895; i++){
+            cout<<memory[i]<<" "<<memory[i + 100]<<" "<<i<<endl;
+        }
 
-    for(int i = 6; i<9; i++){
-        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
-    }
+        for(int i = 6; i<9; i++){
+            cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
+        }
 #endif
 
 #ifdef PROGRAMLOADUNOPT
-    for(int i = 795; i < 895; i++){
-        cout<<memory[i]<<" "<<memory[i + 100]<<" "<<i<<endl;
-    }
+        for(int i = 795; i < 895; i++){
+            cout<<memory[i]<<" "<<memory[i + 100]<<" "<<i<<endl;
+        }
 
-    for(int i = 6; i<9; i++){
-        cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
-    }
+        for(int i = 6; i<9; i++){
+            cout<<"memory location "<<i<<" = "<<+memory[i]<<endl;
+        }
 #endif
-
-    cout<<"Program has finished running"<<endl;
-
-
-    return 1;
+        cout << "Program has finished running" << endl;
+        return 1;
 }

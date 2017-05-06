@@ -629,7 +629,7 @@ uint32_t program_image[] = {
         0x00000000,   // 	nop
         0x00000000,   // 	nop
         0x00000000,   // 	nop
-        0x27bdfc50,   // 	addiu	sp,sp,-944
+        0x27bdfc50,   // 	addiu	sp,sp,-944  START OF PROGRAM PC = 120
         0xafbf03ac,   // 	sw	ra,940(sp)
         0xafb203a8,   // 	sw	s2,936(sp)
         0xafb103a4,   // 	sw	s1,932(sp)
@@ -639,7 +639,7 @@ uint32_t program_image[] = {
         0x27b20144,   // 	addiu	s2,sp,324
         0x02403025,   // 	move	a2,s2
         0x3c020000,   // 	lui	v0,0x00
-        0x8c050008,	  //	lw $a1, 8($zero)	0x8c450008,   // 	lw	a1,8(v0)
+        0x8c050008,	  //	lw $a1, 8($zero)	0x8c450008,   // 	lw	a1,8(v0)  PC = 130
         0x24040005,   // 	li	a0,5
         0x0c00000a,   // 	jal	10 <ceasar_encrypt>
         0x00000000,   // 	nop
@@ -649,7 +649,7 @@ uint32_t program_image[] = {
         0x24040005,   // 	li	a0,5
         0x0c000032,   // 	jal	50 <ceasar_decrypt>
         0x00000000,   // 	nop
-        0x02202825,   // 	move	a1,s1
+        0x02202825,   // 	move	a1,s1       PC = 140
         0x8c040008,	  //	lw $a0, 8($zero) 0x27a40018,   // 	addiu	a0,sp,24
         0x0c00005a,   // 	jal	90 <compare_string>
         0x00000000,   // 	nop
