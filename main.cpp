@@ -118,8 +118,12 @@ int main() {
 
     //MAIN PIPELINE LOOP
     while (pc != 0x00000000) { //while PC does not jump to 0x000 (end of file);
-        thePurge();
+        //thePurge();
         cout << "Program Counter: " << pc << endl;
+
+        if(pc == 132){
+            cout<<"pc is at 132<<endl";
+        }
 
         ///////////////
         //Fetch Stage//
@@ -286,7 +290,7 @@ int main() {
         cout<<"All registers have escaped the shadow realm."<<endl;
         ClockCycles++;
         //cout << "Instruction has been passed through pipeline." << endl;
-        //cout << "**************************************" << endl;
+        cout << "**************************************" << endl;
     }
         //PRINT OUT FINAL ARRAY VALUES
 #ifdef PROGRAM1

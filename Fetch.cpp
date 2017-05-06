@@ -130,6 +130,8 @@ void instJDecode(uint32_t machineCode) {
 
 void instFetch(void) {
 
+    pcNext = pc + 1; //increment the pc
+
     stall = false;
 
     uint32_t machineCode; //instruction machine code

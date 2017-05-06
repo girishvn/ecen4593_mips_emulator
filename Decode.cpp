@@ -343,8 +343,7 @@ void ControlHazard(){
 
     }
     else if(shadow_IDEX.isBranch && !(fwd) && (EXMEM.regWrite) && (EXMEM.memRead) && ((EXMEM.rd != 0) || (EXMEM.rs != 0))
-            && ((EXMEM.rt == IFID.rt) || (EXMEM.rs == IFID.rs))){ //change exmem.rs == ifid.rs to exmem.rt == ifid.rs if screws up
-
+            && ((EXMEM.rt == IFID.rt) || (EXMEM.rs == IFID.rs))){
         stallPipe();
 
     }
@@ -363,8 +362,6 @@ void ControlHazard(){
 ***********************************************************************************************************************/
 
 void instDecode(void) {
-
-    pcNext = pc + 1; //increment the pc
 
     if(IFID.nop) { //NOP detection
         shadow_IDEX.nop = true;
