@@ -26,14 +26,15 @@ void initiCache(void);
 
 void initdCache(void);
 
-int tagCalc(int32_t address, int IorD); //1 for I 2 for D
-int blckIdxCalc(int32_t address,int IorD); //1 for I 2 for D
-int blckOffstCal(int32_t address,int IorD); //1 for I 2 for D
+int tagCalc(uint32_t address, int IorD); //1 for I 2 for D
+int blckIdxCalc(uint32_t address,int IorD); //1 for I 2 for D
+int blckOffstCal(uint32_t address,int IorD); //1 for I 2 for D
 
 void loadFromMem(int32_t address, int blockIndex, int blockOffset, int IorD);
 
 int32_t iCacheRead(int32_t address);
 
-
+int32_t dCacheRead(int32_t address);
+void dCacheWrite(int32_t address,int32_t val);
 
 #endif //ECEN4593_MIPS_EMULATOR_CACHE_H

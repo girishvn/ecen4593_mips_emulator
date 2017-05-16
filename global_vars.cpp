@@ -10,6 +10,10 @@ int32_t reg[32] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 int32_t pc = 0; //program counter
 uint32_t ClockCycles = 0; //Cycle Counter
 uint32_t InstructionCount = 0; //Instruction count
+uint32_t ihits = 0;
+uint32_t iaccesses = 0;
+uint32_t dhits = 0;
+uint32_t daccesses = 0;
 int32_t BranchPC = -1; //Calculated branch address
 bool BranchFlag = false; //Set true if a branch instruction is set
 //Intermediate Registers (declarations)

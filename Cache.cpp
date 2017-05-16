@@ -7,7 +7,7 @@
 
 /***********************************************************************************************************************
 
-CLASS NAME: Decode
+CLASS NAME: CACHE
 
  USE: Implements the decode (ID) stage of the processor pipeline
 
@@ -15,7 +15,7 @@ CLASS NAME: Decode
 
 /***********************************************************************************************************************
 
- FUNCTION NAME: initiCache
+ FUNCTION NAME: initiCache GOOD
 
  DESCRIPTION: Build instruction cache
 
@@ -38,7 +38,7 @@ void initiCache(void){
 
 /***********************************************************************************************************************
 
- FUNCTION NAME: initdCache
+ FUNCTION NAME: initdCache GOOD
 
  DESCRIPTION: Build data cache
 
@@ -61,7 +61,7 @@ void initdCache(void){
 
 /***********************************************************************************************************************
 
- FUNCTION NAME: tagCalc
+ FUNCTION NAME: tagCalc GOOD
 
  DESCRIPTION: Calculates tag to search for in cache
 
@@ -91,7 +91,7 @@ int tagCalc(uint32_t address, int IorD) {
 
 /***********************************************************************************************************************
 
- FUNCTION NAME: blckIdxCalc
+ FUNCTION NAME: blckIdxCalc GOOD
 
  DESCRIPTION: Calculates tag to search for in cache
 
@@ -125,7 +125,7 @@ int blckIdxCalc(uint32_t address,int IorD) {
 
 /***********************************************************************************************************************
 
- FUNCTION NAME: blckIdxCalc
+ FUNCTION NAME: blckIdxCalc GOOD
 
  DESCRIPTION: Calculates tag to search for in cache
 
@@ -174,17 +174,17 @@ int blckOffstCal(uint32_t address,int IorD) {
 void loadFromMem(int32_t address, int blockIndex, int blockOffset, int IorD){
 
 
-
     if(IorD == 1) { //i cache
         for (int i = 0; i < BLOCKSIZE; i++) { //load entire block of instructions from mem
             iCache.blockArr[blockIndex].entryArr[i] = memory[address + i - blockOffset]; //load word from mem
-            //std::cout<<+iCache.blockArr[blockIndex].entryArr[i]<<std::endl;
         }
+        ClockCycles = ClockCycles + 8 + 2*(BLOCKSIZE - 1) - 1;
     }
     else if(IorD == 0){ //D cache
         for (int i = 0; i < BLOCKSIZE; i++) { //load entire block of instructions from mem
-            dCache.blockArr[blockIndex].entryArr[i] = memory[address + i]; //load word from mem
+            dCache.blockArr[blockIndex].entryArr[i] = memory[address + i - blockOffset]; //load word from mem
         }
+        ClockCycles = ClockCycles + 8 + 2*(BLOCKSIZE - 1) - 1;
     }
     else{
         std::cout<<"NOT I OR D TYPE CACHE ACCESS"<<std::endl;
@@ -196,7 +196,7 @@ void loadFromMem(int32_t address, int blockIndex, int blockOffset, int IorD){
 
 /***********************************************************************************************************************
 
- FUNCTION NAME: iCacheRead
+ FUNCTION NAME: iCacheRead GOOD
 
  DESCRIPTION: Build instruction cache
 
@@ -207,6 +207,7 @@ void loadFromMem(int32_t address, int blockIndex, int blockOffset, int IorD){
 ***********************************************************************************************************************/
 
 int32_t iCacheRead(int32_t address){
+    iaccesses++;
 
     int32_t readVal;
 
@@ -223,6 +224,7 @@ int32_t iCacheRead(int32_t address){
 
     }
     else if(iCache.blockArr[blockIndex].tag == tag){ //if memory is correct in cache
+        ihits++;
         readVal = iCache.blockArr[blockIndex].entryArr[blockOffset];
     }
     else { //else
@@ -237,7 +239,7 @@ int32_t iCacheRead(int32_t address){
 
 /***********************************************************************************************************************
 
- FUNCTION NAME: iCacheRead
+ FUNCTION NAME: dCacheRead
 
  DESCRIPTION: Build instruction cache
 
@@ -247,7 +249,39 @@ int32_t iCacheRead(int32_t address){
 
 ***********************************************************************************************************************/
 
+int32_t dCacheRead(int32_t address){
+    daccesses++;
 
+    int32_t readVal;
+
+    int tag = tagCalc(uint32_t(address),0); //calculates tag
+    int blockIndex = blckIdxCalc(uint32_t(address),0); //calculates block index
+    int blockOffset = blckOffstCal(uint32_t(address),0); //calculates block offset
+
+    if(dCache.blockArr[blockIndex].valid == 0){ //if valid bit not set
+
+        loadFromMem(address,blockIndex,blockOffset,0);
+        dCache.blockArr[blockIndex].tag = tag;
+        dCache.blockArr[blockIndex].valid = 1;
+        dCache.blockArr[blockIndex].dirty = 0;
+        readVal = dCache.blockArr[blockIndex].entryArr[blockOffset]; //return first val in newly filled block
+
+    }
+    else if(dCache.blockArr[blockIndex].tag == tag){ //if memory is correct in cache
+        dhits++;
+        dCache.blockArr[blockIndex].tag = tag;
+        readVal = dCache.blockArr[blockIndex].entryArr[blockOffset];
+    }
+    else { //else
+        loadFromMem(address,blockIndex,blockOffset,0);
+        dCache.blockArr[blockIndex].tag = tag;
+        dCache.blockArr[blockIndex].valid = 1;
+        dCache.blockArr[blockIndex].dirty = 0;
+        readVal = dCache.blockArr[blockIndex].entryArr[blockOffset]; //return first val in newly filled block
+    }
+
+    return readVal;
+}
 
 /***********************************************************************************************************************
 
@@ -260,3 +294,40 @@ int32_t iCacheRead(int32_t address){
  OUTPUTS: void
 
 ***********************************************************************************************************************/
+
+void dCacheWrite(int32_t address, int32_t val){
+    daccesses++;
+
+    int tag = tagCalc(uint32_t(address),0); //calculates tag
+    int blockIndex = blckIdxCalc(uint32_t(address),0); //calculates block index
+    int blockOffset = blckOffstCal(uint32_t(address),0); //calculates block offset
+
+    if(dCache.blockArr[blockIndex].tag == tag && dCache.blockArr[blockIndex].dirty == 1) { //address correct but dirty data
+
+        memory[address] = dCache.blockArr[blockIndex].entryArr[blockOffset]; //push to memory
+    }
+
+    if(dCache.blockArr[blockIndex].tag == tag){
+        dhits++;
+        dCache.blockArr[blockIndex].entryArr[blockOffset] = val;
+    }
+    else {
+        loadFromMem(address,blockIndex,blockOffset,0); //if address incorrect pull from memory
+        dCache.blockArr[blockIndex].tag = tag; //set tag
+        dCache.blockArr[blockIndex].valid = 1; //set valid
+
+        dCache.blockArr[blockIndex].entryArr[blockOffset] = val; //store value
+    }
+
+
+    if(writeThrough == true) {
+        memory[address] = val;
+        ClockCycles = ClockCycles + 6 - 1;
+        dCache.blockArr[blockIndex].dirty = 0;
+    }
+    else {
+        dCache.blockArr[blockIndex].dirty = 1;
+    }
+
+    return;
+}

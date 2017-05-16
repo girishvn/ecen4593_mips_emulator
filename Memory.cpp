@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Memory.h"
 #include "Decode.h"
+#include "Cache.h"
 
 /***********************************************************************************************************************
 
@@ -20,7 +21,8 @@ STORE WORD FUNCTIONS
 
 void WriteWordIntoMemory(){ //store word
 
-    memory[EXMEM.address] = EXMEM.rtVal;
+    //memory[EXMEM.address] = EXMEM.rtVal;
+    dCacheWrite(EXMEM.address,EXMEM.rtVal); //GIRISH
 }
 
 void WriteHalfWordIntoMemory(){
@@ -29,7 +31,8 @@ void WriteHalfWordIntoMemory(){
     uint32_t maskMem;
     uint32_t maskReg;
 
-    memVal = memory[EXMEM.address];
+    //memVal = memory[EXMEM.address];
+    memVal = dCacheRead(EXMEM.address); //GIRISH
 
     switch (EXMEM.byteIndex) {
         case 0: { //1th Byte
@@ -39,7 +42,8 @@ void WriteHalfWordIntoMemory(){
             memVal = maskMem & memVal;
             EXMEM.rtVal = maskReg & EXMEM.rtVal;
 
-            memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            //memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            dCacheWrite(EXMEM.address,(memVal | EXMEM.rtVal)); //GIRISH
 
             break;
         }
@@ -51,7 +55,8 @@ void WriteHalfWordIntoMemory(){
             EXMEM.rtVal = maskReg & EXMEM.rtVal;
             EXMEM.rtVal = EXMEM.rtVal << 8;
 
-            memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            //memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            dCacheWrite(EXMEM.address,(memVal | EXMEM.rtVal)); //GIRISH
 
             break;
         }
@@ -63,7 +68,8 @@ void WriteHalfWordIntoMemory(){
             EXMEM.rtVal = maskReg & EXMEM.rtVal;
             EXMEM.rtVal = EXMEM.rtVal << 16;
 
-            memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            //memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            dCacheWrite(EXMEM.address,(memVal | EXMEM.rtVal)); //GIRISH
 
             break;
         }
@@ -81,7 +87,8 @@ void WriteByteIntoMemory(){
     uint32_t maskMem;
     uint32_t maskReg;
 
-    memVal = memory[EXMEM.address];
+    //memVal = memory[EXMEM.address];
+    memVal = dCacheRead(EXMEM.address); //GIRISH
 
     switch (EXMEM.byteIndex) {
         case 0: { //1th Byte
@@ -91,7 +98,8 @@ void WriteByteIntoMemory(){
             memVal = maskMem & memVal;
             EXMEM.rtVal = maskReg & EXMEM.rtVal;
 
-            memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            //memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            dCacheWrite(EXMEM.address,(memVal | EXMEM.rtVal)); //GIRISH
 
             break;
         }
@@ -104,7 +112,8 @@ void WriteByteIntoMemory(){
             EXMEM.rtVal = maskReg & EXMEM.rtVal;
             EXMEM.rtVal = EXMEM.rtVal << 8;
 
-            memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            //memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            dCacheWrite(EXMEM.address,(memVal | EXMEM.rtVal)); //GIRISH
 
             break;
 
@@ -118,7 +127,8 @@ void WriteByteIntoMemory(){
             EXMEM.rtVal = maskReg & EXMEM.rtVal;
             EXMEM.rtVal = EXMEM.rtVal << 16;
 
-            memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            //memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            dCacheWrite(EXMEM.address,(memVal | EXMEM.rtVal)); //GIRISH
 
             break;
 
@@ -132,7 +142,8 @@ void WriteByteIntoMemory(){
             EXMEM.rtVal = maskReg & EXMEM.rtVal;
             EXMEM.rtVal = EXMEM.rtVal << 24;
 
-            memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            //memory[EXMEM.address] = memVal | EXMEM.rtVal;
+            dCacheWrite(EXMEM.address,(memVal | EXMEM.rtVal)); //GIRISH
 
             break;
 
@@ -153,7 +164,8 @@ LOAD WORD FUNCTIONS
 
 void LoadWordFromMemory(void){
 
-    shadow_MEMWB.rv = memory[EXMEM.address];
+    //shadow_MEMWB.rv = memory[EXMEM.address];
+    shadow_MEMWB.rv = dCacheRead(EXMEM.address); //GIRISH
     shadow_MEMWB.rt = EXMEM.rt;
 
 }
@@ -164,7 +176,9 @@ void LoadHalfWordUnsignedFromMemory(void){
     uint32_t maskMem = 0x0000ffff;
     uint32_t maskSignNeg = 0xffff0000;
 
-    memVal = memory[EXMEM.address];
+    //memVal = memory[EXMEM.address];
+    memVal = dCacheRead(EXMEM.address); //GIRISH
+
     shadow_MEMWB.rt = IDEX.rt; //save register
 
     if(EXMEM.byteIndex < 3) {
@@ -194,7 +208,9 @@ void LoadByteSignedFromMemory(void){
     uint32_t maskMem = 0x000000ff;
     uint32_t maskSignNeg = 0xffffff00;
 
-    memVal = memory[EXMEM.address];
+    //memVal = memory[EXMEM.address];
+    memVal = dCacheRead(EXMEM.address);
+
     shadow_MEMWB.rt = IDEX.rt;
 
     if(EXMEM.byteIndex < 4){
@@ -224,7 +240,8 @@ void LoadByteUnsignedFromMemory(void){
     uint32_t maskMem = 0x000000ff;
     uint32_t maskUnsigned = 0x000000ff;
 
-    memVal = memory[EXMEM.address];
+    //memVal = memory[EXMEM.address];
+    memVal = dCacheRead(EXMEM.address);
     shadow_MEMWB.rt = IDEX.rt;
 
     if(EXMEM.byteIndex < 4){

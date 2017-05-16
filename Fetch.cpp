@@ -25,6 +25,5 @@ void instFetch(void) {
     int32_t address = pc;
     instMC= uint32_t(iCacheRead(address));
     shadow_IFID.mc = instMC; //set next instruction to intermediate IF/ID register
-    std::cout<<+instMC<<std::endl;
 
 }

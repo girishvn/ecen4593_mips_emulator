@@ -8,11 +8,10 @@
 void instWriteBack(){
 
     if((MEMWB.rd == $v1 && MEMWB.type == R) || (MEMWB.rt == $v1 && MEMWB.type == I)){
-        std::cout<<"v1"<<std::endl;
     }
 
     if((MEMWB.rd == 0 && MEMWB.type == R) || (MEMWB.rt == 0 && MEMWB.type == I)){
-        std::cout<<"BAD WRITE: RETURN PUSH TO REG 0"<<std::endl;
+        //std::cout<<"BAD WRITE: RETURN PUSH TO REG 0"<<std::endl;
         return;
     }
 
@@ -26,7 +25,6 @@ void instWriteBack(){
     }
     else if(MEMWB.type == R){
         reg[MEMWB.rd] = MEMWB.rv;
-        std::cout<<MEMWB.rv<<" "<<MEMWB.rd<<std::endl;
     }
 
     //Special case for Jump and Link

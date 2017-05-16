@@ -220,7 +220,6 @@ void BNE(){ //good
     if(IDEX.rsVal != IDEX.rtVal){
         BranchPC = pc + IDEX.immediate;
         BranchFlag = true;
-        std::cout<<BranchPC<<std::endl;
     }
 
     shadow_EXMEM.type = IDEX.type;
@@ -284,7 +283,7 @@ LOAD FUNCTIONS
 void LB(){
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
+    shadow_EXMEM.address = (IDEX.rsVal + IDEX.immediate)/4;
     shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     shadow_EXMEM.rt = IDEX.rt;
@@ -298,7 +297,7 @@ void LB(){
 void LBU() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
+    shadow_EXMEM.address = (IDEX.rsVal + IDEX.immediate)/4;
     shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     shadow_EXMEM.rt = IDEX.rt;
@@ -325,7 +324,7 @@ void LUI(){
 void LW(){ //good
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
+    shadow_EXMEM.address = (IDEX.rsVal + IDEX.immediate)/4;
     shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a word, index should always be at 0
@@ -344,7 +343,7 @@ void LW(){ //good
 void LHU() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
+    shadow_EXMEM.address = (IDEX.rsVal + IDEX.immediate)/4;
     shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a word, index should always be at 0
@@ -370,7 +369,7 @@ STORE FUNCTIONS
 void SB() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
+    shadow_EXMEM.address = (IDEX.rsVal + IDEX.immediate)/4;
     shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     shadow_EXMEM.rtVal = 0x000000ff & IDEX.rtVal; //only lowest byte stored
@@ -384,13 +383,12 @@ void SB() {
 void SW(){ //good
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate/4;
+    shadow_EXMEM.address = (IDEX.rsVal + IDEX.immediate)/4;
     shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a word, index should always be at 0
     if(shadow_EXMEM.byteIndex != 0){
         std::cout<<"SW immediate offset crosses memory words: "<<+IDEX.funct<<std::endl;
-        std::cout<<"address: "<<+shadow_EXMEM.address<<" byte index: "<<+shadow_EXMEM.byteIndex<<std::endl;
         return;
     }
 
@@ -404,7 +402,7 @@ void SW(){ //good
 void SH() {
 
     //Calculating immediate address and byte index.
-    shadow_EXMEM.address = IDEX.rsVal/4 + IDEX.immediate / 4;
+    shadow_EXMEM.address = (IDEX.rsVal + IDEX.immediate)/4;
     shadow_EXMEM.byteIndex = uint8_t((IDEX.rsVal + IDEX.immediate) % 4);
 
     //If storing a half word, index should only be at 1, 2, or 3
@@ -442,7 +440,6 @@ void SEB(){
     shadow_EXMEM.type = IDEX.type;
     shadow_EXMEM.opcode = IDEX.opcode;
 
-    std::cout<<"return val: "<<+shadow_EXMEM.rv<<" rtVal:"<<reg[IDEX.rt]<<std::endl;
 }
 
 void SLL(){
